@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.aistudycoach.auth.controller.AuthControllerTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.60 s -- in com.aistudycoach.auth.controller.AuthControllerTest
