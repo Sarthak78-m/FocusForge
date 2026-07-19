@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,18 +21,35 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #f8fafc;
-  color: #0f172a;
+  font-family: var(--font-sans);
+  background: #f8f9fa;
+  color: #0d0d0d;
 }
 
 .dark body {
-  background: #020617;
-  color: #e2e8f0;
+  background: #0a0a0a;
+  color: #e8e8e8;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 99px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
 }
 
 @layer base {
   * {
-    @apply border-slate-200 dark:border-slate-800;
+    @apply border-stone-200 dark:border-stone-800;
   }
 
   a {
@@ -37,16 +57,43 @@ body {
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-950;
+    @apply outline-none ring-2 ring-indigo-500 ring-offset-2 ring-offset-white dark:ring-offset-stone-950;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
   }
 }
 
 @layer components {
+  /* Clean flat surface — no shadow, just border */
   .surface {
-    @apply border border-slate-200 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-950;
+    @apply border border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950;
+  }
+
+  /* Slightly elevated surface */
+  .surface-raised {
+    @apply border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-stone-900;
   }
 
   .muted-text {
-    @apply text-slate-600 dark:text-slate-400;
+    @apply text-stone-500 dark:text-stone-400;
+  }
+
+  /* Editorial divider */
+  .divider {
+    @apply border-t border-stone-200 dark:border-stone-800;
+  }
+
+  /* Pill badge base */
+  .pill {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  /* Timer ring animation */
+  .timer-ring {
+    transform-origin: center;
+    transform: rotate(-90deg);
+    transition: stroke-dashoffset 1s linear;
   }
 }

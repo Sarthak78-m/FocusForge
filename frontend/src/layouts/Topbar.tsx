@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { LogOut, Menu, Moon, Sun } from 'lucide-react';
-import { Button } from '@/components/common';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { LogOut, Menu, Moon, Sun, Timer, X } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { appNavigation } from '@/routes/navigation';
 import { useAuthStore } from '@/store/auth.store';
@@ -12,63 +11,73 @@ export function Topbar() {
   const { mode, toggleMode } = useTheme();
   const user = useAuthStore((state) => state.user);
   const clearSession = useAuthStore((state) => state.clearSession);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    clearSession();
+    navigate('/login', { replace: true });
+  };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
-      <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-stone-200 bg-white/95 backdrop-blur dark:border-stone-800 dark:bg-stone-950/95">
+      <div className="flex h-14 items-center justify-between gap-4 px-4 sm:px-6">
+        {/* Left: mobile hamburger + page label */}
         <div className="flex min-w-0 items-center gap-3">
-          <Button
+          <button
             type="button"
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            aria-label="Open navigation"
+            aria-label={isMobileNavOpen ? 'Close navigation' : 'Open navigation'}
             aria-expanded={isMobileNavOpen}
-            onClick={() => setIsMobileNavOpen((isOpen) => !isOpen)}
+            onClick={() => setIsMobileNavOpen((o) => !o)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-900 lg:hidden"
           >
-            <Menu className="h-5 w-5" aria-hidden="true" />
-          </Button>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-slate-950 dark:text-white">
-              {user?.name ?? 'Study workspace'}
-            </p>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email ?? 'Focus today'}</p>
+            {isMobileNavOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+
+          {/* Mobile brand */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-600">
+              <Timer className="h-3 w-3 text-white" />
+            </div>
+            <span className="text-sm font-semibold text-stone-900 dark:text-white">MindSprint</span>
           </div>
         </div>
-        <nav className="hidden items-center gap-1 md:flex lg:hidden" aria-label="Compact navigation">
-          {appNavigation.slice(0, 4).map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/app'}
-              className={({ isActive }) =>
-                cn(
-                  'rounded-lg px-3 py-2 text-sm font-medium',
-                  isActive
-                    ? 'bg-blue-50 text-brand-700 dark:bg-blue-950 dark:text-blue-200'
-                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900',
-                )
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2">
-          <Button type="button" variant="ghost" size="icon" onClick={toggleMode} aria-label="Toggle theme">
-            {mode === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
-          <Button type="button" variant="ghost" size="icon" onClick={() => clearSession()} aria-label="Logout">
-            <LogOut className="h-5 w-5" aria-hidden="true" />
-          </Button>
+
+        {/* Right: user + actions */}
+        <div className="flex items-center gap-1">
+          {user && (
+            <div className="mr-2 hidden text-right sm:block">
+              <p className="text-xs font-medium text-stone-700 dark:text-stone-300">{user.name}</p>
+              <p className="text-xs text-stone-400 dark:text-stone-500">{user.email}</p>
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={toggleMode}
+            aria-label="Toggle theme"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:bg-stone-100 dark:text-stone-400 dark:hover:bg-stone-900"
+          >
+            {mode === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            aria-label="Logout"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-stone-500 hover:bg-red-50 hover:text-red-600 dark:text-stone-400 dark:hover:bg-red-950 dark:hover:text-red-400"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
       </div>
-      {isMobileNavOpen ? (
+
+      {/* Mobile navigation drawer */}
+      {isMobileNavOpen && (
         <nav
-          className="border-t border-slate-200 bg-white p-3 dark:border-slate-800 dark:bg-slate-950 lg:hidden"
+          className="border-t border-stone-200 bg-white px-3 pb-3 pt-2 dark:border-stone-800 dark:bg-stone-950 lg:hidden"
           aria-label="Mobile navigation"
         >
-          <div className="grid gap-1 sm:grid-cols-2">
+          <div className="space-y-0.5">
             {appNavigation.map((item) => (
               <NavLink
                 key={item.path}
@@ -77,20 +86,20 @@ export function Topbar() {
                 onClick={() => setIsMobileNavOpen(false)}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium',
+                    'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-blue-50 text-brand-700 dark:bg-blue-950 dark:text-blue-200'
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900',
+                      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
+                      : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-900',
                   )
                 }
               >
-                <item.icon className="h-4 w-4" aria-hidden="true" />
+                <item.icon className="h-4 w-4 flex-none" aria-hidden="true" />
                 {item.label}
               </NavLink>
             ))}
           </div>
         </nav>
-      ) : null}
+      )}
     </header>
   );
 }

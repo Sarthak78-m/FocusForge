@@ -1,18 +1,40 @@
 import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { BarChart3, Bot, Clock3, ClipboardList, Gem, Target, UserCircle } from 'lucide-react';
+import { BarChart3, Bot, Gem, Target } from 'lucide-react';
 import { ProtectedLayout } from '@/layouts/ProtectedLayout';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { ModuleShellPage } from '@/pages/ModuleShellPage';
 import { paths } from '@/routes/paths';
 
-const LandingPage = lazy(() => import('@/pages/LandingPage').then((module) => ({ default: module.LandingPage })));
-const LoginPage = lazy(() => import('@/pages/LoginPage').then((module) => ({ default: module.LoginPage })));
-const SignupPage = lazy(() => import('@/pages/SignupPage').then((module) => ({ default: module.SignupPage })));
-const DashboardPage = lazy(() =>
-  import('@/pages/DashboardPage').then((module) => ({ default: module.DashboardPage })),
+// Public pages
+const LandingPage = lazy(() =>
+  import('@/pages/LandingPage').then((m) => ({ default: m.LandingPage })),
 );
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
+const LoginPage = lazy(() =>
+  import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
+);
+const SignupPage = lazy(() =>
+  import('@/pages/SignupPage').then((m) => ({ default: m.SignupPage })),
+);
+
+// Protected pages — fully implemented
+const DashboardPage = lazy(() =>
+  import('@/pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
+);
+const TasksPage = lazy(() =>
+  import('@/pages/TasksPage').then((m) => ({ default: m.TasksPage })),
+);
+const PomodoroPage = lazy(() =>
+  import('@/pages/PomodoroPage').then((m) => ({ default: m.PomodoroPage })),
+);
+const ProfilePage = lazy(() =>
+  import('@/pages/ProfilePage').then((m) => ({ default: m.ProfilePage })),
+);
+
+// 404
+const NotFoundPage = lazy(() =>
+  import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
+);
 
 export const router = createBrowserRouter([
   {
@@ -27,33 +49,50 @@ export const router = createBrowserRouter([
     element: <ProtectedLayout />,
     children: [
       { path: paths.dashboard, element: <DashboardPage /> },
-      {
-        path: paths.tasks,
-        element: <ModuleShellPage title="Tasks" description="Your study task workspace." icon={ClipboardList} />,
-      },
+      { path: paths.tasks, element: <TasksPage /> },
+      { path: paths.pomodoro, element: <PomodoroPage /> },
+      { path: paths.profile, element: <ProfilePage /> },
+
+      // Coming soon — no backend yet
       {
         path: paths.goals,
-        element: <ModuleShellPage title="Goals" description="Your goal progress workspace." icon={Target} />,
-      },
-      {
-        path: paths.pomodoro,
-        element: <ModuleShellPage title="Pomodoro" description="Your focus timer workspace." icon={Clock3} />,
+        element: (
+          <ModuleShellPage
+            title="Goals"
+            description="Goal tracking is coming soon."
+            icon={Target}
+          />
+        ),
       },
       {
         path: paths.rewards,
-        element: <ModuleShellPage title="Rewards" description="Your progress and reward workspace." icon={Gem} />,
+        element: (
+          <ModuleShellPage
+            title="Rewards"
+            description="Rewards & streaks are coming soon."
+            icon={Gem}
+          />
+        ),
       },
       {
         path: paths.analytics,
-        element: <ModuleShellPage title="Analytics" description="Your study analytics workspace." icon={BarChart3} />,
+        element: (
+          <ModuleShellPage
+            title="Analytics"
+            description="Study analytics are coming soon."
+            icon={BarChart3}
+          />
+        ),
       },
       {
         path: paths.aiCoach,
-        element: <ModuleShellPage title="AI Coach" description="Your coaching workspace." icon={Bot} />,
-      },
-      {
-        path: paths.profile,
-        element: <ModuleShellPage title="Profile" description="Your account workspace." icon={UserCircle} />,
+        element: (
+          <ModuleShellPage
+            title="AI Coach"
+            description="AI coaching is coming soon."
+            icon={Bot}
+          />
+        ),
       },
       { path: '/app/*', element: <Navigate to={paths.dashboard} replace /> },
     ],

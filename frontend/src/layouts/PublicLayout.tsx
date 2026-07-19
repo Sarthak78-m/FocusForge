@@ -1,15 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import { Footer } from '@/layouts/Footer';
-import { Navbar } from '@/layouts/Navbar';
 
+// Each public page (Landing, Login, Signup) manages its own layout/chrome.
 export function PublicLayout() {
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-slate-50">
-      <Navbar />
-      <main>
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <Outlet />;
 }

@@ -1,40 +1,50 @@
 import { NavLink } from 'react-router-dom';
-import { GraduationCap } from 'lucide-react';
+import { Timer } from 'lucide-react';
 import { appNavigation } from '@/routes/navigation';
 import { cn } from '@/utils/cn';
 
 export function Sidebar() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white px-4 py-5 dark:border-slate-800 dark:bg-slate-950 lg:block">
-      <div className="mb-8 flex items-center gap-3 px-2">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-white">
-          <GraduationCap className="h-5 w-5" aria-hidden="true" />
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950 lg:flex">
+      {/* Brand */}
+      <div className="flex h-14 items-center gap-2.5 border-b border-stone-200 px-5 dark:border-stone-800">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600">
+          <Timer className="h-3.5 w-3.5 text-white" aria-hidden="true" />
         </div>
-        <div>
-          <p className="text-sm font-semibold text-slate-950 dark:text-white">AI Study Coach</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Study workspace</p>
-        </div>
+        <span className="text-sm font-semibold text-stone-900 dark:text-white">MindSprint</span>
       </div>
-      <nav className="space-y-1" aria-label="Workspace">
-        {appNavigation.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === '/app'}
-            className={({ isActive }) =>
-              cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-blue-50 text-brand-700 dark:bg-blue-950 dark:text-blue-200'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white',
-              )
-            }
-          >
-            <item.icon className="h-4 w-4" aria-hidden="true" />
-            {item.label}
-          </NavLink>
-        ))}
+
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Workspace">
+        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-600">
+          Workspace
+        </p>
+        <div className="space-y-0.5">
+          {appNavigation.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.path === '/app'}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
+                    : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-900 dark:hover:text-stone-100',
+                )
+              }
+            >
+              <item.icon className="h-4 w-4 flex-none" aria-hidden="true" />
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
       </nav>
+
+      {/* Footer */}
+      <div className="border-t border-stone-200 px-5 py-4 dark:border-stone-800">
+        <p className="text-xs text-stone-400 dark:text-stone-600">MindSprint © {new Date().getFullYear()}</p>
+      </div>
     </aside>
   );
 }
