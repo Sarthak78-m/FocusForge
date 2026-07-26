@@ -1,0 +1,25 @@
+# Local secrets — never commit
+.env
+.env.local
+application-local.properties
+src/main/resources/application-local.properties
+
+# Build outputs
+target/
+frontend/dist/
+frontend/node_modules/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & caches
+*.log
+frontend/tsconfig.tsbuildinfo
+frontend/tsconfig.node.tsbuildinfo

@@ -5,6 +5,7 @@ export * from './ChartCard';
 export * from './ConfirmationDialog';
 export * from './Dropdown';
 export * from './EmptyState';
+export * from './ErrorBoundary';
 export * from './ErrorState';
 export * from './Input';
 export * from './LoadingSkeleton';

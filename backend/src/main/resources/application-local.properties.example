@@ -1,0 +1,24 @@
+# application-local.properties
+#
+# This file is loaded when SPRING_PROFILES_ACTIVE=local (the default).
+# It is GITIGNORED — add your real secrets here for local development.
+# Never commit this file to version control.
+#
+# To use: copy this file to application-local.properties and fill in your values.
+# The backend will pick it up automatically.
+
+# Database — matches docker compose or a local PostgreSQL install
+spring.datasource.url=jdbc:postgresql://localhost:5432/AIStudyCoachDB
+spring.datasource.username=postgres
+spring.datasource.password=your_local_password
+
+# JWT — only used locally, override via JWT_SECRET env var in production
+jwt.secret=local-dev-only-secret-min-32-characters-long-change-in-prod
+
+# AI keys — add your keys here for local AI testing
+# GEMINI_API_KEY=your_key_here
+# OPENAI_API_KEY=your_key_here
+
+# Verbose SQL logging for development
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.orm.jdbc.bind=TRACE

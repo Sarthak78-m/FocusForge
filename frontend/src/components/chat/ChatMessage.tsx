@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import type { Message } from '@/types/chat';
 import { MarkdownContent } from '@/utils/markdown';
 import { cn } from '@/utils/cn';
+import { useAuthStore } from '@/store/auth.store';
 
 type ChatMessageProps = {
   message: Message;
@@ -14,6 +15,15 @@ function formatTime(date: Date): string {
 
 export function ChatMessage({ message, isFirst = false }: ChatMessageProps) {
   const isBot = message.role === 'bot';
+  const user = useAuthStore((s) => s.user);
+  const userInitials = user?.name
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : 'U';
 
   return (
     <motion.div
@@ -70,7 +80,7 @@ export function ChatMessage({ message, isFirst = false }: ChatMessageProps) {
       {/* User avatar */}
       {!isBot && (
         <div className="flex h-7 w-7 flex-none items-center justify-center self-start rounded-full bg-stone-200 text-xs font-medium text-stone-700 dark:bg-stone-700 dark:text-stone-200">
-          U
+          {userInitials}
         </div>
       )}
     </motion.div>

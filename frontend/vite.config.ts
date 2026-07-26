@@ -19,4 +19,21 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false, // Disable in production for security
+    rollupOptions: {
+      output: {
+        // Split vendor chunks for better long-term caching
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
+          'animation': ['framer-motion'],
+          'query': ['@tanstack/react-query'],
+          'icons': ['lucide-react'],
+        },
+      },
+    },
+  },
 });
+

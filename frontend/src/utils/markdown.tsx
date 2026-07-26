@@ -45,6 +45,9 @@ function parseInline(text: string, keyPrefix: string): React.ReactNode[] {
 // ─── Block Parser ─────────────────────────────────────────────────────────────
 
 type Block =
+  | { type: 'h1'; text: string }
+  | { type: 'h2'; text: string }
+  | { type: 'h3'; text: string }
   | { type: 'paragraph'; text: string }
   | { type: 'ul'; items: string[] }
   | { type: 'ol'; items: string[] }
@@ -65,7 +68,13 @@ function parseBlocks(content: string): Block[] {
       continue;
     }
 
-    // Blockquote
+    // Headings — check longest prefix first to avoid # matching ## or ###
+    const h3Match = line.match(/^###\s+(.+)/);
+    if (h3Match) { blocks.push({ type: 'h3', text: h3Match[1] }); i++; continue; }
+    const h2Match = line.match(/^##\s+(.+)/);
+    if (h2Match) { blocks.push({ type: 'h2', text: h2Match[1] }); i++; continue; }
+    const h1Match = line.match(/^#\s+(.+)/);
+    if (h1Match) { blocks.push({ type: 'h1', text: h1Match[1] }); i++; continue; }
     if (line.startsWith('> ')) {
       blocks.push({ type: 'blockquote', text: line.slice(2) });
       i++;
@@ -119,6 +128,30 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
     .filter((b) => b.type !== 'blank')
     .map((block, blockIdx) => {
       const key = `block-${blockIdx}`;
+
+      if (block.type === 'h1') {
+        return (
+          <h1 key={key} className="text-base font-bold leading-snug text-stone-900 dark:text-stone-100">
+            {parseInline(block.text, key)}
+          </h1>
+        );
+      }
+
+      if (block.type === 'h2') {
+        return (
+          <h2 key={key} className="text-sm font-semibold leading-snug text-stone-800 dark:text-stone-200">
+            {parseInline(block.text, key)}
+          </h2>
+        );
+      }
+
+      if (block.type === 'h3') {
+        return (
+          <h3 key={key} className="text-sm font-medium leading-snug text-stone-700 dark:text-stone-300">
+            {parseInline(block.text, key)}
+          </h3>
+        );
+      }
 
       if (block.type === 'paragraph') {
         return (

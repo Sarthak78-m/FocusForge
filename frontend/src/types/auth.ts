@@ -11,7 +11,6 @@ export type CurrentUser = {
 
 export type AuthTokens = {
   token: string;
-  refreshToken?: string;
 };
 
 export type LoginRequest = {
@@ -27,5 +26,4 @@ export type RegisterRequest = {
 
 export type AuthenticationResponse = {
   token: string;
-  refreshToken?: string;
 };

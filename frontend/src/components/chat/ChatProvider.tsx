@@ -154,7 +154,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const [conversations, setConversations] = useState<Conversation[]>(() => {
     const cached = localStorage.getItem(STORAGE_CONVS_KEY);
     const parsed = parseConversations(cached);
-    return parsed.length > 0 ? parsed : [WELCOME_CONVERSATION, ...DUMMY_CONVERSATIONS];
+    // Only seed welcome conversation — never dummy data in production
+    return parsed.length > 0 ? parsed : [WELCOME_CONVERSATION];
   });
 
   const [activeConversationId, setActiveConversationId] = useState<string>(() => {
@@ -164,6 +165,15 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup typing timer on unmount to prevent state updates on unmounted component
+  useEffect(() => {
+    return () => {
+      if (typingTimer.current) {
+        clearTimeout(typingTimer.current);
+      }
+    };
+  }, []);
 
   // ── Context snapshot (real user data) ─────────────────────────────────────
   const [contextSnapshot, setContextSnapshot] = useState<ChatContextSnapshot | null>(null);
@@ -246,7 +256,11 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
   // ── Window actions ─────────────────────────────────────────────────────────
   const openChat = useCallback(() => setIsOpen(true), []);
-  const closeChat = useCallback(() => setIsOpen(false), []);
+  const closeChat = useCallback(() => {
+    setIsOpen(false);
+    // Reset the context-fetched flag so we get fresh data on next open
+    contextFetchedRef.current = false;
+  }, []);
   const toggleChat = useCallback(() => setIsOpen((v) => !v), []);
   const toggleSidebar = useCallback(() => setIsSidebarOpen((v) => !v), []);
 
@@ -303,14 +317,8 @@ export function ChatProvider({ children }: ChatProviderProps) {
     async (content: string) => {
       if (!content.trim() || isTyping) return;
 
-      if (isOffline) {
-        notify({
-          title: 'Message Not Sent',
-          message: 'You are currently offline. Please reconnect to communicate with the AI coach.',
-          tone: 'warning',
-        });
-        return;
-      }
+      // Note: offline guard is inside commandEngine — local commands still work offline.
+      // Only AI backend calls are blocked when offline.
 
       const userMsg: Message = {
         id: generateId(),
@@ -342,7 +350,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
       try {
         const { commandEngine } = await import('@/services/commandEngine');
-        const result = await commandEngine.processMessage(content, contextSnapshot, activeConversationId);
+        const result = await commandEngine.processMessage(content, contextSnapshot, activeConversationId, isOffline);
 
         // Simulate a brief natural delay before showing response
         const delay = 600 + Math.random() * 600;

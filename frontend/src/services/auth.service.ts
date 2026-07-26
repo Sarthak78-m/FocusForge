@@ -22,11 +22,4 @@ export const authService = {
     const response = await http.get<ApiResponse<CurrentUser>>('/auth/me');
     return unwrapApiResponse(response.data);
   },
-
-  async refreshToken(refreshToken: string) {
-    const response = await http.post<ApiResponse<AuthenticationResponse>>('/auth/refresh', {
-      refreshToken,
-    });
-    return unwrapApiResponse(response.data);
-  },
 };
