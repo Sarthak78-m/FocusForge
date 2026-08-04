@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.vscode
+.idea
+*.md
+.npmrc
+.nvmrc
+tsconfig.tsbuildinfo
+tsconfig.node.tsbuildinfo
