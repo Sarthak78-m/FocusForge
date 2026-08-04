@@ -59,13 +59,13 @@ export function useRegister() {
     mutationFn: (payload: RegisterRequest) => authService.register(payload),
     onSuccess: async (tokens) => {
       setSession(tokens);
+      navigate(paths.dashboard, { replace: true });
       try {
         const user = await authService.me();
         setUser(user);
       } catch {
-        // user fetch optional
+        // user fetch optional — session is already set so dashboard loads fine
       }
-      navigate(paths.dashboard, { replace: true });
     },
     onError: (error: AxiosError<ApiErrorPayload>) => {
       const message = error.response?.data?.message ?? 'Registration failed. Please try again.';

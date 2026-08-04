@@ -25,7 +25,12 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ApiErrorPayload>) => {
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url ?? '';
+    const isPublicEndpoint =
+      requestUrl.includes('/auth/login') ||
+      requestUrl.includes('/auth/register');
+
+    if (error.response?.status === 401 && !isPublicEndpoint) {
       useAuthStore.getState().clearSession(true);
       window.dispatchEvent(new CustomEvent('auth:session-expired'));
     }
