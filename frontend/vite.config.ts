@@ -26,7 +26,6 @@ export default defineConfig({
       output: {
         // Split vendor chunks for better long-term caching
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
           'router': ['react-router-dom'],
           'animation': ['framer-motion'],
           'query': ['@tanstack/react-query'],
