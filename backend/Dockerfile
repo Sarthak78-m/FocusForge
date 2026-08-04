@@ -34,6 +34,5 @@ ENTRYPOINT ["java", \
   "-XX:MaxRAMPercentage=50.0", \
   "-Xss256k", \
   "-XX:MaxMetaspaceSize=128m", \
-  "-XX:+OptimizeStringFootprint", \
   "-Djava.security.egd=file:/dev/./urandom", \
   "-jar", "app.jar"]
