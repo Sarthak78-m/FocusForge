@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npx vite build",
+  "installCommand": "npm ci --ignore-scripts=false",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
   "rewrites": [
