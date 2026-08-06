@@ -8,9 +8,9 @@ const MODES: { value: PomodoroMode; label: string; minutes: number }[] = [
 ];
 
 const MODE_COLORS: Record<PomodoroMode, string> = {
-  work: '#4f46e5',           // indigo-600
-  'short-break': '#059669',  // emerald-600
-  'long-break': '#0284c7',   // sky-600
+  work: '#EC6530',          // Primary Coral
+  'short-break': '#2DA7AE',  // Accent Teal
+  'long-break': '#FFAE6E',   // Secondary Peach
 };
 
 function TimerRing({
@@ -38,7 +38,7 @@ function TimerRing({
         fill="none"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        className="text-stone-200 dark:text-stone-800"
+        className="text-[var(--color-border)]"
       />
       {/* Progress */}
       <circle
@@ -79,40 +79,29 @@ export function PomodoroPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-stone-900 dark:text-white">Pomodoro</h1>
-        <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">
+        <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Pomodoro</h1>
+        <p className="mt-0.5 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
           Focus timer — stay in the zone
         </p>
       </div>
 
       <div className="mx-auto max-w-lg">
         {/* Mode tabs */}
-        <div className="mb-8 flex rounded-xl border border-stone-200 bg-white p-1 dark:border-stone-800 dark:bg-stone-950">
+        <div className="mb-8 flex rounded-2xl border border-[var(--color-border)] bg-white p-1.5 shadow-soft dark:bg-[var(--color-surface)]">
           {MODES.map((m) => (
             <button
               key={m.value}
               type="button"
               onClick={() => setMode(m.value)}
               className={cn(
-                'flex flex-1 flex-col items-center rounded-lg px-3 py-2 text-center transition-colors',
+                'flex flex-1 flex-col items-center rounded-xl px-3 py-2.5 text-center transition-all duration-200',
                 mode === m.value
-                  ? 'bg-stone-100 dark:bg-stone-800'
-                  : 'hover:bg-stone-50 dark:hover:bg-stone-900',
+                  ? 'bg-primary-50 text-primary-700 shadow-sm dark:bg-primary-950 dark:text-primary-300 font-semibold'
+                  : 'text-text-secondary hover:bg-primary-50/50 hover:text-[var(--color-text-primary)] dark:text-[var(--color-text-secondary)] dark:hover:bg-primary-950/50',
               )}
             >
-              <span
-                className={cn(
-                  'text-xs font-medium',
-                  mode === m.value
-                    ? 'text-stone-900 dark:text-white'
-                    : 'text-stone-500 dark:text-stone-400',
-                )}
-              >
-                {m.label}
-              </span>
-              <span className="mt-0.5 text-xs text-stone-400 dark:text-stone-500">
-                {m.minutes} min
-              </span>
+              <span className="text-xs font-medium">{m.label}</span>
+              <span className="mt-0.5 text-xs opacity-75">{m.minutes} min</span>
             </button>
           ))}
         </div>
@@ -123,13 +112,13 @@ export function PomodoroPage() {
             <TimerRing progress={progress} mode={mode} size={256} />
             <div className="absolute flex flex-col items-center">
               <span
-                className="text-5xl font-mono font-semibold tracking-tight text-stone-900 dark:text-white"
+                className="text-5xl font-mono font-semibold tracking-tight text-[var(--color-text-primary)]"
                 aria-live="polite"
                 aria-atomic="true"
               >
                 {display}
               </span>
-              <span className="mt-1 text-sm font-medium text-stone-500 dark:text-stone-400">
+              <span className="mt-1 text-sm font-medium text-text-secondary dark:text-[var(--color-text-secondary)]">
                 {currentModeConfig.label}
               </span>
             </div>
@@ -141,16 +130,16 @@ export function PomodoroPage() {
               <div
                 key={i}
                 className={cn(
-                  'h-2 w-2 rounded-full transition-colors',
+                  'h-2.5 w-2.5 rounded-full transition-colors',
                   i < dotsCompleted
-                    ? 'bg-indigo-500'
-                    : 'bg-stone-200 dark:bg-stone-700',
+                    ? 'bg-primary-500 shadow-sm'
+                    : 'bg-[var(--color-border)]',
                 )}
               />
             ))}
           </div>
 
-          <p className="mt-2 text-xs text-stone-400 dark:text-stone-500">
+          <p className="mt-2 text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
             {sessionCount} sessions completed · Long break every {SESSION_DOTS}
           </p>
 
@@ -159,7 +148,7 @@ export function PomodoroPage() {
             <button
               type="button"
               onClick={reset}
-              className="rounded-xl border border-stone-200 px-5 py-2.5 text-sm font-medium text-stone-600 transition-colors hover:border-stone-300 hover:bg-stone-50 dark:border-stone-700 dark:text-stone-400 dark:hover:border-stone-600 dark:hover:bg-stone-900"
+              className="rounded-xl border border-[var(--color-border)] bg-white px-5 py-2.5 text-sm font-medium text-[var(--color-text-primary)] transition-all duration-200 hover:bg-primary-50 dark:bg-[var(--color-surface)] dark:hover:bg-primary-950"
             >
               Reset
             </button>
@@ -167,10 +156,10 @@ export function PomodoroPage() {
               type="button"
               onClick={isRunning ? pause : start}
               className={cn(
-                'min-w-[120px] rounded-xl px-8 py-2.5 text-sm font-medium text-white transition-colors',
+                'min-w-[120px] rounded-xl px-8 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:shadow-md active:scale-95',
                 isRunning
-                  ? 'bg-stone-700 hover:bg-stone-800 dark:bg-stone-600 dark:hover:bg-stone-500'
-                  : 'bg-indigo-600 hover:bg-indigo-700',
+                  ? 'bg-text-primary hover:opacity-90'
+                  : 'bg-primary-500 hover:bg-primary-600',
               )}
             >
               {isRunning ? 'Pause' : 'Start'}
@@ -179,8 +168,8 @@ export function PomodoroPage() {
         </div>
 
         {/* How it works */}
-        <div className="mt-12 rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-950">
-          <p className="mb-4 text-xs font-medium uppercase tracking-wide text-stone-400 dark:text-stone-500">
+        <div className="mt-12 rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-soft dark:bg-[var(--color-surface)]">
+          <p className="mb-4 text-xs font-medium uppercase tracking-wide text-text-secondary dark:text-[var(--color-text-secondary)]">
             How it works
           </p>
           <div className="space-y-3">
@@ -190,10 +179,10 @@ export function PomodoroPage() {
               { step: '3', text: 'Repeat. After 4 sessions, take a 15-minute Long break.' },
             ].map((s) => (
               <div key={s.step} className="flex items-start gap-3">
-                <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full border border-stone-200 text-xs font-medium text-stone-500 dark:border-stone-700 dark:text-stone-400">
+                <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full border border-primary-300 text-xs font-medium text-primary-600 dark:border-primary-700 dark:text-primary-400">
                   {s.step}
                 </span>
-                <p className="text-sm text-stone-600 dark:text-stone-400">{s.text}</p>
+                <p className="text-sm text-[var(--color-text-primary)]">{s.text}</p>
               </div>
             ))}
           </div>

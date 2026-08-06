@@ -40,7 +40,7 @@ const statusOptions: { value: TaskStatus; label: string }[] = [
 
 function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
   return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-stone-700 dark:text-stone-300">
+    <label htmlFor={htmlFor} className="block text-sm font-medium text-[var(--color-text-primary)]">
       {children}
     </label>
   );
@@ -65,9 +65,9 @@ function SelectField({
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
       className={cn(
-        'h-10 w-full appearance-none rounded-lg border border-stone-200 bg-white px-3 text-sm',
-        'text-stone-900 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100',
-        'focus:outline-none focus:ring-2 focus:ring-indigo-500',
+        'h-11 w-full appearance-none rounded-xl border border-[var(--color-border)] bg-white px-3 text-sm transition-all duration-200',
+        'text-[var(--color-text-primary)] dark:bg-[var(--color-surface)]',
+        'hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-400',
       )}
     >
       <option value="">{placeholder}</option>
@@ -141,16 +141,16 @@ export function TaskForm({
           placeholder="Add details (optional)"
           rows={3}
           className={cn(
-            'w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm',
-            'text-stone-900 placeholder:text-stone-400',
-            'dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100',
-            'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0',
+            'w-full rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-sm transition-all duration-200',
+            'text-[var(--color-text-primary)] placeholder:text-text-secondary',
+            'dark:bg-[var(--color-surface)]',
+            'hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-400',
             'resize-none',
           )}
           {...register('description')}
         />
         {errors.description && (
-          <p className="text-xs text-red-600">{errors.description.message}</p>
+          <p className="text-xs text-error-600">{errors.description.message}</p>
         )}
       </div>
 
@@ -172,14 +172,14 @@ export function TaskForm({
             id="task-due"
             type="date"
             className={cn(
-              'h-10 w-full rounded-lg border border-stone-200 bg-white px-3 text-sm',
-              'text-stone-900 dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100',
-              'focus:outline-none focus:ring-2 focus:ring-indigo-500',
+              'h-11 w-full rounded-xl border border-[var(--color-border)] bg-white px-3 text-sm transition-all duration-200',
+              'text-[var(--color-text-primary)] dark:bg-[var(--color-surface)]',
+              'hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-400',
             )}
             {...register('dueDate')}
           />
           {errors.dueDate && (
-            <p className="text-xs text-red-600">{errors.dueDate.message}</p>
+            <p className="text-xs text-error-600">{errors.dueDate.message}</p>
           )}
         </div>
       </div>

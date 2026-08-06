@@ -23,16 +23,16 @@ export function FloatingButton() {
       className={cn(
         'fixed bottom-4 right-4 z-50 sm:right-6',
         'flex h-14 w-14 items-center justify-center',
-        'rounded-full shadow-lg transition-colors',
+        'rounded-full shadow-elevated transition-colors',
         isOpen
-          ? 'bg-stone-700 text-white hover:bg-stone-800 dark:bg-stone-800 dark:hover:bg-stone-700'
-          : 'bg-indigo-600 text-white hover:bg-indigo-700',
+          ? 'bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] hover:bg-primary-50 dark:hover:bg-primary-950'
+          : 'bg-primary-500 text-white hover:bg-primary-600 shadow-glow-primary',
       )}
     >
       {/* Pulse ring — only when closed */}
       {!isOpen && (
         <span
-          className="absolute inset-0 animate-ping rounded-full bg-indigo-400 opacity-20"
+          className="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"
           aria-hidden="true"
         />
       )}
@@ -57,7 +57,7 @@ export function FloatingButton() {
         <motion.span
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white"
+          className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-error-500 text-[9px] font-bold text-white shadow-sm"
           aria-label={`${unreadCount} unread conversations`}
         >
           {unreadCount > 9 ? '9+' : unreadCount}

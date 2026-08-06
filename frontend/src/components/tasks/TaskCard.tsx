@@ -5,15 +5,15 @@ import { cn } from '@/utils/cn';
 import type { Task, TaskPriority, TaskStatus } from '@/types/task';
 
 const PRIORITY_CONFIG: Record<TaskPriority, { label: string; className: string }> = {
-  HIGH: { label: 'High', className: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-950 dark:text-red-300 dark:ring-red-800' },
-  MEDIUM: { label: 'Medium', className: 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:ring-amber-800' },
-  LOW: { label: 'Low', className: 'bg-stone-100 text-stone-600 ring-stone-200 dark:bg-stone-800 dark:text-stone-300 dark:ring-stone-700' },
+  HIGH: { label: 'High', className: 'bg-error-50 text-error-700 ring-error-200 dark:bg-error-950 dark:text-error-300 dark:ring-error-800' },
+  MEDIUM: { label: 'Medium', className: 'bg-warning-50 text-warning-700 ring-warning-200 dark:bg-warning-950 dark:text-warning-300 dark:ring-warning-800' },
+  LOW: { label: 'Low', className: 'bg-primary-50 text-text-primary ring-primary-200 dark:bg-primary-950 dark:text-[var(--color-text-primary)] dark:ring-primary-800' },
 };
 
 const STATUS_CONFIG: Record<TaskStatus, { label: string; className: string }> = {
-  TODO: { label: 'To Do', className: 'bg-stone-100 text-stone-600 ring-stone-200 dark:bg-stone-800 dark:text-stone-300 dark:ring-stone-700' },
-  IN_PROGRESS: { label: 'In Progress', className: 'bg-blue-50 text-blue-700 ring-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:ring-blue-800' },
-  COMPLETED: { label: 'Completed', className: 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-800' },
+  TODO: { label: 'To Do', className: 'bg-primary-50 text-primary-700 ring-primary-200 dark:bg-primary-950 dark:text-primary-300 dark:ring-primary-800' },
+  IN_PROGRESS: { label: 'In Progress', className: 'bg-accent-50 text-accent-700 ring-accent-200 dark:bg-accent-950 dark:text-accent-300 dark:ring-accent-800' },
+  COMPLETED: { label: 'Completed', className: 'bg-success-50 text-success-700 ring-success-200 dark:bg-success-950 dark:text-success-300 dark:ring-success-800' },
 };
 
 type TaskCardProps = {
@@ -45,9 +45,9 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
   return (
     <div
       className={cn(
-        'group relative flex items-start gap-3 rounded-lg border p-4 transition-colors',
-        'border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950',
-        'hover:border-stone-300 dark:hover:border-stone-700',
+        'group relative flex items-start gap-3 rounded-xl border p-4 transition-all duration-200',
+        'border-[var(--color-border)] bg-white shadow-soft dark:bg-[var(--color-surface)]',
+        'hover:shadow-elevated hover:border-primary-200 dark:hover:border-primary-900',
         isCompleted && 'opacity-60',
       )}
     >
@@ -60,8 +60,8 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
         className={cn(
           'mt-0.5 flex-none transition-colors',
           isCompleted
-            ? 'text-emerald-500'
-            : 'text-stone-300 hover:text-emerald-500 dark:text-stone-600 dark:hover:text-emerald-400',
+            ? 'text-success-500'
+            : 'text-text-secondary hover:text-success-500 dark:text-[var(--color-text-secondary)] dark:hover:text-success-400',
           isCompleting && 'animate-pulse',
         )}
       >
@@ -76,14 +76,14 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
       <div className="min-w-0 flex-1">
         <p
           className={cn(
-            'text-sm font-medium text-stone-900 dark:text-stone-100',
-            isCompleted && 'line-through',
+            'text-sm font-medium text-[var(--color-text-primary)]',
+            isCompleted && 'line-through text-text-secondary opacity-75',
           )}
         >
           {task.title}
         </p>
         {task.description && (
-          <p className="mt-0.5 line-clamp-2 text-xs text-stone-500 dark:text-stone-400">
+          <p className="mt-0.5 line-clamp-2 text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
             {task.description}
           </p>
         )}
@@ -95,8 +95,8 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
               className={cn(
                 'flex items-center gap-1 text-xs',
                 due.isOverdue && !isCompleted
-                  ? 'text-red-600 dark:text-red-400'
-                  : 'text-stone-400 dark:text-stone-500',
+                  ? 'text-error-600 dark:text-error-400 font-medium'
+                  : 'text-text-secondary dark:text-[var(--color-text-secondary)]',
               )}
             >
               <Clock className="h-3 w-3" />
@@ -111,7 +111,7 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
         <button
           type="button"
           onClick={() => setMenuOpen((o) => !o)}
-          className="rounded p-1 text-stone-400 opacity-0 transition-opacity group-hover:opacity-100 hover:text-stone-700 dark:text-stone-500 dark:hover:text-stone-200"
+          className="rounded-lg p-1 text-text-secondary opacity-0 transition-opacity group-hover:opacity-100 hover:bg-primary-50 hover:text-[var(--color-text-primary)] dark:hover:bg-primary-950"
           aria-label="Task options"
         >
           <MoreHorizontal className="h-4 w-4" />
@@ -124,14 +124,14 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
               onClick={() => setMenuOpen(false)}
               aria-hidden="true"
             />
-            <div className="absolute right-0 z-20 mt-1 w-36 rounded-lg border border-stone-200 bg-white py-1 shadow-md dark:border-stone-700 dark:bg-stone-900">
+            <div className="absolute right-0 z-20 mt-1 w-36 rounded-xl border border-[var(--color-border)] bg-white py-1 shadow-elevated dark:bg-[var(--color-surface)]">
               <button
                 type="button"
                 onClick={() => {
                   setMenuOpen(false);
                   onEdit(task);
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-stone-700 hover:bg-stone-50 dark:text-stone-200 dark:hover:bg-stone-800"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--color-text-primary)] hover:bg-primary-50 dark:hover:bg-primary-950"
               >
                 <Pencil className="h-3.5 w-3.5" />
                 Edit
@@ -142,7 +142,7 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
                   setMenuOpen(false);
                   onDelete(task.id);
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-error-600 hover:bg-error-50 dark:text-error-400 dark:hover:bg-error-950"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 Delete

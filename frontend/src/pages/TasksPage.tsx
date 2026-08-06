@@ -95,15 +95,15 @@ export function TasksPage() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-stone-900 dark:text-white">Tasks</h1>
-          <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">
+          <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Tasks</h1>
+          <p className="mt-0.5 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
             {isLoading ? 'Loading…' : `${totalElements} task${totalElements !== 1 ? 's' : ''}`}
           </p>
         </div>
         <Button
           size="sm"
           onClick={() => setIsCreateOpen(true)}
-          className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700"
+          className="flex items-center gap-1.5 bg-primary-500 hover:bg-primary-600 text-white shadow-soft"
         >
           <Plus className="h-4 w-4" />
           New task
@@ -130,8 +130,8 @@ export function TasksPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-stone-200 pt-4 dark:border-stone-800">
-          <p className="text-xs text-stone-400">
+        <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-4">
+          <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
             Page {page + 1} of {totalPages}
           </p>
           <div className="flex gap-2">
@@ -139,7 +139,7 @@ export function TasksPage() {
               type="button"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-40 dark:border-stone-700 dark:text-stone-400 dark:hover:bg-stone-900"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--color-border)] text-text-secondary hover:bg-primary-50 hover:text-[var(--color-text-primary)] disabled:opacity-40 transition-colors dark:hover:bg-primary-950"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -147,7 +147,7 @@ export function TasksPage() {
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page >= totalPages - 1}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-50 disabled:opacity-40 dark:border-stone-700 dark:text-stone-400 dark:hover:bg-stone-900"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--color-border)] text-text-secondary hover:bg-primary-50 hover:text-[var(--color-text-primary)] disabled:opacity-40 transition-colors dark:hover:bg-primary-950"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

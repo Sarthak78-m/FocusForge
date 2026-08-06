@@ -72,10 +72,9 @@ export function ChatWindow() {
             // Layout
             'flex overflow-hidden',
             // Border & shadow
-            'rounded-none border border-stone-200 shadow-2xl sm:rounded-2xl',
-            'dark:border-stone-800',
+            'rounded-none border border-[var(--color-border)] shadow-elevated sm:rounded-2xl',
             // Background
-            'bg-white dark:bg-stone-950',
+            'bg-white dark:bg-[var(--color-surface)]',
           ].join(' ')}
           role="dialog"
           aria-label="MindSprint AI Coach"
@@ -92,7 +91,7 @@ export function ChatWindow() {
             {/* Message feed */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto overscroll-contain bg-stone-50 px-3 py-4 dark:bg-stone-950"
+              className="flex-1 overflow-y-auto overscroll-contain bg-[var(--color-background)] px-3 py-4"
             >
               <div className="space-y-3">
                 {messages.map((msg, idx) => (
@@ -132,7 +131,7 @@ export function ChatWindow() {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="border-t border-stone-200 bg-white pt-2 dark:border-stone-800 dark:bg-stone-950"
+                  className="border-t border-[var(--color-border)] bg-white pt-2 dark:bg-[var(--color-surface)]"
                 >
                   <QuickReplies replies={quickReplies} onSelect={handleQuickReply} />
                 </motion.div>

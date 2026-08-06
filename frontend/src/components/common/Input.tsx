@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="space-y-2">
         {label ? (
-          <label htmlFor={inputId} className="text-sm font-medium text-slate-800 dark:text-slate-100">
+          <label htmlFor={inputId} className="text-sm font-medium text-text-primary dark:text-[var(--color-text-primary)]">
             {label}
           </label>
         ) : null}
@@ -24,16 +24,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-invalid={Boolean(error)}
           aria-describedby={errorId}
           className={cn(
-            'h-11 w-full rounded-lg border bg-white px-3 text-sm text-slate-900 transition-colors',
-            'placeholder:text-slate-400 hover:border-slate-300',
-            'dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-600',
-            error ? 'border-red-500 focus-visible:ring-red-500' : 'border-slate-200',
+            'h-11 w-full rounded-xl border bg-white px-3 text-sm text-text-primary transition-all duration-200',
+            'placeholder:text-text-secondary hover:border-primary-300',
+            'dark:border-[var(--color-border)] dark:bg-[var(--color-surface)] dark:text-[var(--color-text-primary)] dark:hover:border-primary-700',
+            error ? 'border-error-500 focus-visible:ring-error-500' : 'border-border focus-visible:ring-secondary-400',
             className,
           )}
           {...props}
         />
         {error ? (
-          <p id={errorId} className="text-sm text-red-600 dark:text-red-400">
+          <p id={errorId} className="text-sm text-error-600 dark:text-error-400">
             {error}
           </p>
         ) : null}

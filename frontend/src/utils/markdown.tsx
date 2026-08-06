@@ -17,7 +17,7 @@ function parseInline(text: string, keyPrefix: string): React.ReactNode[] {
     const key = `${keyPrefix}-${match.index}`;
     if (match[1]) {
       // **bold**
-      nodes.push(<strong key={key} className="font-semibold">{match[2]}</strong>);
+      nodes.push(<strong key={key} className="font-semibold text-[var(--color-text-primary)]">{match[2]}</strong>);
     } else if (match[3]) {
       // *italic*
       nodes.push(<em key={key} className="italic">{match[4]}</em>);
@@ -26,7 +26,7 @@ function parseInline(text: string, keyPrefix: string): React.ReactNode[] {
       nodes.push(
         <code
           key={key}
-          className="rounded bg-stone-200 px-1 py-0.5 font-mono text-xs dark:bg-stone-700"
+          className="rounded-md bg-primary-50 px-1.5 py-0.5 font-mono text-xs text-primary-700 dark:bg-primary-950 dark:text-primary-300"
         >
           {match[6]}
         </code>,
@@ -131,7 +131,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
 
       if (block.type === 'h1') {
         return (
-          <h1 key={key} className="text-base font-bold leading-snug text-stone-900 dark:text-stone-100">
+          <h1 key={key} className="text-base font-bold leading-snug text-[var(--color-text-primary)]">
             {parseInline(block.text, key)}
           </h1>
         );
@@ -139,7 +139,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
 
       if (block.type === 'h2') {
         return (
-          <h2 key={key} className="text-sm font-semibold leading-snug text-stone-800 dark:text-stone-200">
+          <h2 key={key} className="text-sm font-semibold leading-snug text-[var(--color-text-primary)]">
             {parseInline(block.text, key)}
           </h2>
         );
@@ -147,7 +147,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
 
       if (block.type === 'h3') {
         return (
-          <h3 key={key} className="text-sm font-medium leading-snug text-stone-700 dark:text-stone-300">
+          <h3 key={key} className="text-sm font-medium leading-snug text-[var(--color-text-primary)]">
             {parseInline(block.text, key)}
           </h3>
         );
@@ -155,7 +155,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
 
       if (block.type === 'paragraph') {
         return (
-          <p key={key} className="leading-relaxed">
+          <p key={key} className="leading-relaxed text-[var(--color-text-primary)]">
             {parseInline(block.text, key)}
           </p>
         );
@@ -185,7 +185,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         return (
           <blockquote
             key={key}
-            className="border-l-2 border-indigo-300 pl-3 italic text-stone-500 dark:border-indigo-700 dark:text-stone-400"
+            className="border-l-2 border-primary-300 pl-3 italic text-text-secondary dark:border-primary-700 dark:text-[var(--color-text-secondary)]"
           >
             {parseInline(block.text, key)}
           </blockquote>

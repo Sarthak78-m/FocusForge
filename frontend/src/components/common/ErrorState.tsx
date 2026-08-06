@@ -13,7 +13,7 @@ export function ErrorState({
   onRetry,
 }: ErrorStateProps) {
   return (
-    <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-100">
+    <div className="rounded-2xl border border-error-200 bg-error-50 p-6 text-error-900 dark:border-error-900 dark:bg-error-950 dark:text-error-100">
       <div className="flex items-start gap-3">
         <AlertCircle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
         <div>

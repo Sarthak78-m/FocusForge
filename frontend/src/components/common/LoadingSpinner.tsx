@@ -8,8 +8,8 @@ type LoadingSpinnerProps = {
 
 export function LoadingSpinner({ className, label = 'Loading' }: LoadingSpinnerProps) {
   return (
-    <div className={cn('inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300', className)}>
-      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+    <div className={cn('inline-flex items-center gap-2 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]', className)}>
+      <Loader2 className="h-4 w-4 animate-spin text-primary-500" aria-hidden="true" />
       <span>{label}</span>
     </div>
   );

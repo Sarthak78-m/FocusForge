@@ -16,7 +16,7 @@ export function AppShell({ children }: AppShellProps) {
     <ErrorBoundary componentName="AppShell">
       <ChatProvider>
         <ChatNavigationListener />
-        <div className="min-h-screen bg-stone-50 text-stone-950 dark:bg-stone-950 dark:text-stone-50">
+        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
           <Sidebar />
           <div className="min-h-screen lg:pl-64">
             <Topbar />
@@ -35,4 +35,3 @@ export function AppShell({ children }: AppShellProps) {
     </ErrorBoundary>
   );
 }
-

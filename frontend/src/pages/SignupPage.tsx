@@ -31,14 +31,14 @@ export function SignupPage() {
   if (token) return <Navigate to={paths.dashboard} replace />;
 
   return (
-    <div className="flex min-h-screen bg-stone-50 dark:bg-stone-950">
+    <div className="flex min-h-screen bg-[var(--color-background)]">
       {/* Left panel */}
-      <div className="hidden flex-col justify-between border-r border-stone-200 bg-white p-10 dark:border-stone-800 dark:bg-stone-950 lg:flex lg:w-[420px]">
+      <div className="hidden flex-col justify-between border-r border-[var(--color-border)] bg-white p-10 dark:bg-[var(--color-surface)] lg:flex lg:w-[420px]">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-500 shadow-sm">
             <Timer className="h-4 w-4 text-white" />
           </div>
-          <span className="text-sm font-semibold text-stone-900 dark:text-white">MindSprint</span>
+          <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
         </div>
         <div className="space-y-6">
           {[
@@ -47,30 +47,30 @@ export function SignupPage() {
             { title: 'Progress overview', body: 'See your completion trends at a glance.' },
           ].map((f) => (
             <div key={f.title}>
-              <p className="text-sm font-semibold text-stone-900 dark:text-white">{f.title}</p>
-              <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">{f.body}</p>
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">{f.title}</p>
+              <p className="mt-1 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">{f.body}</p>
             </div>
           ))}
         </div>
-        <p className="text-xs text-stone-400 dark:text-stone-600">
+        <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
           © {new Date().getFullYear()} MindSprint
         </p>
       </div>
 
       {/* Right panel — form */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm rounded-2xl border border-[var(--color-border)] bg-white p-8 shadow-elevated dark:bg-[var(--color-surface)]">
           {/* Mobile logo */}
           <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600">
+            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary-500">
               <Timer className="h-3.5 w-3.5 text-white" />
             </div>
-            <span className="text-sm font-semibold text-stone-900 dark:text-white">MindSprint</span>
+            <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
           </div>
 
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-stone-900 dark:text-white">Create an account</h1>
-            <p className="mt-1.5 text-sm text-stone-500 dark:text-stone-400">
+            <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text-primary)]">Create an account</h1>
+            <p className="mt-1.5 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
               Start building your study momentum
             </p>
           </div>
@@ -113,11 +113,11 @@ export function SignupPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-stone-500 dark:text-stone-400">
+          <p className="mt-6 text-center text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
             Already have an account?{' '}
             <Link
               to={paths.login}
-              className="font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+              className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
             >
               Log in
             </Link>

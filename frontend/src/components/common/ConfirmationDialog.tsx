@@ -36,7 +36,7 @@ export function ConfirmationDialog({
         </>
       }
     >
-      <p className="text-sm text-slate-600 dark:text-slate-300">{message}</p>
+      <p className="text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">{message}</p>
     </Modal>
   );
 }

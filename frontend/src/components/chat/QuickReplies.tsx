@@ -11,7 +11,7 @@ export function QuickReplies({ replies, onSelect }: QuickRepliesProps) {
 
   return (
     <div className="px-3 pb-2">
-      <p className="mb-2 text-[10px] font-medium uppercase tracking-wide text-stone-400 dark:text-stone-600">
+      <p className="mb-2 text-[10px] font-medium uppercase tracking-wide text-text-secondary dark:text-[var(--color-text-secondary)]">
         Suggested
       </p>
       <div className="flex flex-wrap gap-1.5">
@@ -23,7 +23,7 @@ export function QuickReplies({ replies, onSelect }: QuickRepliesProps) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: idx * 0.05, duration: 0.2 }}
             onClick={() => onSelect(reply.prompt)}
-            className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-indigo-700 dark:hover:bg-indigo-950 dark:hover:text-indigo-300"
+            className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] transition-all duration-200 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:bg-[var(--color-surface)] dark:hover:border-primary-700 dark:hover:bg-primary-950 dark:hover:text-primary-300"
           >
             {reply.label}
           </motion.button>

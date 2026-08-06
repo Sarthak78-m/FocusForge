@@ -23,7 +23,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Previous
       </Button>
-      <span className="text-sm text-slate-600 dark:text-slate-300">
+      <span className="text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
         Page {Math.min(page + 1, Math.max(totalPages, 1))} of {Math.max(totalPages, 1)}
       </span>
       <Button

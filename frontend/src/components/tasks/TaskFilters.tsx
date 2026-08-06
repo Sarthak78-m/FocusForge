@@ -29,10 +29,10 @@ function Select({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          'h-9 appearance-none rounded-lg border border-stone-200 bg-white px-3 pr-8 text-sm',
-          'text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200',
-          'focus:outline-none focus:ring-2 focus:ring-indigo-500',
-          !value && 'text-stone-400 dark:text-stone-500',
+          'h-10 appearance-none rounded-xl border border-[var(--color-border)] bg-white px-3 pr-8 text-sm transition-all duration-200',
+          'text-[var(--color-text-primary)] dark:bg-[var(--color-surface)]',
+          'hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-400',
+          !value && 'text-text-secondary dark:text-[var(--color-text-secondary)]',
         )}
       >
         <option value="">{placeholder}</option>
@@ -42,7 +42,7 @@ function Select({
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-stone-400" />
+      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
     </div>
   );
 }
@@ -81,7 +81,7 @@ export function TaskFilters({ status, priority, onStatusChange, onPriorityChange
             onStatusChange('');
             onPriorityChange('');
           }}
-          className="h-9 rounded-lg px-3 text-sm text-stone-500 hover:text-stone-800 dark:text-stone-400 dark:hover:text-stone-200"
+          className="h-10 rounded-xl px-3 text-sm font-medium text-text-secondary hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 dark:hover:bg-primary-950"
         >
           Clear
         </button>

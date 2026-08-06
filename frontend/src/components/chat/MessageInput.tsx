@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowUp, Paperclip } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { useChatContext } from '@/components/chat/ChatProvider';
 import { cn } from '@/utils/cn';
 
@@ -63,12 +63,11 @@ export function MessageInput({
   const canSend = value.trim().length > 0 && !inputDisabled;
 
   return (
-    <div className="border-t border-stone-200 bg-white p-3 dark:border-stone-800 dark:bg-stone-950">
+    <div className="border-t border-[var(--color-border)] bg-white p-3 dark:bg-[var(--color-surface)]">
       <div
         className={cn(
-          'flex items-end gap-2 rounded-xl border bg-stone-50 px-3 py-2 transition-colors',
-          'border-stone-200 focus-within:border-indigo-400 dark:border-stone-700 dark:bg-stone-900',
-          'dark:focus-within:border-indigo-600',
+          'flex items-end gap-2 rounded-xl border bg-white px-3 py-2 transition-all duration-200 shadow-soft',
+          'border-[var(--color-border)] focus-within:border-secondary-400 dark:bg-[var(--color-surface)]',
         )}
       >
         {/* Textarea */}
@@ -81,8 +80,8 @@ export function MessageInput({
           disabled={inputDisabled}
           rows={1}
           className={cn(
-            'flex-1 resize-none bg-transparent text-sm leading-relaxed text-stone-900 outline-none',
-            'placeholder:text-stone-400 dark:text-stone-100 dark:placeholder:text-stone-600',
+            'flex-1 resize-none bg-transparent text-sm leading-relaxed text-[var(--color-text-primary)] outline-none',
+            'placeholder:text-text-secondary dark:placeholder:text-[var(--color-text-secondary)]',
             'disabled:cursor-not-allowed disabled:opacity-50',
             'max-h-[120px]',
           )}
@@ -96,16 +95,16 @@ export function MessageInput({
           disabled={!canSend}
           aria-label="Send message"
           className={cn(
-            'flex h-7 w-7 flex-none items-center justify-center rounded-lg transition-all',
+            'flex h-7 w-7 flex-none items-center justify-center rounded-xl transition-all duration-200',
             canSend
-              ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-              : 'bg-stone-200 text-stone-400 dark:bg-stone-700 dark:text-stone-600',
+              ? 'bg-primary-500 text-white hover:bg-primary-600 hover:shadow-md'
+              : 'bg-primary-50 text-text-secondary opacity-50 dark:bg-primary-950',
           )}
         >
           <ArrowUp className="h-3.5 w-3.5" strokeWidth={2.5} />
         </button>
       </div>
-      <p className="mt-1.5 text-center text-[10px] text-stone-400 dark:text-stone-600">
+      <p className="mt-1.5 text-center text-[10px] text-text-secondary dark:text-[var(--color-text-secondary)]">
         Press <kbd className="font-mono">Enter</kbd> to send · <kbd className="font-mono">Shift+Enter</kbd> for new line
       </p>
     </div>

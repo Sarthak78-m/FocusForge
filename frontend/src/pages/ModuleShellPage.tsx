@@ -11,19 +11,19 @@ export function ModuleShellPage({ title, description, icon: Icon }: ModuleShellP
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-stone-900 dark:text-white">{title}</h1>
-        <p className="mt-0.5 text-sm text-stone-500 dark:text-stone-400">{description}</p>
+        <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">{title}</h1>
+        <p className="mt-0.5 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">{description}</p>
       </div>
 
-      <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-stone-200 bg-stone-50 dark:border-stone-800 dark:bg-stone-900">
-          <Icon className="h-6 w-6 text-stone-400" />
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--color-border)] bg-white py-24 text-center shadow-soft dark:bg-[var(--color-surface)]">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-primary-500 dark:bg-primary-950 dark:text-primary-400">
+          <Icon className="h-6 w-6" />
         </div>
-        <p className="mt-4 text-sm font-medium text-stone-700 dark:text-stone-300">
+        <p className="mt-4 text-sm font-semibold text-[var(--color-text-primary)]">
           {title} — Coming soon
         </p>
-        <p className="mt-1 flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500">
-          <Construction className="h-3.5 w-3.5" />
+        <p className="mt-1 flex items-center gap-1.5 text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
+          <Construction className="h-3.5 w-3.5 text-secondary-500" />
           This feature is under development
         </p>
       </div>

@@ -17,15 +17,16 @@ export function Dropdown({ className, label, id, options, ...props }: DropdownPr
   return (
     <div className="space-y-2">
       {label ? (
-        <label htmlFor={selectId} className="text-sm font-medium text-slate-800 dark:text-slate-100">
+        <label htmlFor={selectId} className="text-sm font-medium text-text-primary dark:text-[var(--color-text-primary)]">
           {label}
         </label>
       ) : null}
       <select
         id={selectId}
         className={cn(
-          'h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900',
-          'dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100',
+          'h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary transition-all duration-200',
+          'hover:border-primary-300 focus-visible:ring-secondary-400',
+          'dark:border-[var(--color-border)] dark:bg-[var(--color-surface)] dark:text-[var(--color-text-primary)]',
           className,
         )}
         {...props}

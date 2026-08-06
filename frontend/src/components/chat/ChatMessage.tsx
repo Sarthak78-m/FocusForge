@@ -37,7 +37,7 @@ export function ChatMessage({ message, isFirst = false }: ChatMessageProps) {
     >
       {/* Bot avatar */}
       {isBot && (
-        <div className="flex h-7 w-7 flex-none items-center justify-center self-start rounded-full bg-indigo-100 text-xs dark:bg-indigo-950">
+        <div className="flex h-7 w-7 flex-none items-center justify-center self-start rounded-full bg-primary-50 text-xs text-primary-600 shadow-sm dark:bg-primary-950 dark:text-primary-300">
           <span aria-hidden="true">🤖</span>
         </div>
       )}
@@ -45,19 +45,19 @@ export function ChatMessage({ message, isFirst = false }: ChatMessageProps) {
       {/* Bubble */}
       <div
         className={cn(
-          'max-w-[78%] rounded-2xl px-4 py-2.5',
+          'max-w-[78%] rounded-2xl px-4 py-2.5 shadow-soft',
           isBot
-            ? 'rounded-bl-sm border border-stone-200 bg-white text-stone-900 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100'
-            : 'rounded-br-sm bg-indigo-600 text-white',
+            ? 'rounded-bl-sm border border-[var(--color-border)] bg-white text-[var(--color-text-primary)] dark:bg-[var(--color-surface)]'
+            : 'rounded-br-sm bg-primary-500 text-white',
         )}
       >
         {isBot ? (
           <MarkdownContent
             content={message.content}
             className={cn(
-              '[&_strong]:text-stone-900 [&_strong]:dark:text-white',
-              '[&_code]:bg-stone-100 [&_code]:dark:bg-stone-800',
-              '[&_blockquote]:border-indigo-300 [&_blockquote]:dark:border-indigo-700',
+              '[&_strong]:text-[var(--color-text-primary)]',
+              '[&_code]:bg-primary-50 [&_code]:text-primary-700 [&_code]:dark:bg-primary-950 [&_code]:dark:text-primary-300',
+              '[&_blockquote]:border-primary-300 [&_blockquote]:dark:border-primary-700',
             )}
           />
         ) : (
@@ -69,8 +69,8 @@ export function ChatMessage({ message, isFirst = false }: ChatMessageProps) {
           className={cn(
             'mt-1 text-right text-[10px] leading-none',
             isBot
-              ? 'text-stone-400 dark:text-stone-500'
-              : 'text-indigo-200',
+              ? 'text-text-secondary dark:text-[var(--color-text-secondary)]'
+              : 'text-primary-100',
           )}
         >
           {formatTime(message.timestamp)}
@@ -79,7 +79,7 @@ export function ChatMessage({ message, isFirst = false }: ChatMessageProps) {
 
       {/* User avatar */}
       {!isBot && (
-        <div className="flex h-7 w-7 flex-none items-center justify-center self-start rounded-full bg-stone-200 text-xs font-medium text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+        <div className="flex h-7 w-7 flex-none items-center justify-center self-start rounded-full bg-primary-100 text-xs font-semibold text-primary-700 dark:bg-primary-950 dark:text-primary-300">
           {userInitials}
         </div>
       )}

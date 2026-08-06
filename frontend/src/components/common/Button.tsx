@@ -13,12 +13,12 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand-600 text-white hover:bg-brand-700 disabled:bg-brand-300 dark:disabled:bg-brand-900',
+    'bg-primary-500 text-white hover:bg-primary-600 hover:shadow-md hover:-translate-y-0.5 disabled:bg-primary-300 dark:disabled:bg-primary-900',
   secondary:
-    'border border-slate-300 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900',
+    'border border-border bg-white text-text-primary hover:bg-primary-50 hover:border-primary-200 dark:border-border dark:bg-[var(--color-surface)] dark:text-[var(--color-text-primary)] dark:hover:bg-primary-950',
   ghost:
-    'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-900',
-  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
+    'text-text-primary hover:bg-primary-50 dark:text-[var(--color-text-primary)] dark:hover:bg-primary-950',
+  danger: 'bg-error-600 text-white hover:bg-error-700 disabled:bg-error-300',
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -38,7 +38,7 @@ export function buttonClassName({
   className?: string;
 }) {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
+    'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200',
     'disabled:cursor-not-allowed disabled:opacity-80',
     variants[variant],
     sizes[size],

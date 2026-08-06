@@ -25,10 +25,10 @@ type QuickStatProps = {
 
 function QuickStat({ label, value, sub, className }: QuickStatProps) {
   return (
-    <div className={cn('rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-950', className)}>
-      <p className="text-xs font-medium uppercase tracking-wide text-stone-400 dark:text-stone-500">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-stone-900 dark:text-white">{value}</p>
-      <p className="mt-0.5 text-xs text-stone-400 dark:text-stone-500">{sub}</p>
+    <div className={cn('rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-soft dark:bg-[var(--color-surface)]', className)}>
+      <p className="text-xs font-medium uppercase tracking-wide text-text-secondary dark:text-[var(--color-text-secondary)]">{label}</p>
+      <p className="mt-1 text-2xl font-semibold text-[var(--color-text-primary)]">{value}</p>
+      <p className="mt-0.5 text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">{sub}</p>
     </div>
   );
 }
@@ -52,21 +52,21 @@ function RecentTaskRow({ task, onComplete }: { task: Task; onComplete: (id: numb
           'flex-none transition-colors',
           isCompleted
             ? 'text-emerald-500'
-            : 'text-stone-300 hover:text-emerald-500 dark:text-stone-600',
+            : 'text-text-secondary hover:text-emerald-500 dark:text-[var(--color-text-secondary)]',
         )}
       >
         <Icon className="h-4 w-4" />
       </button>
       <span
         className={cn(
-          'flex-1 truncate text-sm text-stone-700 dark:text-stone-300',
-          isCompleted && 'line-through text-stone-400',
+          'flex-1 truncate text-sm text-[var(--color-text-primary)]',
+          isCompleted && 'line-through text-text-secondary opacity-60',
         )}
       >
         {task.title}
       </span>
       {task.dueDate && (
-        <span className="text-xs text-stone-400 dark:text-stone-500">
+        <span className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
           {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         </span>
       )}
@@ -80,37 +80,37 @@ function PomodoroWidget() {
   const modeLabel = mode === 'work' ? 'Focus' : mode === 'short-break' ? 'Short Break' : 'Long Break';
 
   return (
-    <div className="rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-950">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-soft dark:bg-[var(--color-surface)]">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-stone-400 dark:text-stone-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-text-secondary dark:text-[var(--color-text-secondary)]">
             Pomodoro
           </p>
-          <p className="mt-0.5 text-sm font-medium text-stone-700 dark:text-stone-300">{modeLabel}</p>
+          <p className="mt-0.5 text-sm font-medium text-[var(--color-text-primary)]">{modeLabel}</p>
         </div>
-        <span className="text-xs text-stone-400">{sessionCount} sessions</span>
+        <span className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">{sessionCount} sessions</span>
       </div>
-      <div className="text-3xl font-mono font-semibold tracking-tight text-stone-900 dark:text-white">
+      <div className="text-3xl font-mono font-semibold tracking-tight text-[var(--color-text-primary)]">
         {display}
       </div>
       <div className="mt-3 flex items-center gap-2">
         <button
           type="button"
           onClick={isRunning ? pause : start}
-          className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700"
+          className="rounded-xl bg-primary-500 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-primary-600 transition-all duration-200 hover:shadow-md"
         >
           {isRunning ? 'Pause' : 'Start'}
         </button>
         <button
           type="button"
           onClick={reset}
-          className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 hover:bg-stone-50 dark:border-stone-700 dark:text-stone-400 dark:hover:bg-stone-900"
+          className="rounded-xl border border-[var(--color-border)] px-3.5 py-1.5 text-xs font-medium text-[var(--color-text-primary)] hover:bg-primary-50 transition-all duration-200 dark:hover:bg-primary-950"
         >
           Reset
         </button>
         <Link
           to={paths.pomodoro}
-          className="ml-auto flex items-center gap-1 text-xs text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
+          className="ml-auto flex items-center gap-1 text-xs text-text-secondary hover:text-primary-600 dark:text-[var(--color-text-secondary)] dark:hover:text-primary-300 transition-colors"
         >
           Full timer
           <ArrowRight className="h-3 w-3" />
@@ -139,16 +139,16 @@ function QuickAddTask({ onAdd }: { onAdd: (title: string) => void }) {
         onChange={(e) => setValue(e.target.value)}
         placeholder="Quick add a task..."
         className={cn(
-          'h-9 flex-1 rounded-lg border border-stone-200 bg-white px-3 text-sm',
-          'text-stone-900 placeholder:text-stone-400',
-          'dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100',
-          'focus:outline-none focus:ring-2 focus:ring-indigo-500',
+          'h-10 flex-1 rounded-xl border border-[var(--color-border)] bg-white px-3 text-sm transition-all duration-200',
+          'text-[var(--color-text-primary)] placeholder:text-text-secondary',
+          'dark:bg-[var(--color-surface)]',
+          'focus:outline-none focus:ring-2 focus:ring-secondary-400',
         )}
       />
       <button
         type="submit"
         disabled={!value.trim()}
-        className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white transition-colors hover:bg-indigo-700 disabled:opacity-40"
+        className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500 text-white transition-all duration-200 hover:bg-primary-600 hover:shadow-md disabled:opacity-40"
         aria-label="Add task"
       >
         <Plus className="h-4 w-4" />
@@ -177,10 +177,10 @@ export function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-stone-900 dark:text-white">
+        <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">
           {getHour()}{user?.name ? `, ${user.name.split(' ')[0]}` : ''}.
         </h1>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+        <p className="mt-1 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </div>
@@ -196,35 +196,35 @@ export function DashboardPage() {
       {/* Main grid */}
       <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
         {/* Tasks column */}
-        <div className="rounded-xl border border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950">
-          <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4 dark:border-stone-800">
+        <div className="rounded-2xl border border-[var(--color-border)] bg-white shadow-soft dark:bg-[var(--color-surface)]">
+          <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-4">
             <div>
-              <p className="text-sm font-semibold text-stone-900 dark:text-white">Recent tasks</p>
-              <p className="text-xs text-stone-400 dark:text-stone-500">Showing last 5</p>
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">Recent tasks</p>
+              <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">Showing last 5</p>
             </div>
             <Link
               to={paths.tasks}
-              className="flex items-center gap-1 rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 hover:bg-stone-50 dark:border-stone-700 dark:text-stone-400 dark:hover:bg-stone-900"
+              className="flex items-center gap-1 rounded-xl border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium text-[var(--color-text-primary)] hover:bg-primary-50 dark:hover:bg-primary-950 transition-colors"
             >
               All tasks
               <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="px-5 pb-3 pt-2">
+          <div className="px-5 pb-3 pt-4">
             <QuickAddTask
               onAdd={(title) => createTask({ title })}
             />
           </div>
-          <div className="divide-y divide-stone-100 px-5 dark:divide-stone-800/50">
+          <div className="divide-y divide-[var(--color-border)] px-5">
             {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-3 py-2.5">
-                  <div className="h-4 w-4 animate-pulse rounded-full bg-stone-200 dark:bg-stone-700" />
-                  <div className="h-3 flex-1 animate-pulse rounded bg-stone-100 dark:bg-stone-800" />
+                  <div className="h-4 w-4 animate-pulse rounded-full bg-primary-100 dark:bg-primary-900/40" />
+                  <div className="h-3 flex-1 animate-pulse rounded-md bg-primary-100/50 dark:bg-primary-900/20" />
                 </div>
               ))
             ) : tasks.length === 0 ? (
-              <div className="py-10 text-center text-sm text-stone-400 dark:text-stone-500">
+              <div className="py-10 text-center text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
                 No tasks yet. Quick-add one above.
               </div>
             ) : (
@@ -238,10 +238,10 @@ export function DashboardPage() {
             )}
           </div>
           {tasks.length > 0 && (
-            <div className="px-5 py-3">
+            <div className="px-5 py-3 border-t border-[var(--color-border)]">
               <Link
                 to={paths.tasks}
-                className="text-xs text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                className="text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400"
               >
                 View all {totalElements} tasks →
               </Link>
@@ -254,8 +254,8 @@ export function DashboardPage() {
           <PomodoroWidget />
 
           {/* Quick links */}
-          <div className="rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-950">
-            <p className="mb-3 text-xs font-medium uppercase tracking-wide text-stone-400 dark:text-stone-500">
+          <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-soft dark:bg-[var(--color-surface)]">
+            <p className="mb-3 text-xs font-medium uppercase tracking-wide text-text-secondary dark:text-[var(--color-text-secondary)]">
               Quick nav
             </p>
             <div className="space-y-1">
@@ -267,7 +267,7 @@ export function DashboardPage() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="flex items-center justify-between rounded-lg px-2 py-2 text-sm text-stone-600 hover:bg-stone-50 dark:text-stone-400 dark:hover:bg-stone-900"
+                  className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-text-secondary hover:bg-primary-50/60 hover:text-[var(--color-text-primary)] dark:text-[var(--color-text-secondary)] dark:hover:bg-primary-950/60 transition-all duration-200"
                 >
                   {link.label}
                   <ArrowRight className="h-3.5 w-3.5" />

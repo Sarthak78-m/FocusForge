@@ -5,18 +5,18 @@ import { cn } from '@/utils/cn';
 
 export function Sidebar() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950 lg:flex">
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-[var(--color-border)] bg-white dark:bg-[var(--color-surface)] lg:flex">
       {/* Brand */}
-      <div className="flex h-14 items-center gap-2.5 border-b border-stone-200 px-5 dark:border-stone-800">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600">
+      <div className="flex h-14 items-center gap-2.5 border-b border-[var(--color-border)] px-5">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-500 shadow-sm">
           <Timer className="h-3.5 w-3.5 text-white" aria-hidden="true" />
         </div>
-        <span className="text-sm font-semibold text-stone-900 dark:text-white">MindSprint</span>
+        <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Workspace">
-        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-600">
+        <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-text-secondary dark:text-[var(--color-text-secondary)]">
           Workspace
         </p>
         <div className="space-y-0.5">
@@ -27,10 +27,10 @@ export function Sidebar() {
               end={item.path === '/app'}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300'
-                    : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-900 dark:hover:text-stone-100',
+                    ? 'bg-primary-50 text-primary-700 shadow-sm dark:bg-primary-950 dark:text-primary-300'
+                    : 'text-text-secondary hover:bg-primary-50/60 hover:text-[var(--color-text-primary)] dark:text-[var(--color-text-secondary)] dark:hover:bg-primary-950/60 dark:hover:text-[var(--color-text-primary)]',
                 )
               }
             >
@@ -42,8 +42,8 @@ export function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-stone-200 px-5 py-4 dark:border-stone-800">
-        <p className="text-xs text-stone-400 dark:text-stone-600">MindSprint © {new Date().getFullYear()}</p>
+      <div className="border-t border-[var(--color-border)] px-5 py-4">
+        <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">MindSprint © {new Date().getFullYear()}</p>
       </div>
     </aside>
   );
