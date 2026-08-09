@@ -5,6 +5,7 @@ export type CurrentUser = {
   name: string;
   email: string;
   role: UserRole;
+  emailVerified: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -16,6 +17,7 @@ export type AuthTokens = {
 export type LoginRequest = {
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 export type RegisterRequest = {
@@ -26,4 +28,19 @@ export type RegisterRequest = {
 
 export type AuthenticationResponse = {
   token: string;
+};
+
+export type RegistrationResponse = {
+  email: string;
+  emailVerificationRequired: boolean;
+};
+
+export type EmailRequest = {
+  email: string;
+};
+
+export type ResetPasswordRequest = {
+  token: string;
+  password: string;
+  confirmPassword: string;
 };

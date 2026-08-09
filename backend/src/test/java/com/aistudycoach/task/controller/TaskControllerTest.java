@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.aistudycoach.repository.TaskRepository;
 import com.aistudycoach.repository.UserRepository;
+import com.aistudycoach.user.Role;
+import com.aistudycoach.user.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -40,6 +43,9 @@ class TaskControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -162,16 +168,23 @@ class TaskControllerTest {
     }
 
     private String registerAndExtractToken(String email) throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/auth/register")
+        userRepository.save(User.builder()
+                .name("Sarthak Sharma")
+                .email(email)
+                .password(passwordEncoder.encode("Password123"))
+                .role(Role.USER)
+                .emailVerified(true)
+                .build());
+
+        MvcResult result = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "name": "Sarthak Sharma",
                                   "email": "%s",
                                   "password": "Password123"
                                 }
                                 """.formatted(email)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andReturn();
 
         JsonNode root = objectMapper.readTree(result.getResponse().getContentAsString());

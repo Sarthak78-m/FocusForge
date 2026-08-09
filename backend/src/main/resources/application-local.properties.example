@@ -15,6 +15,15 @@ spring.datasource.password=your_local_password
 # JWT — only used locally, override via JWT_SECRET env var in production
 jwt.secret=local-dev-only-secret-min-32-characters-long-change-in-prod
 
+# Local email development: no SMTP is required. Verification and reset links are logged locally.
+app.frontend-url=http://localhost:5173
+# To test real email delivery locally, uncomment and configure these values.
+# spring.mail.host=smtp.example.com
+# spring.mail.port=587
+# spring.mail.username=your_username
+# spring.mail.password=your_password
+# app.email.from=no-reply@example.com
+
 # AI keys — add your keys here for local AI testing
 # GEMINI_API_KEY=your_key_here
 # OPENAI_API_KEY=your_key_here

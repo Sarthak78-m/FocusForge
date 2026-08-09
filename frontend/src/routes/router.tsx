@@ -16,6 +16,15 @@ const LoginPage = lazy(() =>
 const SignupPage = lazy(() =>
   import('@/pages/SignupPage').then((m) => ({ default: m.SignupPage })),
 );
+const VerifyEmailPage = lazy(() =>
+  import('@/pages/VerifyEmailPage').then((m) => ({ default: m.VerifyEmailPage })),
+);
+const ForgotPasswordPage = lazy(() =>
+  import('@/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })),
+);
+const ResetPasswordPage = lazy(() =>
+  import('@/pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })),
+);
 
 // Protected pages — fully implemented
 const DashboardPage = lazy(() =>
@@ -43,6 +52,9 @@ export const router = createBrowserRouter([
       { path: paths.landing, element: <LandingPage /> },
       { path: paths.login, element: <LoginPage /> },
       { path: paths.signup, element: <SignupPage /> },
+      { path: paths.verifyEmail, element: <VerifyEmailPage /> },
+      { path: paths.forgotPassword, element: <ForgotPasswordPage /> },
+      { path: paths.resetPassword, element: <ResetPasswordPage /> },
     ],
   },
   {

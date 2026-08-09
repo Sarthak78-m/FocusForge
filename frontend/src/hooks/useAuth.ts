@@ -1,16 +1,22 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import type { AxiosError } from 'axios';
 import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth.store';
 import { useNotificationStore } from '@/store/notification.store';
 import { paths } from '@/routes/paths';
-import type { LoginRequest, RegisterRequest } from '@/types/auth';
-import type { AxiosError } from 'axios';
+import type {
+  EmailRequest,
+  LoginRequest,
+  RegisterRequest,
+  RegistrationResponse,
+  ResetPasswordRequest,
+} from '@/types/auth';
 import type { ApiErrorPayload } from '@/types/api';
 
 export function useCurrentUser() {
-  const token = useAuthStore((s) => s.token);
-  const setUser = useAuthStore((s) => s.setUser);
+  const token = useAuthStore((state) => state.token);
+  const setUser = useAuthStore((state) => state.setUser);
 
   return useQuery({
     queryKey: ['currentUser'],
@@ -24,11 +30,15 @@ export function useCurrentUser() {
   });
 }
 
-export function useLogin() {
+type LoginOptions = {
+  onUnverified?: (email: string) => void;
+};
+
+export function useLogin(options: LoginOptions = {}) {
   const navigate = useNavigate();
-  const setSession = useAuthStore((s) => s.setSession);
-  const setUser = useAuthStore((s) => s.setUser);
-  const notify = useNotificationStore((s) => s.notify);
+  const setSession = useAuthStore((state) => state.setSession);
+  const setUser = useAuthStore((state) => state.setUser);
+  const notify = useNotificationStore((state) => state.notify);
 
   return useMutation({
     mutationFn: (payload: LoginRequest) => authService.login(payload),
@@ -38,38 +48,80 @@ export function useLogin() {
         const user = await authService.me();
         setUser(user);
       } catch {
-        // user fetch optional
+        // A successful token is sufficient; the protected view can fetch the profile again.
       }
       navigate(paths.dashboard, { replace: true });
     },
-    onError: (error: AxiosError<ApiErrorPayload>) => {
+    onError: (error: AxiosError<ApiErrorPayload>, variables: LoginRequest) => {
       const message = error.response?.data?.message ?? 'Invalid email or password';
+      if (error.response?.status === 403 && message === 'Please verify your email before logging in.') {
+        options.onUnverified?.(variables.email);
+      }
       notify({ title: 'Login failed', message, tone: 'error' });
     },
   });
 }
 
-export function useRegister() {
-  const navigate = useNavigate();
-  const setSession = useAuthStore((s) => s.setSession);
-  const setUser = useAuthStore((s) => s.setUser);
-  const notify = useNotificationStore((s) => s.notify);
+type RegisterOptions = {
+  onRegistered?: (response: RegistrationResponse) => void;
+};
+
+export function useRegister(options: RegisterOptions = {}) {
+  const notify = useNotificationStore((state) => state.notify);
 
   return useMutation({
     mutationFn: (payload: RegisterRequest) => authService.register(payload),
-    onSuccess: async (tokens) => {
-      setSession(tokens);
-      navigate(paths.dashboard, { replace: true });
-      try {
-        const user = await authService.me();
-        setUser(user);
-      } catch {
-        // user fetch optional — session is already set so dashboard loads fine
-      }
+    onSuccess: (response) => {
+      options.onRegistered?.(response);
+      notify({
+        title: 'Account created',
+        message: 'Check your email to verify your account before logging in.',
+        tone: 'success',
+      });
     },
     onError: (error: AxiosError<ApiErrorPayload>) => {
       const message = error.response?.data?.message ?? 'Registration failed. Please try again.';
       notify({ title: 'Registration failed', message, tone: 'error' });
     },
+  });
+}
+
+export function useResendVerification() {
+  const notify = useNotificationStore((state) => state.notify);
+
+  return useMutation({
+    mutationFn: (payload: EmailRequest) => authService.resendVerification(payload),
+    onSuccess: () => {
+      notify({
+        title: 'Verification email requested',
+        message: 'Check your inbox for a verification link.',
+        tone: 'success',
+      });
+    },
+    onError: (error: AxiosError<ApiErrorPayload>) => {
+      notify({
+        title: 'Could not resend verification email',
+        message: error.response?.data?.message ?? 'Please try again shortly.',
+        tone: 'error',
+      });
+    },
+  });
+}
+
+export function useVerifyEmail() {
+  return useMutation({
+    mutationFn: (token: string) => authService.verifyEmail(token),
+  });
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (payload: EmailRequest) => authService.forgotPassword(payload),
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: (payload: ResetPasswordRequest) => authService.resetPassword(payload),
   });
 }

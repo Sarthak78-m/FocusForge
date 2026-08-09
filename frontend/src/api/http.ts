@@ -28,7 +28,11 @@ http.interceptors.response.use(
     const requestUrl = error.config?.url ?? '';
     const isPublicEndpoint =
       requestUrl.includes('/auth/login') ||
-      requestUrl.includes('/auth/register');
+      requestUrl.includes('/auth/register') ||
+      requestUrl.includes('/auth/verify-email') ||
+      requestUrl.includes('/auth/resend-verification') ||
+      requestUrl.includes('/auth/forgot-password') ||
+      requestUrl.includes('/auth/reset-password');
 
     if (error.response?.status === 401 && !isPublicEndpoint) {
       useAuthStore.getState().clearSession(true);
