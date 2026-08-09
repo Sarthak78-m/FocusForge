@@ -1,12 +1,13 @@
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { Mail, Timer } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
-import { Timer } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button, Input } from '@/components/common';
-import { useLogin } from '@/hooks/useAuth';
-import { useAuthStore } from '@/store/auth.store';
+import { useLogin, useResendVerification } from '@/hooks/useAuth';
 import { paths } from '@/routes/paths';
+import { useAuthStore } from '@/store/auth.store';
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -16,22 +17,26 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export function LoginPage() {
-  const token = useAuthStore((s) => s.token);
-  const { mutate: login, isPending } = useLogin();
-
+  const token = useAuthStore((state) => state.token);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
+  const { mutate: login, isPending } = useLogin({ onUnverified: setUnverifiedEmail });
+  const { mutate: resendVerification, isPending: isResending } = useResendVerification();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-  });
+  } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
   if (token) return <Navigate to={paths.dashboard} replace />;
 
+  const resend = () => {
+    if (unverifiedEmail) {
+      resendVerification({ email: unverifiedEmail });
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-[var(--color-background)]">
-      {/* Left panel — branding */}
       <div className="hidden flex-col justify-between border-r border-[var(--color-border)] bg-white p-10 dark:bg-[var(--color-surface)] lg:flex lg:w-[420px]">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-500 shadow-sm">
@@ -39,21 +44,12 @@ export function LoginPage() {
           </div>
           <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
         </div>
-        <div>
-          <blockquote className="text-base leading-relaxed text-text-secondary dark:text-[var(--color-text-secondary)] italic">
-            "The secret of getting ahead is getting started."
-          </blockquote>
-          <p className="mt-2 text-sm font-medium text-text-secondary dark:text-[var(--color-text-secondary)]">— Mark Twain</p>
-        </div>
-        <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">
-          © {new Date().getFullYear()} MindSprint
-        </p>
+        <p className="text-base leading-relaxed text-text-secondary">Return to the study plan you are building.</p>
+        <p className="text-xs text-text-secondary">MindSprint</p>
       </div>
 
-      {/* Right panel — form */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm rounded-2xl border border-[var(--color-border)] bg-white p-8 shadow-elevated dark:bg-[var(--color-surface)]">
-          {/* Mobile logo */}
           <div className="mb-8 flex items-center gap-2 lg:hidden">
             <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary-500">
               <Timer className="h-3.5 w-3.5 text-white" />
@@ -62,13 +58,18 @@ export function LoginPage() {
           </div>
 
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text-primary)]">Welcome back</h1>
-            <p className="mt-1.5 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
-              Log in to your study workspace
-            </p>
+            <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">Welcome back</h1>
+            <p className="mt-1.5 text-sm text-text-secondary">Log in to your study workspace</p>
           </div>
 
-          <form onSubmit={handleSubmit((v) => login(v))} className="space-y-4" noValidate>
+          <form
+            onSubmit={handleSubmit((values) => {
+              setUnverifiedEmail(null);
+              login(values);
+            })}
+            className="space-y-4"
+            noValidate
+          >
             <Input
               id="login-email"
               type="email"
@@ -82,23 +83,43 @@ export function LoginPage() {
               id="login-password"
               type="password"
               label="Password"
-              placeholder="••••••••"
+              placeholder="Your password"
               autoComplete="current-password"
               error={errors.password?.message}
               {...register('password')}
             />
-
-            <Button type="submit" className="w-full" isLoading={isPending}>
-              Log in
-            </Button>
+            <div className="flex justify-end">
+              <Link to={paths.forgotPassword} className="text-sm font-medium text-primary-600 hover:text-primary-700">
+                Forgot password?
+              </Link>
+            </div>
+            <Button type="submit" className="w-full" isLoading={isPending}>Log in</Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
-            Don't have an account?{' '}
-            <Link
-              to={paths.signup}
-              className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-            >
+          {unverifiedEmail ? (
+            <div className="mt-5 rounded-xl border border-warning-200 bg-warning-50 p-4 dark:border-warning-900 dark:bg-warning-950" role="alert">
+              <div className="flex gap-3">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-warning-700 dark:text-warning-300" aria-hidden="true" />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-warning-800 dark:text-warning-200">
+                    Please verify your email before logging in.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={resend}
+                    disabled={isResending}
+                    className="mt-2 text-sm font-medium text-primary-700 hover:text-primary-800 disabled:cursor-not-allowed disabled:opacity-60 dark:text-primary-300"
+                  >
+                    {isResending ? 'Sending verification email...' : 'Resend verification email'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <p className="mt-6 text-center text-sm text-text-secondary">
+            Do not have an account?{' '}
+            <Link to={paths.signup} className="font-medium text-primary-600 hover:text-primary-700">
               Sign up
             </Link>
           </p>
