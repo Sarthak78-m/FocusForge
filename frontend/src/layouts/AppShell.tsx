@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { Sidebar } from '@/layouts/Sidebar';
 import { Topbar } from '@/layouts/Topbar';
 import { ChatProvider } from '@/components/chat/ChatProvider';
 import { ChatNavigationListener } from '@/components/chat/ChatNavigationListener';
@@ -16,21 +15,28 @@ export function AppShell({ children }: AppShellProps) {
     <ErrorBoundary componentName="AppShell">
       <ChatProvider>
         <ChatNavigationListener />
-        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
-          <Sidebar />
-          <div className="min-h-screen lg:pl-64">
-            <Topbar />
-            <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-              {children}
-            </main>
-          </div>
 
-          {/* Floating AI Coach — wrapped so a chat crash can't break the page */}
-          <ErrorBoundary componentName="ChatWidget">
-            <FloatingButton />
-            <ChatWindow />
-          </ErrorBoundary>
+        {/* Full-page wrapper */}
+        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
+
+          {/* Top navigation bar — replaces sidebar */}
+          <Topbar />
+
+          {/* Page content */}
+          <main
+            className="mx-auto w-full max-w-content px-6 py-8"
+            /* Extra bottom padding on mobile so content clears the fixed bottom tab bar */
+            style={{ paddingBottom: 'max(2rem, calc(env(safe-area-inset-bottom) + 4.5rem))' }}
+          >
+            {children}
+          </main>
         </div>
+
+        {/* Floating AI Coach — isolated so a crash can't break the page */}
+        <ErrorBoundary componentName="ChatWidget">
+          <FloatingButton />
+          <ChatWindow />
+        </ErrorBoundary>
       </ChatProvider>
     </ErrorBoundary>
   );

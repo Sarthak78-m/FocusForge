@@ -7,105 +7,123 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
+
       colors: {
-        /* ───────── Primary — Coral (#EC6530) ───────── */
+        /* ── Primary — Coral ── */
         primary: {
-          50:  '#FEF3EE',
-          100: '#FDE4D6',
-          200: '#FACAAD',
-          300: '#F6A579',
-          400: '#F17B45',
-          500: '#EC6530',
-          600: '#DD4A19',
-          700: '#B83816',
-          800: '#932F19',
-          900: '#7A2918',
-          950: '#42120A',
+          DEFAULT: '#EC6530',
+          hover:   '#DD4A19',
+          light:   '#FEF3EE',
+          subtle:  '#FACAAD',
+          50:      '#FEF3EE',
+          100:     '#FDE4D6',
+          200:     '#FACAAD',
+          300:     '#F6A579',
+          400:     '#F17B45',
+          500:     '#EC6530',
+          600:     '#DD4A19',
+          700:     '#B83816',
+          800:     '#932F19',
+          900:     '#7A2918',
+          950:     '#42120A',
         },
 
-        /* ───────── Secondary — Peach (#FFAE6E) ───────── */
+        /* ── Secondary — Electric Blue ── */
         secondary: {
-          50:  '#FFF7ED',
-          100: '#FFECD4',
-          200: '#FFD5A8',
-          300: '#FFC18A',
-          400: '#FFAE6E',
-          500: '#F08830',
-          600: '#D96D17',
-          700: '#B55114',
-          800: '#904117',
-          900: '#773816',
-          950: '#401A09',
+          DEFAULT: '#3478F6',
+          light:   '#EBF2FE',
+          50:      '#EBF2FE',
+          100:     '#D6E5FD',
+          200:     '#ADCBFB',
+          300:     '#84B0F9',
+          400:     '#5B96F7',
+          500:     '#3478F6',
+          600:     '#1A60E4',
+          700:     '#154CC0',
+          800:     '#113B96',
+          900:     '#0D2D72',
+          950:     '#081A45',
         },
 
-        /* ───────── Accent — Teal (#8FDDDF) ───────── */
+        /* ── Accent — Teal ── */
         accent: {
-          50:  '#F0FAFB',
-          100: '#D0F1F3',
-          200: '#A6E4E7',
-          300: '#8FDDDF',
-          400: '#48C3C9',
-          500: '#2DA7AE',
-          600: '#298793',
-          700: '#276D78',
-          800: '#265A63',
-          900: '#234C54',
-          950: '#123236',
+          DEFAULT: '#30D5C8',
+          light:   '#E6FAF8',
+          50:      '#E6FAF8',
+          100:     '#C2F3EF',
+          200:     '#87E8E1',
+          300:     '#30D5C8',
+          400:     '#1CBFB3',
+          500:     '#17A89D',
+          600:     '#138880',
+          700:     '#106B65',
+          800:     '#0D514D',
+          900:     '#0A3C39',
+          950:     '#052423',
         },
 
-        /* ───────── Semantic surfaces ───────── */
-        surface:    '#FFFFFF',
-        background: '#FFE3E3',
-
-        /* ───────── Text tokens ───────── */
-        'text-primary':   '#2D2D2D',
-        'text-secondary': '#666666',
-
-        /* ───────── Border token ───────── */
-        border: '#E8D5D5',
-
-        /* ───────── Semantic status ───────── */
-        success: {
-          50:  '#F0FDF4',
-          100: '#DCFCE7',
-          200: '#BBF7D0',
-          300: '#86EFAC',
-          400: '#4ADE80',
-          500: '#22C55E',
-          600: '#16A34A',
-          700: '#15803D',
-          800: '#166534',
-          900: '#14532D',
-          950: '#052E16',
-        },
+        /* ── Warning — Amber ── */
         warning: {
-          50:  '#FFFBEB',
-          100: '#FEF3C7',
-          200: '#FDE68A',
-          300: '#FCD34D',
-          400: '#FBBF24',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
-          950: '#451A03',
-        },
-        error: {
-          50:  '#FEF2F2',
-          100: '#FEE2E2',
-          200: '#FECACA',
-          300: '#FCA5A5',
-          400: '#F87171',
-          500: '#EF4444',
-          600: '#DC2626',
-          700: '#B91C1C',
-          800: '#991B1B',
-          900: '#7F1D1D',
-          950: '#450A0A',
+          DEFAULT: '#FF9F0A',
+          light:   '#FFF8E6',
+          50:      '#FFF8E6',
+          100:     '#FFEFC0',
+          200:     '#FFE08A',
+          300:     '#FFCF4D',
+          400:     '#FFB929',
+          500:     '#FF9F0A',
+          600:     '#E07F00',
+          700:     '#B86300',
+          800:     '#904C00',
+          900:     '#703B00',
+          950:     '#3D1E00',
         },
 
-        /* ───────── Legacy compat (keeps old `brand-*` refs working) ───────── */
+        /* ── Danger — Pink-Red ── */
+        danger: {
+          DEFAULT: '#FF375F',
+          light:   '#FFEBEF',
+          50:      '#FFEBEF',
+          100:     '#FFD0DA',
+          200:     '#FFA8BB',
+          300:     '#FF7597',
+          400:     '#FF5278',
+          500:     '#FF375F',
+          600:     '#E0193F',
+          700:     '#B81432',
+          800:     '#900F27',
+          900:     '#700B1E',
+          950:     '#3D0510',
+        },
+
+        /* ── Success — Green ── */
+        success: {
+          DEFAULT: '#34C759',
+          light:   '#EDFBF1',
+          50:      '#EDFBF1',
+          100:     '#D4F5DF',
+          200:     '#A8EAC0',
+          300:     '#6DDA97',
+          400:     '#3FCB72',
+          500:     '#34C759',
+          600:     '#25A845',
+          700:     '#1D8436',
+          800:     '#176429',
+          900:     '#114D1F',
+          950:     '#082B11',
+        },
+
+        /* ── Surface tokens (CSS-var-backed aliases for Tailwind classes) ── */
+        surface:     'var(--color-surface)',
+        background:  'var(--color-background)',
+        border:      'var(--color-border)',
+
+        /* ── Text tokens ── */
+        'text-primary':   'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-tertiary':  'var(--color-text-tertiary)',
+
+        /* ── Legacy compat — keeps old `brand-*` refs working ── */
         brand: {
           50:  '#FEF3EE',
           100: '#FDE4D6',
@@ -121,16 +139,36 @@ export default {
       },
 
       boxShadow: {
-        soft:          '0 1px 3px 0 rgba(236, 101, 48, 0.06), 0 1px 2px -1px rgba(236, 101, 48, 0.06)',
-        elevated:      '0 4px 24px -4px rgba(236, 101, 48, 0.10), 0 2px 8px -2px rgba(0, 0, 0, 0.04)',
+        card:         '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)',
+        'card-hover': '0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)',
+        elevated:     '0 8px 30px rgba(0,0,0,0.12)',
+        nav:          '0 1px 3px rgba(0,0,0,0.06)',
+        /* legacy */
+        soft:         '0 1px 3px 0 rgba(0,0,0,0.04), 0 1px 2px -1px rgba(0,0,0,0.06)',
         'glow-primary': '0 0 20px rgba(236, 101, 48, 0.20)',
-        'glow-accent':  '0 0 20px rgba(143, 221, 223, 0.25)',
+        'glow-accent':  '0 0 20px rgba(48, 213, 200, 0.25)',
+        'glow-secondary': '0 0 20px rgba(52, 120, 246, 0.25)',
       },
 
       borderRadius: {
-        '2xl': '16px',
-        xl:    '12px',
-        lg:    '10px',
+        sm:   '8px',
+        md:   '12px',
+        lg:   '16px',
+        xl:   '20px',
+        '2xl':'24px',
+        full: '9999px',
+      },
+
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
+
+      transitionDuration: {
+        fast:   '150ms',
+        normal: '200ms',
+        smooth: '300ms',
+        spring: '400ms',
       },
 
       keyframes: {
@@ -139,18 +177,44 @@ export default {
           to:   { opacity: '1' },
         },
         'slide-up': {
-          from: { opacity: '0', transform: 'translateY(12px)' },
+          from: { opacity: '0', transform: 'translateY(16px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
+        'slide-down': {
+          from: { opacity: '0', transform: 'translateY(-12px)' },
           to:   { opacity: '1', transform: 'translateY(0)' },
         },
         'scale-in': {
           from: { opacity: '0', transform: 'scale(0.95)' },
           to:   { opacity: '1', transform: 'scale(1)' },
         },
+        'scale-spring': {
+          '0%':   { opacity: '0', transform: 'scale(0.88)' },
+          '60%':  { opacity: '1', transform: 'scale(1.04)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'pulse-ring': {
+          '0%':   { transform: 'scale(1)',    opacity: '0.8' },
+          '100%': { transform: 'scale(1.35)', opacity: '0' },
+        },
       },
+
       animation: {
-        'fade-in':  'fade-in 0.3s ease-out',
-        'slide-up': 'slide-up 0.4s ease-out',
-        'scale-in': 'scale-in 0.2s ease-out',
+        'fade-in':     'fade-in 0.3s ease-out both',
+        'slide-up':    'slide-up 0.4s ease-out both',
+        'slide-down':  'slide-down 0.3s ease-out both',
+        'scale-in':    'scale-in 0.2s ease-out both',
+        'scale-spring':'scale-spring 0.4s cubic-bezier(0.34,1.56,0.64,1) both',
+        'pulse-ring':  'pulse-ring 1.4s cubic-bezier(0.4,0,0.6,1) infinite',
+      },
+
+      spacing: {
+        18: '4.5rem',
+        22: '5.5rem',
+      },
+
+      maxWidth: {
+        'content': '1280px',
       },
     },
   },
