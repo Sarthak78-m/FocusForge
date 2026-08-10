@@ -80,7 +80,7 @@ public class AuthService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public AuthenticationResponse login(AuthenticationRequest request, String clientAddress) {
         String email = emailAddressValidationService.normalize(request.getEmail());
         String rateLimitKey = email + ":" + clientAddress;
@@ -100,7 +100,15 @@ public class AuthService {
 
         authRateLimiter.resetLoginFailures(rateLimitKey);
         if (!user.isEmailVerified()) {
-            throw new EmailNotVerifiedException("Please verify your email before logging in.");
+            // Accounts created before email verification was introduced have no verification token.
+            // Preserve access for those already-authenticated legacy accounts without weakening
+            // verification for newly registered users, which always receive a token.
+            if (!emailVerificationTokenRepository.existsByUser(user)) {
+                user.setEmailVerified(true);
+                userRepository.save(user);
+            } else {
+                throw new EmailNotVerifiedException("Please verify your email before logging in.");
+            }
         }
 
         return AuthenticationResponse.builder()
@@ -157,6 +165,7 @@ public class AuthService {
         }
 
         token.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
+        token.getUser().setEmailVerified(true);
         token.setUsedAt(LocalDateTime.now());
     }
 

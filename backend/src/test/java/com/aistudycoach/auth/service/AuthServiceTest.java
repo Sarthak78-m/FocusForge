@@ -124,11 +124,33 @@ class AuthServiceTest {
 
         when(emailAddressValidationService.normalize(request.getEmail())).thenReturn("user@example.com");
         when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(emailVerificationTokenRepository.existsByUser(user)).thenReturn(true);
 
         assertThatThrownBy(() -> authService.login(request, "127.0.0.1"))
                 .isInstanceOf(EmailNotVerifiedException.class)
                 .hasMessage("Please verify your email before logging in.");
         verify(jwtService, never()).generateToken(any(User.class));
+    }
+
+    @Test
+    void legacyUserWithoutVerificationTokenIsMarkedVerifiedAfterValidLogin() {
+        AuthenticationRequest request = AuthenticationRequest.builder()
+                .email("legacy@example.com")
+                .password("Password123")
+                .build();
+        User user = User.builder().id(1L).name("Legacy User").email("legacy@example.com")
+                .password("encoded-password").role(Role.USER).emailVerified(false).build();
+
+        when(emailAddressValidationService.normalize(request.getEmail())).thenReturn("legacy@example.com");
+        when(userRepository.findByEmail("legacy@example.com")).thenReturn(Optional.of(user));
+        when(emailVerificationTokenRepository.existsByUser(user)).thenReturn(false);
+        when(jwtService.generateToken(user)).thenReturn("jwt-token");
+
+        AuthenticationResponse response = authService.login(request, "127.0.0.1");
+
+        assertThat(response.getToken()).isEqualTo("jwt-token");
+        assertThat(user.isEmailVerified()).isTrue();
+        verify(userRepository).save(user);
     }
 
     @Test

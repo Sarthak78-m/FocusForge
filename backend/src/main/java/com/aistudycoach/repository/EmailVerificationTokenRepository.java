@@ -13,6 +13,8 @@ public interface EmailVerificationTokenRepository extends JpaRepository<EmailVer
 
     Optional<EmailVerificationToken> findByTokenHashAndUsedAtIsNull(String tokenHash);
 
+    boolean existsByUser(User user);
+
     @Modifying
     @Query("""
             update EmailVerificationToken token

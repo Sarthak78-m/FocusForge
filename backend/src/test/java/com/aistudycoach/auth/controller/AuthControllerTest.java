@@ -172,7 +172,12 @@ class AuthControllerTest {
 
     @Test
     void unverifiedUserCannotLogIn() throws Exception {
-        createUser("unverified.login@example.com", "Password123", false);
+        User user = createUser("unverified.login@example.com", "Password123", false);
+        emailVerificationTokenRepository.save(EmailVerificationToken.builder()
+                .user(user)
+                .tokenHash(secureTokenService.hash(secureTokenService.generateToken()))
+                .expiresAt(LocalDateTime.now().plusMinutes(30))
+                .build());
 
         mockMvc.perform(loginRequest("unverified.login@example.com", "Password123"))
                 .andExpect(status().isForbidden())
@@ -234,6 +239,36 @@ class AuthControllerTest {
         assertThat(passwordResetTokenRepository.findAll()).singleElement()
                 .extracting(PasswordResetToken::getUsedAt)
                 .isNotNull();
+    }
+
+    @Test
+    void unverifiedUserCanResetPasswordWithoutVerifyingEmailFirst() throws Exception {
+        User user = createUser("unverified.reset@example.com", "Password123", false);
+
+        mockMvc.perform(post("/api/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"unverified.reset@example.com\"}"))
+                .andExpect(status().isOk());
+
+        ArgumentCaptor<String> tokenCaptor = ArgumentCaptor.forClass(String.class);
+        verify(emailService).sendPasswordResetEmail(any(User.class), tokenCaptor.capture());
+
+        mockMvc.perform(post("/api/auth/reset-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "token": "%s",
+                                  "password": "ResetPassword123",
+                                  "confirmPassword": "ResetPassword123"
+                                }
+                                """.formatted(tokenCaptor.getValue())))
+                .andExpect(status().isOk());
+
+        assertThat(passwordEncoder.matches(
+                "ResetPassword123",
+                userRepository.findById(user.getId()).orElseThrow().getPassword()
+        )).isTrue();
+        assertThat(userRepository.findById(user.getId()).orElseThrow().isEmailVerified()).isTrue();
     }
 
     @Test

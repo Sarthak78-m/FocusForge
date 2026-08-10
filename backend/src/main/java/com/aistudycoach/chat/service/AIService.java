@@ -72,10 +72,11 @@ public class AIService {
     }
 
     private String callGemini(String prompt) throws Exception {
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + geminiApiKey.trim();
+        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-goog-api-key", geminiApiKey.trim());
 
         // Build Gemini payload structure
         Map<String, Object> textPart = new HashMap<>();
