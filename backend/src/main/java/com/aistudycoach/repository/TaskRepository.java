@@ -19,6 +19,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     long countByUserIdAndStatus(Long userId, TaskStatus status);
 
+    java.util.List<Task> findByDueDateLessThanEqualAndReminderSentFalseAndStatusNot(
+            LocalDate dueDate,
+            TaskStatus status
+    );
+
     @Query("""
             select t from Task t
             where t.user.id = :userId
