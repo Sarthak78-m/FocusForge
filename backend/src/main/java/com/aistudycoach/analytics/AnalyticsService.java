@@ -26,8 +26,8 @@ public class AnalyticsService {
         User user = userRepository.findByEmail(authentication.getName().toLowerCase())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        int totalTasks = (int) taskRepository.countByUser(user);
-        int completedTasks = (int) taskRepository.countByUserAndStatus(user, TaskStatus.DONE);
+        int totalTasks = (int) taskRepository.countByUserId(user.getId());
+        int completedTasks = (int) taskRepository.countByUserIdAndStatus(user.getId(), TaskStatus.COMPLETED);
 
         List<DailyFocusMetric> weeklyDistribution = List.of(
                 DailyFocusMetric.builder().day("Mon").hours(2.5).build(),
