@@ -134,6 +134,7 @@ public class AuthService {
 
         token.setUsedAt(LocalDateTime.now());
         token.getUser().setEmailVerified(true);
+        emailService.sendWelcomeEmail(token.getUser());
     }
 
     @Transactional
@@ -173,6 +174,7 @@ public class AuthService {
         token.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
         token.getUser().setEmailVerified(true);
         token.setUsedAt(LocalDateTime.now());
+        emailService.sendPasswordChangedNotification(token.getUser());
     }
 
     @Transactional(readOnly = true)
