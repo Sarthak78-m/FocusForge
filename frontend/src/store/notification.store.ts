@@ -7,6 +7,7 @@ export type Notification = {
   title: string;
   message?: string;
   tone: NotificationTone;
+  durationMs?: number;
 };
 
 type NotificationState = {
@@ -16,21 +17,31 @@ type NotificationState = {
   clear: () => void;
 };
 
-export const useNotificationStore = create<NotificationState>((set) => ({
+export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: [],
-  notify: (notification) =>
+  notify: (notification) => {
+    const id = crypto.randomUUID();
+    const duration = notification.durationMs ?? 3000; // Auto dismiss after 3s default
+
     set((state) => ({
       notifications: [
         ...state.notifications,
         {
-          id: crypto.randomUUID(),
+          id,
           ...notification,
         },
       ],
-    })),
+    }));
+
+    if (duration > 0) {
+      setTimeout(() => {
+        get().dismiss(id);
+      }, duration);
+    }
+  },
   dismiss: (id) =>
     set((state) => ({
-      notifications: state.notifications.filter((notification) => notification.id !== id),
+      notifications: state.notifications.filter((n) => n.id !== id),
     })),
   clear: () => set({ notifications: [] }),
 }));

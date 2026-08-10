@@ -282,10 +282,12 @@ function TaskListCard() {
   );
 }
 
-function StreakCard() {
+function StreakCard({ tasks = [] }: { tasks?: Task[] }) {
   const { activePalette } = useTheme();
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const activeDays = [true, true, true, true, true, false, true];
+  const completedCount = tasks.filter((t) => t.status === 'COMPLETED').length;
+  const streakDays = completedCount > 0 ? Math.min(7, Math.max(1, completedCount)) : 0;
+  const activeDays = days.map((_, idx) => idx < streakDays);
 
   return (
     <div
@@ -299,13 +301,15 @@ function StreakCard() {
             <p className="text-xs font-bold uppercase tracking-wider text-white/90">Study Streak</p>
           </div>
           <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-md">
-            🔥 On Fire!
+            {streakDays > 0 ? '🔥 On Fire!' : '🌱 Start Today'}
           </span>
         </div>
 
         <div>
-          <p className="text-4xl font-extrabold text-white">7 Days</p>
-          <p className="mt-0.5 text-xs text-white/80">Active daily learning momentum</p>
+          <p className="text-4xl font-extrabold text-white">{streakDays} {streakDays === 1 ? 'Day' : 'Days'}</p>
+          <p className="mt-0.5 text-xs text-white/80">
+            {streakDays > 0 ? 'Active daily learning momentum' : 'Complete tasks to build your streak!'}
+          </p>
         </div>
 
         {/* 7-day visual tracker */}
@@ -330,14 +334,33 @@ function StreakCard() {
   );
 }
 
-function SubjectDistributionCard() {
+function SubjectDistributionCard({ tasks = [] }: { tasks?: Task[] }) {
   const { activePalette } = useTheme();
-  const subjects = [
-    { name: 'Computer Science', hours: 4.5, pct: 45, color: '#4F46E5' },
-    { name: 'Mathematics', hours: 2.5, pct: 25, color: '#0EA5E9' },
-    { name: 'Physics & Eng', hours: 2.0, pct: 20, color: '#10B981' },
-    { name: 'General Revision', hours: 1.0, pct: 10, color: '#F59E0B' },
-  ];
+
+  const subjectMap: Record<string, number> = {};
+  tasks.forEach((t) => {
+    let subject = 'General Revision';
+    const lower = t.title.toLowerCase();
+    if (lower.includes('cs') || lower.includes('code') || lower.includes('dev') || lower.includes('computer')) {
+      subject = 'Computer Science';
+    } else if (lower.includes('math') || lower.includes('calc') || lower.includes('algebra')) {
+      subject = 'Mathematics';
+    } else if (lower.includes('phys') || lower.includes('eng') || lower.includes('lab')) {
+      subject = 'Physics & Eng';
+    }
+    subjectMap[subject] = (subjectMap[subject] || 0) + 1;
+  });
+
+  const totalCount = Object.values(subjectMap).reduce((a, b) => a + b, 0);
+
+  const colors = ['#4F46E5', '#0EA5E9', '#10B981', '#F59E0B', '#EC4899'];
+  const subjects = Object.entries(subjectMap).map(([name, count], index) => ({
+    name,
+    count,
+    hours: (count * 1.5).toFixed(1),
+    pct: totalCount > 0 ? Math.round((count / totalCount) * 100) : 0,
+    color: colors[index % colors.length],
+  }));
 
   return (
     <div className="bento-card flex flex-col gap-4 p-5">
@@ -346,36 +369,40 @@ function SubjectDistributionCard() {
           <TrendingUp className="h-4 w-4 text-[var(--color-primary)]" />
           <p className="text-sm font-bold text-slate-900 dark:text-white">Subject Time Breakdown</p>
         </div>
-        <span className="text-xs font-semibold text-slate-500">10.0 hrs total</span>
+        <span className="text-xs font-semibold text-slate-500">
+          {totalCount > 0 ? `${(totalCount * 1.5).toFixed(1)} hrs total` : '0.0 hrs total'}
+        </span>
       </div>
 
-      <div className="space-y-3">
-        {subjects.map((s) => (
-          <div key={s.name} className="space-y-1">
-            <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-700 dark:text-slate-300">{s.name}</span>
-              <span className="text-slate-500">{s.hours}h ({s.pct}%)</span>
+      {subjects.length === 0 ? (
+        <div className="py-6 text-center text-xs font-medium text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50">
+          No tasks logged yet. Add your study tasks above to view subject breakdown!
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {subjects.map((s) => (
+            <div key={s.name} className="space-y-1">
+              <div className="flex justify-between text-xs font-semibold">
+                <span className="text-slate-700 dark:text-slate-300">{s.name}</span>
+                <span className="text-slate-500">{s.hours}h ({s.pct}%)</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${s.pct}%`, background: s.color }}
+                />
+              </div>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{ width: `${s.pct}%`, background: s.color }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function QuickStatsCard() {
-  const { data: tasksData } = useTasks({ size: 100 });
-  const tasks = tasksData?.content ?? [];
-
-  const completedToday = tasks.filter(
-    (t) => t.status === 'COMPLETED' && t.completedAt?.startsWith(new Date().toISOString().slice(0, 10)),
-  ).length;
+function DailyTargetCard({ tasks = [] }: { tasks?: Task[] }) {
+  const completedToday = tasks.filter((t) => t.status === 'COMPLETED').length;
+  const focusHours = (completedToday * 0.5).toFixed(1) + 'h';
 
   return (
     <div className="bento-card flex flex-col gap-4 p-5">
@@ -398,7 +425,7 @@ function QuickStatsCard() {
 
         <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3.5 dark:border-slate-800 dark:bg-slate-950">
           <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
-            3.5h
+            {focusHours}
           </p>
           <p className="mt-0.5 text-xs font-semibold text-slate-500">
             Focus Time Done
@@ -508,7 +535,7 @@ export function DashboardPage() {
           icon={Clock}
           color="#0EA5E9"
         />
-        <StreakCard />
+        <StreakCard tasks={tasks} />
       </motion.div>
 
       {/* ── Bento Grid Row 2: Main Workspace Content ── */}
@@ -521,13 +548,13 @@ export function DashboardPage() {
         {/* Left 2 Columns: Today's Tasks */}
         <div className="lg:col-span-2 space-y-5">
           <TaskListCard />
-          <SubjectDistributionCard />
+          <SubjectDistributionCard tasks={tasks} />
         </div>
 
         {/* Right Column: Pomodoro + Stats + Actions */}
         <div className="space-y-5">
           <PomodoroCard />
-          <QuickStatsCard />
+          <DailyTargetCard tasks={tasks} />
           <QuickLinksCard />
         </div>
       </motion.div>
