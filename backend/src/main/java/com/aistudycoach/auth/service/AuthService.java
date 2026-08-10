@@ -6,6 +6,7 @@ import com.aistudycoach.auth.dto.EmailRequest;
 import com.aistudycoach.auth.dto.RegistrationResponse;
 import com.aistudycoach.auth.dto.RegisterRequest;
 import com.aistudycoach.auth.dto.ResetPasswordRequest;
+import com.aistudycoach.auth.dto.UpdatePhoneRequest;
 import com.aistudycoach.auth.dto.UserResponse;
 import com.aistudycoach.auth.token.EmailVerificationToken;
 import com.aistudycoach.auth.token.PasswordResetToken;
