@@ -1,15 +1,15 @@
-FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn package -DskipTests -B
+RUN mvn clean package -DskipTests -B
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup --system spring && adduser --system spring --ingroup spring
 USER spring:spring
 
 COPY --from=build /app/target/ai-study-coach-*.jar app.jar
