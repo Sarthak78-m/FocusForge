@@ -1,6 +1,7 @@
 package com.aistudycoach.task;
 
 import com.aistudycoach.auth.service.EmailService;
+import com.aistudycoach.auth.service.SmsService;
 import com.aistudycoach.repository.TaskRepository;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,7 @@ public class TaskDeadlineReminderScheduler {
 
     private final TaskRepository taskRepository;
     private final EmailService emailService;
+    private final SmsService smsService;
 
     // Run every 5 minutes (300,000 ms)
     @Scheduled(fixedRate = 300000)
@@ -34,13 +36,22 @@ public class TaskDeadlineReminderScheduler {
         for (Task task : upcomingTasks) {
             try {
                 if (task.getUser() != null) {
+                    String dueDateStr = task.getDueDate() != null ? task.getDueDate().toString() : "Today";
+                    
                     emailService.sendTaskDeadlineReminderEmail(
                             task.getUser(),
                             task.getTitle(),
-                            task.getDueDate() != null ? task.getDueDate().toString() : "Today"
+                            dueDateStr
                     );
+
+                    smsService.sendTaskDeadlineSms(
+                            task.getUser(),
+                            task.getTitle(),
+                            dueDateStr
+                    );
+
                     task.setReminderSent(true);
-                    log.info("Sent 1-hour deadline reminder for task '{}' (ID: {}) to {}",
+                    log.info("Sent 1-hour deadline Email/SMS reminders for task '{}' (ID: {}) to {}",
                             task.getTitle(), task.getId(), task.getUser().getEmail());
                 }
             } catch (Exception ex) {
