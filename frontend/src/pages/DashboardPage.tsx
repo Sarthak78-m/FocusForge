@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth.store';
 import { useTasks, useCreateTask, useCompleteTask } from '@/hooks/useTasks';
 import { usePomodoro } from '@/hooks/usePomodoro';
+import { useTheme } from '@/hooks/useTheme';
 import { paths } from '@/routes/paths';
 import { cn } from '@/utils/cn';
 import type { Task, TaskStatus } from '@/types/task';
