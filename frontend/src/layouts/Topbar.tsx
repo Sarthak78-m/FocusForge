@@ -16,6 +16,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/hooks/useTheme';
 import { useAuthStore } from '@/store/auth.store';
+import { usePomodoro } from '@/hooks/usePomodoro';
 import { paths } from '@/routes/paths';
 import { cn } from '@/utils/cn';
 import { ThemeCustomizer } from '@/components/common/ThemeCustomizer';
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
 export function Topbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { mode, toggleMode } = useTheme();
+  const { isRunning, display } = usePomodoro();
   const user  = useAuthStore((s) => s.user);
   const clearSession = useAuthStore((s) => s.clearSession);
   const navigate = useNavigate();
@@ -112,7 +114,18 @@ export function Topbar() {
           </nav>
 
           {/* ── Right: Actions ── */}
-          <div className="flex flex-none items-center gap-1">
+          <div className="flex flex-none items-center gap-1.5">
+            {isRunning && (
+              <NavLink
+                to={paths.pomodoro}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white bg-indigo-600 animate-pulse shadow-md hover:scale-105 transition-all"
+                title="Active Pomodoro Focus Sprint"
+              >
+                <Timer className="h-3.5 w-3.5" />
+                <span>{display}</span>
+              </NavLink>
+            )}
+
             {/* Search */}
             <button
               type="button"
