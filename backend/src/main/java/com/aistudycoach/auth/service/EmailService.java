@@ -2,15 +2,15 @@ package com.aistudycoach.auth.service;
 
 import com.aistudycoach.exception.EmailDeliveryException;
 import com.aistudycoach.user.User;
+import jakarta.mail.internet.MimeMessage;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -28,47 +28,108 @@ public class EmailService {
     @Value("${app.email.from:${EMAIL_FROM:}}")
     private String emailFrom;
 
+    @Value("${spring.mail.username:}")
+    private String mailUsername;
+
     public void sendVerificationEmail(User user, String rawToken) {
         String verificationUrl = buildUrl("/verify-email?token=" + rawToken);
-        String text = "Verify your MindSprint email address by opening this link:\n\n"
-                + verificationUrl
-                + "\n\nThis link expires soon. If you did not create an account, you can ignore this email.";
-        send(user.getEmail(), "Verify your MindSprint email", text, verificationUrl);
+        String subject = "Verify your MindSprint Account";
+        String htmlBody = """
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0;">
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <h2 style="color: #4f46e5; margin: 0; font-size: 24px; font-weight: 800;">MindSprint</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-top: 4px;">AI Study Coach & Productivity Studio</p>
+                    </div>
+                    <div style="padding: 24px; background-color: #f8fafc; border-radius: 12px; margin-bottom: 24px;">
+                        <h3 style="color: #0f172a; margin-top: 0; font-size: 18px;">Welcome, %s! 👋</h3>
+                        <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+                            Thank you for joining MindSprint. Please click the button below to verify your email address and activate your study workspace.
+                        </p>
+                        <div style="text-align: center; margin: 28px 0;">
+                            <a href="%s" style="background: linear-gradient(135deg, #4f46e5 0%%, #7c3aed 100%%); color: #ffffff; padding: 14px 28px; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 9999px; display: inline-block; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+                                Verify Email Address
+                            </a>
+                        </div>
+                        <p style="color: #64748b; font-size: 12px; margin-bottom: 0;">
+                            If you did not request this, you can safely ignore this email.
+                        </p>
+                    </div>
+                    <div style="text-align: center; font-size: 12px; color: #94a3b8;">
+                        © 2026 MindSprint AI Study Coach
+                    </div>
+                </div>
+                """.formatted(user.getName(), verificationUrl);
+
+        send(user.getEmail(), subject, htmlBody, verificationUrl);
     }
 
     public void sendPasswordResetEmail(User user, String rawToken) {
         String resetUrl = buildUrl("/reset-password?token=" + rawToken);
-        String text = "Reset your MindSprint password by opening this link:\n\n"
-                + resetUrl
-                + "\n\nThis link expires soon. If you did not request a reset, you can ignore this email.";
-        send(user.getEmail(), "Reset your MindSprint password", text, resetUrl);
+        String subject = "Reset your MindSprint Password";
+        String htmlBody = """
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0;">
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <h2 style="color: #4f46e5; margin: 0; font-size: 24px; font-weight: 800;">MindSprint</h2>
+                        <p style="color: #64748b; font-size: 14px; margin-top: 4px;">AI Study Coach & Productivity Studio</p>
+                    </div>
+                    <div style="padding: 24px; background-color: #f8fafc; border-radius: 12px; margin-bottom: 24px;">
+                        <h3 style="color: #0f172a; margin-top: 0; font-size: 18px;">Password Reset Request</h3>
+                        <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+                            We received a request to reset your MindSprint password. Click the button below to choose a new password.
+                        </p>
+                        <div style="text-align: center; margin: 28px 0;">
+                            <a href="%s" style="background: linear-gradient(135deg, #4f46e5 0%%, #7c3aed 100%%); color: #ffffff; padding: 14px 28px; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 9999px; display: inline-block; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+                                Reset Password
+                            </a>
+                        </div>
+                        <p style="color: #64748b; font-size: 12px; margin-bottom: 0;">
+                            This reset link expires in 30 minutes. If you did not request a password reset, please ignore this email.
+                        </p>
+                    </div>
+                    <div style="text-align: center; font-size: 12px; color: #94a3b8;">
+                        © 2026 MindSprint AI Study Coach
+                    </div>
+                </div>
+                """.formatted(resetUrl);
+
+        send(user.getEmail(), subject, htmlBody, resetUrl);
     }
 
-    private void send(String recipient, String subject, String text, String developmentUrl) {
+    private void send(String recipient, String subject, String htmlBody, String developmentUrl) {
         JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
-        if (mailSender == null || !StringUtils.hasText(emailFrom)) {
-            if (isDevelopmentProfile()) {
-                log.info("Development email link for {}: {}", recipient, developmentUrl);
+        String from = StringUtils.hasText(emailFrom) ? emailFrom : mailUsername;
+
+        if (mailSender == null || !StringUtils.hasText(from)) {
+            if (isDevelopmentProfile() || !isEmailConfigured()) {
+                log.info("Development email link generated for {}: {}", recipient, developmentUrl);
                 return;
             }
             throw new EmailDeliveryException("Email delivery is not configured");
         }
 
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(emailFrom);
-            message.setTo(recipient);
-            message.setSubject(subject);
-            message.setText(text);
-            mailSender.send(message);
-        } catch (MailException ex) {
-            throw new EmailDeliveryException("Unable to send email", ex);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setFrom(from);
+            helper.setTo(recipient);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+            mailSender.send(mimeMessage);
+            log.info("Successfully sent email to {} with subject '{}'", recipient, subject);
+        } catch (Exception ex) {
+            log.error("Failed to send email to {}: {}", recipient, ex.getMessage(), ex);
+            if (isDevelopmentProfile()) {
+                log.info("Fallback development link for {}: {}", recipient, developmentUrl);
+                return;
+            }
+            throw new EmailDeliveryException("Unable to deliver email. Please verify your SMTP settings or check spam folder.", ex);
         }
     }
 
     public boolean isEmailConfigured() {
         JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
-        return mailSender != null && StringUtils.hasText(emailFrom);
+        String from = StringUtils.hasText(emailFrom) ? emailFrom : mailUsername;
+        return mailSender != null && StringUtils.hasText(from);
     }
 
     public boolean isDevelopmentProfile() {
