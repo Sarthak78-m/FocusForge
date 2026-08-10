@@ -63,6 +63,14 @@ public class User implements UserDetails {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean emailVerified = false;
 
+    @jakarta.persistence.Convert(converter = com.aistudycoach.config.PhoneCryptoConverter.class)
+    @Column(name = "phone_number", length = 255)
+    private String phoneNumber;
+
+    @Builder.Default
+    @Column(name = "phone_notifications_enabled", nullable = false, columnDefinition = "boolean default false")
+    private boolean phoneNotificationsEnabled = false;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

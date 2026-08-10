@@ -189,6 +189,22 @@ public class AuthService {
         return toUserResponse(user);
     }
 
+    @Transactional
+    public UserResponse updatePhone(Authentication authentication, UpdatePhoneRequest request) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new BadCredentialsException("Authentication is required");
+        }
+
+        User user = userRepository.findByEmail(authentication.getName().toLowerCase())
+                .orElseThrow(() -> new BadCredentialsException("Authentication is required"));
+
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setPhoneNotificationsEnabled(request.isPhoneNotificationsEnabled());
+        User saved = userRepository.save(user);
+
+        return toUserResponse(saved);
+    }
+
     private UserResponse toUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
@@ -196,6 +212,8 @@ public class AuthService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .emailVerified(user.isEmailVerified())
+                .maskedPhoneNumber(com.aistudycoach.config.PhoneCryptoConverter.maskPhoneNumber(user.getPhoneNumber()))
+                .phoneNotificationsEnabled(user.isPhoneNotificationsEnabled())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();

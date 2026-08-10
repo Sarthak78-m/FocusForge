@@ -22,6 +22,8 @@ public class UserResponse {
     private String email;
     private Role role;
     private boolean emailVerified;
+    private String maskedPhoneNumber;
+    private boolean phoneNotificationsEnabled;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

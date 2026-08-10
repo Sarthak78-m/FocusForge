@@ -6,6 +6,8 @@ export type CurrentUser = {
   email: string;
   role: UserRole;
   emailVerified: boolean;
+  maskedPhoneNumber?: string;
+  phoneNotificationsEnabled?: boolean;
   createdAt: string;
   updatedAt: string;
 };
