@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, LayoutGrid, List as ListIcon, Layers } from 'lucide-react';
 import { Button, ConfirmationDialog, Modal } from '@/components/common';
 import { TaskFilters, TaskForm, TaskList } from '@/components/tasks';
 import type { TaskFormValues } from '@/components/tasks';
@@ -10,10 +10,14 @@ import {
   useCompleteTask,
   useDeleteTask,
 } from '@/hooks/useTasks';
+import { useTheme } from '@/hooks/useTheme';
 import type { Task, TaskPriority, TaskStatus } from '@/types/task';
 
 export function TasksPage() {
-  // Filters
+  const { activePalette } = useTheme();
+
+  // Filters & Views
+  const [viewMode, setViewMode] = useState<'list' | 'kanban'>('list');
   const [status, setStatus] = useState<TaskStatus | ''>('');
   const [priority, setPriority] = useState<TaskPriority | ''>('');
   const [page, setPage] = useState(0);
@@ -93,21 +97,55 @@ export function TasksPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-[var(--color-text-primary)]">Tasks</h1>
-          <p className="mt-0.5 text-sm text-text-secondary dark:text-[var(--color-text-secondary)]">
-            {isLoading ? 'Loading…' : `${totalElements} task${totalElements !== 1 ? 's' : ''}`}
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Task Management Studio
+          </h1>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            {isLoading ? 'Loading workspace tasks…' : `${totalElements} total study task${totalElements !== 1 ? 's' : ''}`} · Inspired by ClickUp & Paymo
           </p>
         </div>
-        <Button
-          size="sm"
-          onClick={() => setIsCreateOpen(true)}
-          className="flex items-center gap-1.5 bg-primary-500 hover:bg-primary-600 text-white shadow-soft"
-        >
-          <Plus className="h-4 w-4" />
-          New task
-        </Button>
+
+        <div className="flex items-center gap-3">
+          {/* View Switcher Pills */}
+          <div className="flex items-center gap-1 rounded-full border border-slate-200/90 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                viewMode === 'list'
+                  ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400'
+              }`}
+            >
+              <ListIcon className="h-3.5 w-3.5" />
+              List View
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('kanban')}
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                viewMode === 'kanban'
+                  ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400'
+              }`}
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+              Kanban Board
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsCreateOpen(true)}
+            className="flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
+            style={{ background: activePalette.gradient }}
+          >
+            <Plus className="h-4 w-4" />
+            New Task
+          </button>
+        </div>
       </div>
 
       {/* Filters */}

@@ -39,22 +39,22 @@ export function LoginPage() {
     <div className="flex min-h-screen bg-[var(--color-background)]">
       <div className="hidden flex-col justify-between border-r border-[var(--color-border)] bg-white p-10 dark:bg-[var(--color-surface)] lg:flex lg:w-[420px]">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-500 shadow-sm">
-            <Timer className="h-4 w-4 text-white" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 shadow-md">
+            <Timer className="h-4.5 w-4.5 text-white" />
           </div>
-          <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
+          <span className="text-base font-bold text-[var(--color-text-primary)]">MindSprint</span>
         </div>
-        <p className="text-base leading-relaxed text-text-secondary">Return to the study plan you are building.</p>
-        <p className="text-xs text-text-secondary">MindSprint</p>
+        <p className="text-base leading-relaxed text-text-secondary">Return to your personalized study workspace and track your daily momentum.</p>
+        <p className="text-xs text-text-secondary">MindSprint AI Study Coach</p>
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm rounded-2xl border border-[var(--color-border)] bg-white p-8 shadow-elevated dark:bg-[var(--color-surface)]">
           <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary-500">
-              <Timer className="h-3.5 w-3.5 text-white" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-600 shadow-md">
+              <Timer className="h-4 w-4 text-white" />
             </div>
-            <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
+            <span className="text-base font-bold text-[var(--color-text-primary)]">MindSprint</span>
           </div>
 
           <div className="mb-8">

@@ -18,6 +18,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useAuthStore } from '@/store/auth.store';
 import { paths } from '@/routes/paths';
 import { cn } from '@/utils/cn';
+import { ThemeCustomizer } from '@/components/common/ThemeCustomizer';
 
 const NAV_ITEMS = [
   { label: 'Dashboard', path: paths.dashboard,  icon: LayoutDashboard, end: true },
@@ -54,7 +55,7 @@ export function Topbar() {
           <div className="flex flex-none items-center gap-2.5">
             <div
               className="flex h-9 w-9 items-center justify-center rounded-xl"
-              style={{ background: 'linear-gradient(135deg, #EC6530 0%, #FACAAD 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' }}
               aria-hidden="true"
             >
               <Timer className="h-4.5 w-4.5 text-white" style={{ width: '18px', height: '18px' }} />
@@ -121,18 +122,8 @@ export function Topbar() {
               <Search className="h-4 w-4" />
             </button>
 
-            {/* Theme toggle */}
-            <button
-              type="button"
-              aria-label="Toggle theme"
-              onClick={toggleMode}
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-secondary)] hover:text-[var(--color-text-primary)] transition-all duration-150"
-            >
-              {mode === 'dark'
-                ? <Sun  className="h-4 w-4" />
-                : <Moon className="h-4 w-4" />
-              }
-            </button>
+            {/* Theme customizer */}
+            <ThemeCustomizer />
 
             {/* Divider */}
             <div
@@ -145,7 +136,7 @@ export function Topbar() {
             <div className="hidden sm:flex items-center gap-2.5 mr-0.5">
               <div
                 className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-sm font-semibold text-white select-none"
-                style={{ background: 'linear-gradient(135deg, #EC6530 0%, #FACAAD 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' }}
                 aria-hidden="true"
               >
                 {userInitial}
@@ -226,7 +217,7 @@ export function Topbar() {
               <div className="mt-3 flex items-center gap-3 rounded-xl border border-[var(--color-border)] px-4 py-2.5">
                 <div
                   className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-sm font-semibold text-white"
-                  style={{ background: 'linear-gradient(135deg, #EC6530 0%, #FACAAD 100%)' }}
+                  style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' }}
                 >
                   {userInitial}
                 </div>

@@ -17,3 +17,4 @@ export * from './SearchBar';
 export * from './StatCard';
 export * from './Table';
 export * from './Toast';
+export * from './ThemeCustomizer';

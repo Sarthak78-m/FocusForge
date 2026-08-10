@@ -53,7 +53,11 @@ export function useLogin(options: LoginOptions = {}) {
       navigate(paths.dashboard, { replace: true });
     },
     onError: (error: AxiosError<ApiErrorPayload>, variables: LoginRequest) => {
-      const message = error.response?.data?.message ?? 'Invalid email or password';
+      const status = error.response?.status;
+      const message = error.response?.data?.message
+        ?? (status && status >= 500
+          ? 'Unable to reach the authentication server. Start the backend and try again.'
+          : 'Invalid email or password');
       if (error.response?.status === 403 && message === 'Please verify your email before logging in.') {
         options.onUnverified?.(variables.email);
       }

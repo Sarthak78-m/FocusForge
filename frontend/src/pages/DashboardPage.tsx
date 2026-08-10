@@ -282,33 +282,87 @@ function TaskListCard() {
 }
 
 function StreakCard() {
+  const { activePalette } = useTheme();
+  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const activeDays = [true, true, true, true, true, false, true];
+
   return (
     <div
-      className="bento-card relative overflow-hidden p-5"
-      style={{
-        background: 'linear-gradient(135deg, #FF9F0A 0%, #FFD060 100%)',
-      }}
+      className="bento-card relative overflow-hidden p-5 text-white shadow-lg transition-transform hover:scale-[1.02]"
+      style={{ background: activePalette.gradient }}
     >
-      {/* Decorative circles */}
-      <div
-        className="absolute -right-4 -top-4 h-24 w-24 rounded-full opacity-20"
-        style={{ background: '#FFFFFF' }}
-      />
-      <div
-        className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full opacity-10"
-        style={{ background: '#FFFFFF' }}
-      />
+      <div className="relative z-10 flex flex-col justify-between h-full gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Flame className="h-5 w-5 fill-white text-white animate-bounce" />
+            <p className="text-xs font-bold uppercase tracking-wider text-white/90">Study Streak</p>
+          </div>
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-md">
+            🔥 On Fire!
+          </span>
+        </div>
 
-      <div className="relative z-10 flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <Flame className="h-5 w-5 text-white" />
-          <p className="text-sm font-semibold text-white">Study Streak</p>
-        </div>
         <div>
-          <p className="text-4xl font-bold text-white">14</p>
-          <p className="mt-0.5 text-sm text-white/90">days in a row</p>
+          <p className="text-4xl font-extrabold text-white">7 Days</p>
+          <p className="mt-0.5 text-xs text-white/80">Active daily learning momentum</p>
         </div>
-        <p className="text-xs text-white/80">Keep it up! 🔥</p>
+
+        {/* 7-day visual tracker */}
+        <div className="flex items-center justify-between pt-2 border-t border-white/20">
+          {days.map((d, i) => (
+            <div key={i} className="flex flex-col items-center gap-1">
+              <span className="text-[10px] font-bold text-white/70">{d}</span>
+              <div
+                className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                  activeDays[i]
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'bg-white/10 text-white/40'
+                }`}
+              >
+                {activeDays[i] ? '✓' : ''}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SubjectDistributionCard() {
+  const { activePalette } = useTheme();
+  const subjects = [
+    { name: 'Computer Science', hours: 4.5, pct: 45, color: '#4F46E5' },
+    { name: 'Mathematics', hours: 2.5, pct: 25, color: '#0EA5E9' },
+    { name: 'Physics & Eng', hours: 2.0, pct: 20, color: '#10B981' },
+    { name: 'General Revision', hours: 1.0, pct: 10, color: '#F59E0B' },
+  ];
+
+  return (
+    <div className="bento-card flex flex-col gap-4 p-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-[var(--color-primary)]" />
+          <p className="text-sm font-bold text-slate-900 dark:text-white">Subject Time Breakdown</p>
+        </div>
+        <span className="text-xs font-semibold text-slate-500">10.0 hrs total</span>
+      </div>
+
+      <div className="space-y-3">
+        {subjects.map((s) => (
+          <div key={s.name} className="space-y-1">
+            <div className="flex justify-between text-xs font-semibold">
+              <span className="text-slate-700 dark:text-slate-300">{s.name}</span>
+              <span className="text-slate-500">{s.hours}h ({s.pct}%)</span>
+            </div>
+            <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{ width: `${s.pct}%`, background: s.color }}
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -325,34 +379,28 @@ function QuickStatsCard() {
   return (
     <div className="bento-card flex flex-col gap-4 p-5">
       <div className="flex items-center gap-2">
-        <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-accent)' }} />
-        <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-          Today's Progress
+        <Target className="h-4 w-4 text-[var(--color-primary)]" />
+        <p className="text-sm font-bold text-slate-900 dark:text-white">
+          Today's Daily Target
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div
-          className="rounded-xl border border-[var(--color-border)] p-3"
-          style={{ background: 'var(--color-surface-secondary)' }}
-        >
-          <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+        <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3.5 dark:border-slate-800 dark:bg-slate-950">
+          <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
             {completedToday}
           </p>
-          <p className="mt-0.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-            Tasks Done
+          <p className="mt-0.5 text-xs font-semibold text-slate-500">
+            Tasks Completed
           </p>
         </div>
 
-        <div
-          className="rounded-xl border border-[var(--color-border)] p-3"
-          style={{ background: 'var(--color-surface-secondary)' }}
-        >
-          <p className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-            2.5h
+        <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3.5 dark:border-slate-800 dark:bg-slate-950">
+          <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
+            3.5h
           </p>
-          <p className="mt-0.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-            Focus Time
+          <p className="mt-0.5 text-xs font-semibold text-slate-500">
+            Focus Time Done
           </p>
         </div>
       </div>
@@ -362,16 +410,16 @@ function QuickStatsCard() {
 
 function QuickLinksCard() {
   const links = [
-    { label: 'Set a goal', to: paths.goals, icon: Target },
-    { label: 'View analytics', to: paths.analytics, icon: TrendingUp },
-    { label: 'Browse rewards', to: paths.rewards, icon: Flame },
+    { label: 'Set study goals', to: paths.goals, icon: Target },
+    { label: 'View analytics report', to: paths.analytics, icon: TrendingUp },
+    { label: 'Pomodoro focus timer', to: paths.pomodoro, icon: Clock },
   ];
 
   return (
     <div className="bento-card flex flex-col gap-3 p-5">
       <div className="flex items-center gap-2">
-        <Calendar className="h-4 w-4" style={{ color: 'var(--color-text-secondary)' }} />
-        <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+        <Calendar className="h-4 w-4 text-slate-500" />
+        <p className="text-sm font-bold text-slate-900 dark:text-white">
           Quick Actions
         </p>
       </div>
@@ -381,12 +429,11 @@ function QuickLinksCard() {
           <Link
             key={to}
             to={to}
-            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-150 hover:bg-[var(--color-surface-secondary)]"
-            style={{ color: 'var(--color-text-secondary)' }}
+            className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
           >
-            <Icon className="h-4 w-4 flex-none" />
+            <Icon className="h-4 w-4 flex-none text-[var(--color-primary)]" />
             <span className="flex-1">{label}</span>
-            <ArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
+            <ArrowRight className="h-3.5 w-3.5 opacity-60" />
           </Link>
         ))}
       </div>
@@ -402,73 +449,81 @@ export function DashboardPage() {
   const user = useAuthStore((s) => s.user);
   const { data: tasksData } = useTasks({ size: 100 });
 
-  const firstName = user?.name ? user.name.split(' ')[0] : 'there';
+  const firstName = user?.name ? user.name.split(' ')[0] : 'Student';
   const tasks = tasksData?.content ?? [];
   const totalTasks = tasksData?.totalElements ?? 0;
   const todoCount = tasks.filter((t) => t.status === 'TODO').length;
   const inProgressCount = tasks.filter((t) => t.status === 'IN_PROGRESS').length;
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-8 pb-8 font-sans">
       {/* ── Header ── */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
       >
-        <h1 className="text-3xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>
-          {getGreeting()}, {firstName}! 👋
-        </h1>
-        <p className="mt-1 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-          {getFormattedDate()}
-        </p>
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            {getGreeting()}, {firstName}! 👋
+          </h1>
+          <p className="mt-1 text-xs font-semibold text-slate-500">
+            {getFormattedDate()} · MindSprint Active Workspace
+          </p>
+        </div>
+
+        <Link
+          to={paths.tasks}
+          className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white px-4 py-2 text-xs font-bold text-slate-800 shadow-sm transition-all hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+        >
+          <Plus className="h-3.5 w-3.5 text-[var(--color-primary)]" />
+          Create New Task
+        </Link>
       </motion.div>
 
-      {/* ── Bento Grid Layout ── */}
+      {/* ── Bento Grid Row 1: Key Metrics ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-        className="grid gap-5"
-        style={{
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        }}
+        className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
       >
-        {/* Row 1: Quick stats (4 small cards on desktop) */}
         <StatCard
-          label="Total Tasks"
+          label="Total Workspace Tasks"
           value={totalTasks}
           icon={CheckCircle2}
-          color="var(--color-secondary)"
+          color="#4F46E5"
         />
         <StatCard
-          label="To Do"
+          label="Tasks To Do"
           value={todoCount}
           icon={Circle}
-          color="var(--color-warning)"
+          color="#F59E0B"
         />
         <StatCard
           label="In Progress"
           value={inProgressCount}
           icon={Clock}
-          color="var(--color-accent)"
+          color="#0EA5E9"
         />
         <StreakCard />
       </motion.div>
 
-      {/* ── Main Content Grid ── */}
+      {/* ── Bento Grid Row 2: Main Workspace Content ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
         className="grid gap-5 lg:grid-cols-3"
       >
-        {/* Left: Task list (spans 2 columns on large screens) */}
-        <div className="lg:col-span-2">
+        {/* Left 2 Columns: Today's Tasks */}
+        <div className="lg:col-span-2 space-y-5">
           <TaskListCard />
+          <SubjectDistributionCard />
         </div>
 
-        {/* Right column: Pomodoro + Quick actions */}
+        {/* Right Column: Pomodoro + Stats + Actions */}
         <div className="space-y-5">
           <PomodoroCard />
           <QuickStatsCard />

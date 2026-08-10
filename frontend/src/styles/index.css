@@ -10,53 +10,53 @@
 
 :root {
   /* ── Font ── */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
 
   /* ── Core Surfaces ── */
-  --color-background:          #F2F2F7;
+  --color-background:          #F8FAFC;
   --color-surface:             #FFFFFF;
-  --color-surface-secondary:   #F9F9FB;
+  --color-surface-secondary:   #F1F5F9;
 
   /* ── Borders ── */
-  --color-border:              #E5E5EA;
-  --color-border-strong:       #D1D1D6;
+  --color-border:              #E2E8F0;
+  --color-border-strong:       #CBD5E1;
 
   /* ── Text ── */
-  --color-text-primary:        #1C1C1E;
-  --color-text-secondary:      #8E8E93;
-  --color-text-tertiary:       #AEAEB2;
+  --color-text-primary:        #0F172A;
+  --color-text-secondary:      #64748B;
+  --color-text-tertiary:       #94A3B8;
 
-  /* ── Primary — Coral ── */
-  --color-primary:             #EC6530;
-  --color-primary-hover:       #DD4A19;
-  --color-primary-light:       #FEF3EE;
-  --color-primary-subtle:      #FACAAD;
+  /* ── Primary — Indigo ── */
+  --color-primary:             #4F46E5;
+  --color-primary-hover:       #4338CA;
+  --color-primary-light:       #EEF2FF;
+  --color-primary-subtle:      #C7D2FE;
 
-  /* ── Secondary — Electric Blue ── */
-  --color-secondary:           #3478F6;
-  --color-secondary-light:     #EBF2FE;
+  /* ── Secondary — Azure Blue ── */
+  --color-secondary:           #2563EB;
+  --color-secondary-light:     #EFF6FF;
 
-  /* ── Accent — Teal ── */
-  --color-accent:              #30D5C8;
-  --color-accent-light:        #E6FAF8;
+  /* ── Accent — Emerald ── */
+  --color-accent:              #10B981;
+  --color-accent-light:        #ECFDF5;
 
   /* ── Warning — Amber ── */
-  --color-warning:             #FF9F0A;
-  --color-warning-light:       #FFF8E6;
+  --color-warning:             #F59E0B;
+  --color-warning-light:       #FFFBEB;
 
-  /* ── Danger — Pink-Red ── */
-  --color-danger:              #FF375F;
-  --color-danger-light:        #FFEBEF;
+  /* ── Danger — Rose ── */
+  --color-danger:              #F43F5E;
+  --color-danger-light:        #FFF1F2;
 
-  /* ── Success — Green ── */
-  --color-success:             #34C759;
-  --color-success-light:       #EDFBF1;
+  /* ── Success — Emerald ── */
+  --color-success:             #10B981;
+  --color-success-light:       #ECFDF5;
 
   /* ── Shadows ── */
-  --shadow-card:               0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-card-hover:         0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
-  --shadow-elevated:           0 8px 30px rgba(0,0,0,0.12);
-  --shadow-nav:                0 1px 3px rgba(0,0,0,0.06);
+  --shadow-card:               0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover:         0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-elevated:           0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-nav:                0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   /* ── Border Radii ── */
   --radius-sm:                 8px;
