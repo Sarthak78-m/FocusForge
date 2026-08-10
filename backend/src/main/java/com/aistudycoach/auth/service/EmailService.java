@@ -66,13 +66,18 @@ public class EmailService {
         }
     }
 
-    private String buildUrl(String pathAndQuery) {
-        return frontendUrl.replaceAll("/+$", "") + pathAndQuery;
+    public boolean isEmailConfigured() {
+        JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+        return mailSender != null && StringUtils.hasText(emailFrom);
     }
 
-    private boolean isDevelopmentProfile() {
+    public boolean isDevelopmentProfile() {
         return Arrays.stream(environment.getActiveProfiles())
                 .map(String::toLowerCase)
                 .anyMatch(profile -> profile.equals("local") || profile.equals("dev") || profile.equals("test"));
+    }
+
+    private String buildUrl(String pathAndQuery) {
+        return frontendUrl.replaceAll("/+$", "") + pathAndQuery;
     }
 }

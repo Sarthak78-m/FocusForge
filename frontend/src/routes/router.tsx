@@ -40,6 +40,20 @@ const ProfilePage = lazy(() =>
   import('@/pages/ProfilePage').then((m) => ({ default: m.ProfilePage })),
 );
 
+// Newly implemented pages
+const GoalsPage = lazy(() =>
+  import('@/pages/GoalsPage').then((m) => ({ default: m.GoalsPage })),
+);
+const AnalyticsPage = lazy(() =>
+  import('@/pages/AnalyticsPage').then((m) => ({ default: m.AnalyticsPage })),
+);
+const RewardsPage = lazy(() =>
+  import('@/pages/RewardsPage').then((m) => ({ default: m.RewardsPage })),
+);
+const AICoachPage = lazy(() =>
+  import('@/pages/AICoachPage').then((m) => ({ default: m.AICoachPage })),
+);
+
 // 404
 const NotFoundPage = lazy(() =>
   import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
@@ -64,48 +78,10 @@ export const router = createBrowserRouter([
       { path: paths.tasks, element: <TasksPage /> },
       { path: paths.pomodoro, element: <PomodoroPage /> },
       { path: paths.profile, element: <ProfilePage /> },
-
-      // Coming soon — no backend yet
-      {
-        path: paths.goals,
-        element: (
-          <ModuleShellPage
-            title="Goals"
-            description="Goal tracking is coming soon."
-            icon={Target}
-          />
-        ),
-      },
-      {
-        path: paths.rewards,
-        element: (
-          <ModuleShellPage
-            title="Rewards"
-            description="Rewards & streaks are coming soon."
-            icon={Gem}
-          />
-        ),
-      },
-      {
-        path: paths.analytics,
-        element: (
-          <ModuleShellPage
-            title="Analytics"
-            description="Study analytics are coming soon."
-            icon={BarChart3}
-          />
-        ),
-      },
-      {
-        path: paths.aiCoach,
-        element: (
-          <ModuleShellPage
-            title="AI Coach"
-            description="AI coaching is coming soon."
-            icon={Bot}
-          />
-        ),
-      },
+      { path: paths.goals, element: <GoalsPage /> },
+      { path: paths.rewards, element: <RewardsPage /> },
+      { path: paths.analytics, element: <AnalyticsPage /> },
+      { path: paths.aiCoach, element: <AICoachPage /> },
       { path: '/app/*', element: <Navigate to={paths.dashboard} replace /> },
     ],
   },

@@ -45,6 +45,9 @@ public class AuthService {
     private final EmailService emailService;
     private final AuthRateLimiter authRateLimiter;
 
+    @Value("${auth.email.verification-required:false}")
+    private boolean verificationRequired;
+
     @Value("${auth.email.verification-expiration-minutes:30}")
     private long verificationExpirationMinutes;
 
@@ -63,20 +66,25 @@ public class AuthService {
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
+        boolean isAutoVerify = !verificationRequired || !emailService.isEmailConfigured() || emailService.isDevelopmentProfile();
+
         User user = User.builder()
                 .name(request.getName().trim())
                 .email(email)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
-                .emailVerified(false)
+                .emailVerified(isAutoVerify)
                 .build();
 
         User savedUser = userRepository.save(user);
-        issueEmailVerification(savedUser);
+
+        if (!isAutoVerify) {
+            issueEmailVerification(savedUser);
+        }
 
         return RegistrationResponse.builder()
                 .email(savedUser.getEmail())
-                .emailVerificationRequired(true)
+                .emailVerificationRequired(!isAutoVerify)
                 .build();
     }
 
@@ -100,10 +108,8 @@ public class AuthService {
 
         authRateLimiter.resetLoginFailures(rateLimitKey);
         if (!user.isEmailVerified()) {
-            // Accounts created before email verification was introduced have no verification token.
-            // Preserve access for those already-authenticated legacy accounts without weakening
-            // verification for newly registered users, which always receive a token.
-            if (!emailVerificationTokenRepository.existsByUser(user)) {
+            boolean canAutoVerify = !verificationRequired || !emailService.isEmailConfigured() || emailService.isDevelopmentProfile() || !emailVerificationTokenRepository.existsByUser(user);
+            if (canAutoVerify) {
                 user.setEmailVerified(true);
                 userRepository.save(user);
             } else {
