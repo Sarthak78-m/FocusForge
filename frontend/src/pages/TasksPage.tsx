@@ -156,15 +156,131 @@ export function TasksPage() {
         onPriorityChange={handlePriorityChange}
       />
 
-      {/* List */}
-      <TaskList
-        tasks={tasks}
-        isLoading={isLoading}
-        onComplete={handleComplete}
-        onEdit={setEditingTask}
-        onDelete={setDeletingId}
-        completingId={completingId}
-      />
+      {/* Main Content Area */}
+      {viewMode === 'list' ? (
+        <TaskList
+          tasks={tasks}
+          isLoading={isLoading}
+          completingId={completingId}
+          onComplete={handleComplete}
+          onEdit={(task) => setEditingTask(task)}
+          onDelete={(id) => setDeletingId(id)}
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Backlog Column */}
+          <div className="rounded-3xl border border-slate-200/90 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/50 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200/60 pb-3 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-rose-500" />
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  To Do ({tasks.filter((t) => t.status === 'TODO').length})
+                </h3>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {tasks
+                .filter((t) => t.status === 'TODO')
+                .map((task) => (
+                  <div
+                    key={task.id}
+                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-900 space-y-3"
+                  >
+                    <div className="flex items-start justify-between">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">{task.title}</h4>
+                      <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600 dark:bg-rose-950 dark:text-rose-300">
+                        {task.priority}
+                      </span>
+                    </div>
+                    {task.description && <p className="text-xs text-slate-500 line-clamp-2">{task.description}</p>}
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                      <span className="text-[10px] font-medium text-slate-400">{task.dueDate ?? 'No deadline'}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleComplete(task.id)}
+                        className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-emerald-600 hover:bg-emerald-100 transition-colors"
+                      >
+                        Mark Done
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          {/* In Progress Column */}
+          <div className="rounded-3xl border border-slate-200/90 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/50 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200/60 pb-3 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-amber-500" />
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  In Progress ({tasks.filter((t) => t.status === 'IN_PROGRESS').length})
+                </h3>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {tasks
+                .filter((t) => t.status === 'IN_PROGRESS')
+                .map((task) => (
+                  <div
+                    key={task.id}
+                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-900 space-y-3"
+                  >
+                    <div className="flex items-start justify-between">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">{task.title}</h4>
+                      <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-600 dark:bg-amber-950 dark:text-amber-300">
+                        {task.priority}
+                      </span>
+                    </div>
+                    {task.description && <p className="text-xs text-slate-500 line-clamp-2">{task.description}</p>}
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                      <span className="text-[10px] font-medium text-slate-400">{task.dueDate ?? 'No deadline'}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleComplete(task.id)}
+                        className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-emerald-600 hover:bg-emerald-100 transition-colors"
+                      >
+                        Complete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          {/* Completed Column */}
+          <div className="rounded-3xl border border-slate-200/90 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-900/50 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200/60 pb-3 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-emerald-500" />
+                <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  Completed ({tasks.filter((t) => t.status === 'COMPLETED').length})
+                </h3>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {tasks
+                .filter((t) => t.status === 'COMPLETED')
+                .map((task) => (
+                  <div
+                    key={task.id}
+                    className="rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm opacity-80 dark:border-slate-800 dark:bg-slate-900/70 space-y-2"
+                  >
+                    <div className="flex items-start justify-between">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white line-through">{task.title}</h4>
+                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
+                        Done
+                      </span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
