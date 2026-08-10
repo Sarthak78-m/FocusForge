@@ -84,7 +84,11 @@ export function useRegister(options: RegisterOptions = {}) {
       });
     },
     onError: (error: AxiosError<ApiErrorPayload>) => {
-      const message = error.response?.data?.message ?? 'Registration failed. Please try again.';
+      const message =
+        error.response?.data?.message ??
+        (!error.response
+          ? 'Backend server is unreachable. Please verify your VITE_API_BASE_URL environment variable or backend status.'
+          : 'Registration failed. Please check your details and try again.');
       notify({ title: 'Registration failed', message, tone: 'error' });
     },
   });
