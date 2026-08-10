@@ -26,16 +26,28 @@ export type GetTasksParams = {
   sort?: string;
 };
 
-const LOCAL_TASKS_KEY = 'mindsprint_user_tasks';
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+function getUserStorageKey(): string {
+  try {
+    const mockUser = localStorage.getItem('mindsprint_mock_user');
+    if (mockUser) {
+      const parsed = JSON.parse(mockUser);
+      if (parsed?.email) {
+        return `mindsprint_user_tasks_${parsed.email.toLowerCase()}`;
+      }
+    }
+  } catch {}
+  return 'mindsprint_user_tasks_default';
+}
 
 function getStoredTasks(): Task[] {
   try {
-    const raw = localStorage.getItem(LOCAL_TASKS_KEY);
+    const key = getUserStorageKey();
+    const raw = localStorage.getItem(key);
     if (!raw) return [];
     const tasks: Task[] = JSON.parse(raw);
     const now = Date.now();
-    // Filter out tasks older than 30 days
     return tasks.filter((t) => {
       const created = new Date(t.createdAt).getTime();
       return now - created <= THIRTY_DAYS_MS;
@@ -47,10 +59,10 @@ function getStoredTasks(): Task[] {
 
 function saveStoredTasks(tasks: Task[]): void {
   try {
-    localStorage.setItem(LOCAL_TASKS_KEY, JSON.stringify(tasks));
-  } catch {
-    // Local storage quota exceeded or unavailable
-  }
+    const key = getUserStorageKey();
+    localStorage.setItem(key, JSON.stringify(tasks));
+    window.dispatchEvent(new Event('storage'));
+  } catch {}
 }
 
 export const taskService = {
