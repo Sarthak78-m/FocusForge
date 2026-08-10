@@ -13,21 +13,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * AnalyticsController
+ * StudyAnalyticsController
  *
- * Stub controller for the Analytics module.
+ * Stub controller for the Study Analytics module.
  * Returns empty analytics until the Analytics domain is implemented.
  *
  * Frontend expects:
- *   GET /api/analytics/summary?range=30d  → analytics summary
+ *   GET /api/study-analytics/summary?range=30d  → analytics summary
  */
-@Tag(name = "Analytics", description = "Study analytics APIs")
+@Tag(name = "Study Analytics", description = "Study analytics APIs")
 @RestController
-@RequestMapping("/api/analytics")
+@RequestMapping("/api/study-analytics")
 @SecurityRequirement(name = "bearerAuth")
-public class AnalyticsController {
+public class StudyAnalyticsController {
 
-    @Operation(summary = "Get analytics summary")
+    @Operation(summary = "Get study analytics summary")
     @GetMapping("/summary")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSummary(
             @RequestParam(defaultValue = "30d") String range
@@ -42,3 +42,4 @@ public class AnalyticsController {
         return ResponseEntity.ok(ApiResponse.success("Analytics fetched for range: " + range, summary));
     }
 }
+
