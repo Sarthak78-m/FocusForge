@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Maximize2, Minimize2, Play, Pause, RotateCcw, Volume2, VolumeX, Flame, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Maximize2, Minimize2, Play, Pause, RotateCcw, Volume2, VolumeX, Flame, Sparkles, CheckCircle2, Plus, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePomodoro } from '@/hooks/usePomodoro';
 import { useTheme } from '@/hooks/useTheme';
@@ -18,7 +18,7 @@ const MOTIVATIONAL_QUOTES = [
 ];
 
 export function FocusModeOverlay({ isOpen, onClose }: FocusModeOverlayProps) {
-  const { display, progress, isRunning, mode, start, pause, reset, sessionCount } = usePomodoro();
+  const { display, progress, isRunning, mode, start, pause, reset, sessionCount, adjustTime } = usePomodoro();
   const { activePalette } = useTheme();
   const [soundType, setSoundType] = useState<'rain' | 'white-noise' | 'deep-space' | 'lofi-hum'>('rain');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -140,6 +140,42 @@ export function FocusModeOverlay({ isOpen, onClose }: FocusModeOverlayProps) {
                 {isRunning ? 'Session In Progress' : 'Paused'}
               </p>
             </div>
+          </div>
+
+          {/* Quick Dynamic Time Adjustments (+1m, +5m, -1m, -5m) */}
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => adjustTime(-300)}
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 backdrop-blur-md transition-all hover:bg-rose-500/20 hover:text-white"
+              title="Subtract 5 minutes"
+            >
+              <Minus className="h-3 w-3" /> 5m
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustTime(-60)}
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 backdrop-blur-md transition-all hover:bg-rose-500/20 hover:text-white"
+              title="Subtract 1 minute"
+            >
+              <Minus className="h-3 w-3" /> 1m
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustTime(60)}
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 backdrop-blur-md transition-all hover:bg-emerald-500/20 hover:text-white"
+              title="Add 1 minute"
+            >
+              <Plus className="h-3 w-3" /> 1m
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustTime(300)}
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 backdrop-blur-md transition-all hover:bg-emerald-500/20 hover:text-white"
+              title="Add 5 minutes"
+            >
+              <Plus className="h-3 w-3" /> 5m
+            </button>
           </div>
 
           {/* Action Buttons */}

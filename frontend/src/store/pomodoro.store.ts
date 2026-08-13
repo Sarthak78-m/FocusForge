@@ -3,24 +3,30 @@ import { persist } from 'zustand/middleware';
 
 export type PomodoroMode = 'work' | 'short-break' | 'long-break';
 
-export const DURATIONS: Record<PomodoroMode, number> = {
+export const DEFAULT_DURATIONS: Record<PomodoroMode, number> = {
   work: 25 * 60,
   'short-break': 5 * 60,
   'long-break': 15 * 60,
 };
+
+export const DURATIONS = DEFAULT_DURATIONS;
 
 const SESSIONS_BEFORE_LONG_BREAK = 4;
 
 type PomodoroStoreState = {
   mode: PomodoroMode;
   secondsLeft: number;
+  totalSeconds: number;
   isRunning: boolean;
   sessionCount: number;
   targetEndTime: number | null;
+  durations: Record<PomodoroMode, number>;
   start: () => void;
   pause: () => void;
   reset: () => void;
   setMode: (mode: PomodoroMode) => void;
+  adjustTime: (deltaSeconds: number) => void;
+  setCustomDuration: (mode: PomodoroMode, minutes: number) => void;
   tick: () => void;
 };
 
@@ -72,7 +78,9 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
   persist(
     (set, get) => ({
       mode: 'work',
-      secondsLeft: DURATIONS.work,
+      durations: { ...DEFAULT_DURATIONS },
+      secondsLeft: DEFAULT_DURATIONS.work,
+      totalSeconds: DEFAULT_DURATIONS.work,
       isRunning: false,
       sessionCount: 0,
       targetEndTime: null,
@@ -100,25 +108,67 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
       },
 
       reset: () => {
-        const mode = get().mode;
+        const { mode, durations } = get();
+        const defaultSec = durations[mode] || DEFAULT_DURATIONS[mode];
         set({
-          secondsLeft: DURATIONS[mode],
+          secondsLeft: defaultSec,
+          totalSeconds: defaultSec,
           isRunning: false,
           targetEndTime: null,
         });
       },
 
       setMode: (newMode: PomodoroMode) => {
+        const { durations } = get();
+        const defaultSec = durations[newMode] || DEFAULT_DURATIONS[newMode];
         set({
           mode: newMode,
-          secondsLeft: DURATIONS[newMode],
+          secondsLeft: defaultSec,
+          totalSeconds: defaultSec,
           isRunning: false,
           targetEndTime: null,
         });
       },
 
+      adjustTime: (deltaSeconds: number) => {
+        const { isRunning, secondsLeft, totalSeconds } = get();
+        const maxLimit = 180 * 60; // max 3 hours
+        const newSeconds = Math.max(0, Math.min(maxLimit, secondsLeft + deltaSeconds));
+        
+        let newTargetEndTime: number | null = null;
+        if (isRunning) {
+          newTargetEndTime = Date.now() + newSeconds * 1000;
+        }
+
+        const newTotalSeconds = Math.max(totalSeconds, newSeconds);
+
+        set({
+          secondsLeft: newSeconds,
+          totalSeconds: newTotalSeconds,
+          targetEndTime: isRunning ? newTargetEndTime : null,
+        });
+      },
+
+      setCustomDuration: (modeToSet: PomodoroMode, minutes: number) => {
+        const sanitizedMinutes = Math.max(1, Math.min(180, Math.round(minutes)));
+        const newSec = sanitizedMinutes * 60;
+        const { mode, isRunning, durations } = get();
+        const updatedDurations = { ...durations, [modeToSet]: newSec };
+
+        const updates: Partial<PomodoroStoreState> = {
+          durations: updatedDurations,
+        };
+
+        if (mode === modeToSet && !isRunning) {
+          updates.secondsLeft = newSec;
+          updates.totalSeconds = newSec;
+        }
+
+        set(updates);
+      },
+
       tick: () => {
-        const { isRunning, targetEndTime, mode, sessionCount } = get();
+        const { isRunning, targetEndTime, mode, sessionCount, durations } = get();
         if (!isRunning || !targetEndTime) return;
 
         const now = Date.now();
@@ -135,9 +185,12 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
                 : 'short-break'
               : 'work';
 
+          const nextDuration = durations[nextMode] || DEFAULT_DURATIONS[nextMode];
+
           set({
             mode: nextMode,
-            secondsLeft: DURATIONS[nextMode],
+            secondsLeft: nextDuration,
+            totalSeconds: nextDuration,
             isRunning: false,
             targetEndTime: null,
             sessionCount: newSessionCount,
@@ -152,9 +205,11 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
       partialize: (state) => ({
         mode: state.mode,
         secondsLeft: state.secondsLeft,
+        totalSeconds: state.totalSeconds,
         isRunning: state.isRunning,
         sessionCount: state.sessionCount,
         targetEndTime: state.targetEndTime,
+        durations: state.durations,
       }),
     }
   )

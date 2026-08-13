@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { Maximize2, Volume2, VolumeX, Flame, Sparkles, RefreshCw, Play, Pause } from 'lucide-react';
+import { Maximize2, Volume2, VolumeX, Flame, Plus, Minus, Settings, RotateCcw, Play, Pause, Check } from 'lucide-react';
 import { usePomodoro, type PomodoroMode } from '@/hooks/usePomodoro';
 import { useTheme } from '@/hooks/useTheme';
 import { soundscapes } from '@/utils/soundscapes';
 import { FocusModeOverlay } from '@/components/pomodoro/FocusModeOverlay';
 import { cn } from '@/utils/cn';
 
-const MODES: { value: PomodoroMode; label: string; minutes: number }[] = [
-  { value: 'work', label: 'Focus Sprint', minutes: 25 },
-  { value: 'short-break', label: 'Short Break', minutes: 5 },
-  { value: 'long-break', label: 'Long Rest', minutes: 15 },
+const MODE_DEFS: { value: PomodoroMode; label: string }[] = [
+  { value: 'work', label: 'Focus Sprint' },
+  { value: 'short-break', label: 'Short Break' },
+  { value: 'long-break', label: 'Long Rest' },
 ];
 
 function TimerRing({ progress, size = 260 }: { progress: number; size?: number }) {
@@ -60,19 +60,24 @@ export function PomodoroPage() {
     progress,
     isRunning,
     sessionCount,
+    durations,
     start,
     pause,
     reset,
     setMode,
+    adjustTime,
+    setCustomDuration,
   } = usePomodoro();
 
   const { activePalette } = useTheme();
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [soundType, setSoundType] = useState<'rain' | 'white-noise' | 'deep-space' | 'lofi-hum'>('rain');
 
   const dotsCompleted = sessionCount % SESSION_DOTS;
-  const currentModeConfig = MODES.find((m) => m.value === mode)!;
+  const currentModeConfig = MODE_DEFS.find((m) => m.value === mode)!;
+  const currentModeMinutes = Math.round((durations[mode] || 1500) / 60);
 
   const toggleAudio = () => {
     if (isPlayingAudio) {
@@ -109,41 +114,116 @@ export function PomodoroPage() {
             </span>
           </div>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            Inspired by Paymo, Focus Keeper, and Momentum Pro
+            Dynamic, customizable focus sprints & break timer
           </p>
         </div>
 
         {/* Launcher Button */}
-        <button
-          type="button"
-          onClick={() => setIsOverlayOpen(true)}
-          className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
-          style={{ background: activePalette.gradient }}
-        >
-          <Maximize2 className="h-4 w-4" />
-          Full-Screen Focus Mode
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowSettings(!showSettings)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+          >
+            <Settings className="h-4 w-4" />
+            Custom Duration Settings
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsOverlayOpen(true)}
+            className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
+            style={{ background: activePalette.gradient }}
+          >
+            <Maximize2 className="h-4 w-4" />
+            Full-Screen Focus
+          </button>
+        </div>
       </div>
+
+      {/* Custom Duration Settings Panel */}
+      {showSettings && (
+        <div className="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white p-5 shadow-md dark:border-slate-800 dark:bg-slate-900 transition-all">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Settings className="h-4 w-4 text-emerald-500" /> Configure Default Mode Durations (Minutes)
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowSettings(false)}
+              className="text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            >
+              Done
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {MODE_DEFS.map((m) => {
+              const mins = Math.round((durations[m.value] || 1500) / 60);
+              return (
+                <div key={m.value} className="flex flex-col gap-1.5 rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    {m.label}
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min={1}
+                      max={180}
+                      value={mins}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value, 10);
+                        if (!isNaN(val)) setCustomDuration(m.value, val);
+                      }}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                    />
+                    <span className="text-xs text-slate-500 font-medium">min</span>
+                  </div>
+                  {/* Preset quick buttons */}
+                  <div className="flex gap-1 mt-1">
+                    {[15, 25, 45, 60].filter(p => m.value === 'work' ? true : p <= 30).map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => setCustomDuration(m.value, preset)}
+                        className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
+                          mins === preset
+                            ? 'bg-emerald-500 text-white'
+                            : 'bg-slate-200 text-slate-600 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-400'
+                        }`}
+                      >
+                        {preset}m
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="mx-auto max-w-xl">
         {/* Mode tabs */}
         <div className="mb-8 flex rounded-2xl border border-slate-200/90 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          {MODES.map((m) => (
-            <button
-              key={m.value}
-              type="button"
-              onClick={() => setMode(m.value)}
-              className={cn(
-                'flex flex-1 flex-col items-center rounded-xl px-3 py-2.5 text-center transition-all duration-200',
-                mode === m.value
-                  ? 'bg-slate-100 font-bold text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white',
-              )}
-            >
-              <span className="text-xs">{m.label}</span>
-              <span className="mt-0.5 text-[11px] font-semibold opacity-70">{m.minutes} min</span>
-            </button>
-          ))}
+          {MODE_DEFS.map((m) => {
+            const modeMins = Math.round((durations[m.value] || 1500) / 60);
+            return (
+              <button
+                key={m.value}
+                type="button"
+                onClick={() => setMode(m.value)}
+                className={cn(
+                  'flex flex-1 flex-col items-center rounded-xl px-3 py-2.5 text-center transition-all duration-200',
+                  mode === m.value
+                    ? 'bg-slate-100 font-bold text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
+                    : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white',
+                )}
+              >
+                <span className="text-xs">{m.label}</span>
+                <span className="mt-0.5 text-[11px] font-semibold opacity-70">{modeMins} min</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Timer display card */}
@@ -158,6 +238,42 @@ export function PomodoroPage() {
                 {currentModeConfig.label}
               </span>
             </div>
+          </div>
+
+          {/* Quick Dynamic Time Adjustments (+1m, +5m, -1m, -5m) */}
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => adjustTime(-300)}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600 transition-all hover:bg-rose-50 hover:text-rose-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-rose-950 dark:hover:text-rose-400"
+              title="Subtract 5 minutes"
+            >
+              <Minus className="h-3 w-3" /> 5m
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustTime(-60)}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600 transition-all hover:bg-rose-50 hover:text-rose-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-rose-950 dark:hover:text-rose-400"
+              title="Subtract 1 minute"
+            >
+              <Minus className="h-3 w-3" /> 1m
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustTime(60)}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600 transition-all hover:bg-emerald-50 hover:text-emerald-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-emerald-950 dark:hover:text-emerald-400"
+              title="Add 1 minute"
+            >
+              <Plus className="h-3 w-3" /> 1m
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustTime(300)}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600 transition-all hover:bg-emerald-50 hover:text-emerald-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-emerald-950 dark:hover:text-emerald-400"
+              title="Add 5 minutes"
+            >
+              <Plus className="h-3 w-3" /> 5m
+            </button>
           </div>
 
           {/* Session Progress Dots */}

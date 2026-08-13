@@ -79,9 +79,8 @@ function StatCard({ label, value, change, icon: Icon, color }: {
 }
 
 function PomodoroCard() {
-  const { mode, display, isRunning, sessionCount, start, pause, reset } = usePomodoro();
+  const { mode, display, progress, isRunning, sessionCount, start, pause, reset } = usePomodoro();
   const modeLabel = mode === 'work' ? 'Focus' : mode === 'short-break' ? 'Short Break' : 'Long Break';
-  const percentage = 75; // Mock progress for the ring
 
   return (
     <div className="bento-card flex flex-col gap-4 p-6">
@@ -124,7 +123,7 @@ function PomodoroCard() {
             stroke="var(--color-accent)"
             strokeWidth="8"
             strokeDasharray={`${2 * Math.PI * 60}`}
-            strokeDashoffset={`${2 * Math.PI * 60 * (1 - percentage / 100)}`}
+            strokeDashoffset={`${2 * Math.PI * 60 * (1 - progress)}`}
             strokeLinecap="round"
             style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
