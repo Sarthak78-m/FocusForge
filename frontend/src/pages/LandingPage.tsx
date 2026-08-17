@@ -4,70 +4,46 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock3,
-  BarChart3,
   Timer,
   Sparkles,
   Play,
   Pause,
   RotateCcw,
   Check,
-  Zap,
-  MessageSquare,
   Flame,
   Bot,
   Layers,
-  Palette,
-  Sun,
-  Moon
+  Hash,
+  Flag,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { paths } from '@/routes/paths';
-import { useTheme, ACCENT_PALETTES } from '@/hooks/useTheme';
-import { type ThemeAccent } from '@/store/theme.store';
-import { ThemeCustomizer } from '@/components/common/ThemeCustomizer';
 
 function NavBar() {
-  const { activePalette } = useTheme();
-
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--color-border)] bg-white/90 backdrop-blur-xl dark:bg-slate-900/90">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Link to={paths.landing} className="flex items-center gap-2.5">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-md"
-            style={{ background: activePalette.gradient }}
-          >
-            <Timer className="h-4.5 w-4.5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white shadow-xs">
+            <Timer className="h-5 w-5" />
           </div>
-          <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <span className="text-base font-extrabold tracking-tight text-[var(--color-text-primary)]">
             FocusForge
           </span>
         </Link>
-
-        {/* Center: Live Accent Color Selector */}
-        <div className="hidden md:flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-100/70 p-1 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/70">
-          <span className="px-2.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider dark:text-slate-400">
-            Accent Theme:
-          </span>
-          <ThemeCustomizer />
-        </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
           <Link
             to={paths.login}
-            className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+            className="rounded-full px-4 py-2 text-xs font-bold text-[var(--color-text-secondary)] transition-all hover:bg-slate-100 hover:text-[var(--color-text-primary)] dark:hover:bg-slate-800"
           >
             Log in
           </Link>
           <Link
             to={paths.signup}
-            className="inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg active:scale-95"
-            style={{
-              background: activePalette.gradient,
-              boxShadow: `0 4px 14px ${activePalette.glow}`,
-            }}
+            className="inline-flex items-center justify-center rounded-full bg-[var(--color-primary)] px-5 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] active:scale-95"
           >
             Get started free
           </Link>
@@ -78,17 +54,16 @@ function NavBar() {
 }
 
 /* ══════════════════════════════════════════════════════════
-   INTERACTIVE LIVE WORKSPACE PREVIEW DEMO (Inspired by Paymo & ClickUp)
+   INTERACTIVE STITCH WORKSPACE PREVIEW DEMO
    ══════════════════════════════════════════════════════════ */
 function InteractiveWorkspaceDemo() {
-  const { activePalette, accent, setAccent } = useTheme();
   const [activeTab, setActiveTab] = useState<'timer' | 'tasks' | 'ai'>('timer');
   const [isRunning, setIsRunning] = useState(false);
   const [seconds, setSeconds] = useState(1500); // 25:00
   const [tasks, setTasks] = useState([
-    { id: 1, text: 'Review Operating Systems Chapter 4', done: true, tag: 'High' },
-    { id: 2, text: 'Solve 5 LeetCode Algorithm Problems', done: false, tag: 'Medium' },
-    { id: 3, text: 'Draft Machine Learning Lab Report', done: false, tag: 'High' },
+    { id: 1, text: 'Reading Chapter 4 — Organic Chemistry', done: true, tag: 'ExamPrep', priority: 'P1' },
+    { id: 2, text: 'Solve 5 LeetCode Algorithm Problems', done: false, tag: 'WebsiteUpdate', priority: 'P2' },
+    { id: 3, text: 'Draft Machine Learning Lab Report', done: false, tag: 'Fitness', priority: 'P1' },
   ]);
   const [aiMessage, setAiMessage] = useState('How can I optimize your study schedule today?');
 
@@ -105,57 +80,30 @@ function InteractiveWorkspaceDemo() {
   };
 
   return (
-    <div className="relative mx-auto mt-12 w-full max-w-4xl rounded-3xl border border-slate-200/90 bg-white/90 p-4 sm:p-6 shadow-2xl backdrop-blur-2xl dark:border-slate-800 dark:bg-slate-900/90">
-      {/* Outer ambient glow based on current accent */}
-      <div
-        className="pointer-events-none absolute -inset-1 rounded-3xl opacity-30 blur-2xl transition-all duration-500"
-        style={{ background: activePalette.gradient }}
-      />
-
+    <div className="relative mx-auto mt-12 w-full max-w-4xl rounded-2xl border border-[var(--color-border)] bg-white p-4 sm:p-6 shadow-xl dark:bg-slate-900">
       {/* Demo Header Bar */}
-      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
+      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[var(--color-border)] pb-4">
         <div className="flex items-center gap-3">
           <div className="flex gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-rose-400" />
-            <div className="h-3 w-3 rounded-full bg-amber-400" />
-            <div className="h-3 w-3 rounded-full bg-emerald-400" />
+            <div className="h-3 w-3 rounded-full bg-rose-500" />
+            <div className="h-3 w-3 rounded-full bg-amber-500" />
+            <div className="h-3 w-3 rounded-full bg-emerald-500" />
           </div>
-          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+          <span className="text-xs font-bold text-[var(--color-text-tertiary)]">
             Interactive Workspace Preview
           </span>
         </div>
 
-        {/* Live Color Accent Swatches Bar */}
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
-            Try Live Themes:
-          </span>
-          <div className="flex gap-1.5">
-            {(Object.keys(ACCENT_PALETTES) as ThemeAccent[]).map((key) => {
-              const p = ACCENT_PALETTES[key];
-              const active = accent === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setAccent(key)}
-                  className={`h-5 w-5 rounded-full transition-all duration-200 ${
-                    active ? 'scale-125 ring-2 ring-slate-400 dark:ring-white' : 'hover:scale-110'
-                  }`}
-                  style={{ background: p.gradient }}
-                  title={p.label}
-                />
-              );
-            })}
-          </div>
-        </div>
+        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-surface-container)] px-3 py-1 text-[11px] font-bold text-[var(--color-primary)] border border-[var(--color-border-strong)]">
+          Focus Mode Active
+        </span>
       </div>
 
       {/* Interactive Module Tabs */}
-      <div className="relative mt-4 flex items-center gap-2 rounded-2xl border border-slate-100 bg-slate-50/80 p-1.5 dark:border-slate-800 dark:bg-slate-950">
+      <div className="relative mt-4 flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-slate-50 p-1.5 dark:bg-slate-950">
         {[
           { id: 'timer', label: 'Pomodoro Focus', icon: Clock3 },
-          { id: 'tasks', label: 'Kanban Tasks', icon: CheckCircle2 },
+          { id: 'tasks', label: 'Todoist Tasks', icon: CheckCircle2 },
           { id: 'ai', label: 'AI Study Assistant', icon: Bot },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -165,30 +113,21 @@ function InteractiveWorkspaceDemo() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id as any)}
-              className={`relative flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition-all ${
+              className={`relative flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-xs font-bold transition-all ${
                 isActive
-                  ? 'text-slate-900 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                  ? 'bg-[var(--color-primary)] text-white shadow-xs'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
               }`}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="demo-tab-active"
-                  className="absolute inset-0 rounded-xl bg-white shadow-sm dark:bg-slate-800"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-2">
-                <Icon className="h-4 w-4 text-[var(--color-primary)]" />
-                {tab.label}
-              </span>
+              <Icon className="h-4 w-4" />
+              {tab.label}
             </button>
           );
         })}
       </div>
 
       {/* Demo Tab Content */}
-      <div className="relative mt-5 min-h-[220px] rounded-2xl border border-slate-100 bg-slate-50/50 p-6 dark:border-slate-800/80 dark:bg-slate-950/50">
+      <div className="relative mt-5 min-h-[220px] rounded-xl border border-[var(--color-border)] bg-slate-50/60 p-6 dark:bg-slate-950/60">
         <AnimatePresence mode="wait">
           {activeTab === 'timer' && (
             <motion.div
@@ -198,27 +137,26 @@ function InteractiveWorkspaceDemo() {
               exit={{ opacity: 0, y: -8 }}
               className="flex flex-col items-center justify-center gap-4 text-center"
             >
-              <div className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-white" style={{ background: activePalette.gradient }}>
-                <Flame className="h-3.5 w-3.5" />
-                Focus Mode Active
+              <div className="flex items-center gap-2 rounded-full bg-[var(--color-surface-container)] px-3.5 py-1 text-xs font-bold text-[var(--color-primary)] border border-[var(--color-border-strong)]">
+                <Flame className="h-3.5 w-3.5 fill-[var(--color-primary)] text-[var(--color-primary)]" />
+                Session 1 of 4
               </div>
-              <p className="font-mono text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              <p className="font-mono text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
                 {formatTimer(seconds)}
               </p>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setIsRunning(!isRunning)}
-                  className="flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
-                  style={{ background: activePalette.gradient }}
+                  className="flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-6 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-105"
                 >
-                  {isRunning ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                  {isRunning ? <Pause className="h-4 w-4 fill-white" /> : <Play className="h-4 w-4 fill-white ml-0.5" />}
                   {isRunning ? 'Pause Session' : 'Start Focus'}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setSeconds(1500); setIsRunning(false); }}
-                  className="rounded-full border border-slate-200 bg-white p-2.5 text-slate-600 shadow-sm transition-all hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                  className="rounded-full border border-[var(--color-border)] bg-white p-2.5 text-[var(--color-text-secondary)] shadow-xs transition-all hover:bg-slate-100 dark:bg-slate-900"
                 >
                   <RotateCcw className="h-4 w-4" />
                 </button>
@@ -235,7 +173,7 @@ function InteractiveWorkspaceDemo() {
               className="space-y-2.5"
             >
               <div className="flex items-center justify-between pb-2">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <span className="text-xs font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider">
                   Today's High-Priority Tasks
                 </span>
                 <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
@@ -246,31 +184,38 @@ function InteractiveWorkspaceDemo() {
                 <div
                   key={task.id}
                   onClick={() => toggleTask(task.id)}
-                  className="flex cursor-pointer items-center justify-between rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm transition-all hover:border-[var(--color-primary)] dark:border-slate-800 dark:bg-slate-900"
+                  className="flex cursor-pointer items-center justify-between rounded-xl border border-[var(--color-border)] bg-white p-3.5 shadow-xs transition-all hover:border-[var(--color-primary)] dark:bg-slate-900"
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-5 w-5 items-center justify-center rounded-lg border transition-all ${
+                      className={`flex h-5 w-5 items-center justify-center rounded-full border transition-all ${
                         task.done
                           ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white'
-                          : 'border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-800'
+                          : 'border-[var(--color-border-strong)] bg-white dark:bg-slate-900'
                       }`}
                     >
-                      {task.done && <Check className="h-3.5 w-3.5" />}
+                      {task.done && <Check className="h-3.5 w-3.5 stroke-[3]" />}
                     </div>
                     <span
-                      className={`text-xs font-medium transition-all ${
+                      className={`text-xs font-semibold transition-all ${
                         task.done
-                          ? 'line-through text-slate-400 dark:text-slate-500'
-                          : 'text-slate-800 dark:text-slate-200'
+                          ? 'line-through text-[var(--color-text-tertiary)]'
+                          : 'text-[var(--color-text-primary)]'
                       }`}
                     >
                       {task.text}
                     </span>
                   </div>
-                  <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-[10px] font-semibold text-indigo-600 dark:bg-indigo-950 dark:text-indigo-300">
-                    {task.tag}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600">
+                      <Flag className="h-2.5 w-2.5 fill-rose-600" />
+                      {task.priority}
+                    </span>
+                    <span className="inline-flex items-center gap-0.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-container)] px-2 py-0.5 text-[10px] font-bold text-[var(--color-primary)]">
+                      <Hash className="h-2.5 w-2.5" />
+                      {task.tag}
+                    </span>
+                  </div>
                 </div>
               ))}
             </motion.div>
@@ -284,13 +229,13 @@ function InteractiveWorkspaceDemo() {
               exit={{ opacity: 0, y: -8 }}
               className="space-y-4"
             >
-              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl text-white" style={{ background: activePalette.gradient }}>
+              <div className="flex items-start gap-3 rounded-xl border border-[var(--color-border)] bg-white p-4 shadow-xs dark:bg-slate-900">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary)] text-white">
                   <Bot className="h-4 w-4" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">FocusForge AI Coach</p>
-                  <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">{aiMessage}</p>
+                  <p className="text-xs font-bold text-[var(--color-text-primary)]">FocusForge AI Coach</p>
+                  <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">{aiMessage}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -303,7 +248,7 @@ function InteractiveWorkspaceDemo() {
                     key={prompt}
                     type="button"
                     onClick={() => setAiMessage(`Here is your custom plan for "${prompt}": Stay focused with 25m sprints and active recall!`)}
-                    className="rounded-full border border-slate-200/90 bg-white px-3 py-1.5 text-[11px] font-medium text-slate-700 shadow-sm transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                    className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1.5 text-[11px] font-bold text-[var(--color-text-secondary)] shadow-xs transition-all hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary)] dark:bg-slate-900"
                   >
                     ✨ {prompt}
                   </button>
@@ -321,42 +266,31 @@ function InteractiveWorkspaceDemo() {
    MAIN LANDING PAGE COMPONENT
    ══════════════════════════════════════════════════════════ */
 export function LandingPage() {
-  const { activePalette } = useTheme();
-
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 dark:bg-slate-950 dark:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--color-background)] font-sans text-[var(--color-text-primary)] antialiased">
       <NavBar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 pb-20 pt-32 sm:px-6 sm:pb-28 sm:pt-40">
-        {/* Animated Background Mesh Glow */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full opacity-25 blur-3xl transition-all duration-700"
-          style={{ background: activePalette.gradient }}
-        />
-
         <div className="relative mx-auto max-w-4xl text-center">
           {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-1.5 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-1.5 shadow-xs dark:bg-slate-900">
             <Sparkles className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
-              Notion & Paymo Inspired Study Suite
+            <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
+              Stitch & Todoist Inspired Focus Suite
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-6xl sm:leading-tight dark:text-white">
+          <h1 className="text-4xl font-extrabold tracking-tight text-[var(--color-text-primary)] sm:text-6xl sm:leading-tight">
             Study smarter,{' '}
-            <span
-              className="bg-clip-text text-transparent transition-all duration-500"
-              style={{ backgroundImage: activePalette.gradient }}
-            >
+            <span className="text-[var(--color-primary)]">
               not longer.
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[var(--color-text-secondary)] sm:text-lg">
             FocusForge merges task management, Pomodoro focus sprints, and AI coaching into one
             vibrant, customizable workspace — built for student success.
           </p>
@@ -365,18 +299,14 @@ export function LandingPage() {
           <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               to={paths.signup}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-bold text-white shadow-lg transition-all duration-200 hover:scale-105 sm:w-auto"
-              style={{
-                background: activePalette.gradient,
-                boxShadow: `0 8px 25px ${activePalette.glow}`,
-              }}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] px-8 py-3.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-105 sm:w-auto"
             >
               Start for free
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to={paths.login}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white px-8 py-3.5 text-sm font-bold text-slate-800 shadow-sm transition-all duration-200 hover:bg-slate-100 hover:text-slate-900 sm:w-auto dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-8 py-3.5 text-xs font-bold text-[var(--color-text-primary)] shadow-xs transition-all hover:bg-slate-100 sm:w-auto dark:bg-slate-900"
             >
               Open Workspace Dashboard
             </Link>
@@ -388,14 +318,14 @@ export function LandingPage() {
       </section>
 
       {/* Features Grid */}
-      <section className="border-t border-slate-200/80 bg-white py-24 dark:border-slate-800 dark:bg-slate-900">
+      <section className="border-t border-[var(--color-border)] bg-white py-24 dark:bg-slate-900">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mb-14 text-center">
-            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <h2 className="text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
               Everything You Need to Excel
             </h2>
-            <p className="mt-3 text-base text-slate-600 dark:text-slate-400">
-              Designed for high-performing students who want clarity and momentum.
+            <p className="mt-3 text-sm font-medium text-[var(--color-text-secondary)]">
+              Designed for high-performing students who want cognitive clarity and momentum.
             </p>
           </div>
           <div className="grid gap-6 sm:grid-cols-3">
@@ -403,12 +333,12 @@ export function LandingPage() {
               {
                 icon: Layers,
                 title: 'Structured Task Board',
-                desc: 'Organize study goals by priority, status, and deadlines with Notion-inspired clarity.',
+                desc: 'Organize study goals with circular checkboxes, priority flags P1-P3, and project hashtags.',
               },
               {
                 icon: Timer,
                 title: 'Pomodoro Focus Cycles',
-                desc: 'Paymo-style focus sprints with custom work and break durations to build daily momentum.',
+                desc: 'Stitch-style focus sprints with custom work and break durations to build daily momentum.',
               },
               {
                 icon: Bot,
@@ -420,16 +350,13 @@ export function LandingPage() {
               return (
                 <div
                   key={f.title}
-                  className="rounded-2xl border border-slate-200/80 bg-slate-50/50 p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-slate-950/50"
+                  className="rounded-2xl border border-[var(--color-border)] bg-slate-50/70 p-6 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md dark:bg-slate-950/70"
                 >
-                  <div
-                    className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl text-white"
-                    style={{ background: activePalette.gradient }}
-                  >
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-xs">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  <h3 className="text-base font-bold text-[var(--color-text-primary)]">{f.title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-secondary)]">
                     {f.desc}
                   </p>
                 </div>
@@ -440,19 +367,16 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/80 bg-slate-50 py-8 dark:border-slate-800 dark:bg-slate-950">
+      <footer className="border-t border-[var(--color-border)] bg-[var(--color-background)] py-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-white"
-              style={{ background: activePalette.gradient }}
-            >
-              <Timer className="h-3.5 w-3.5" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--color-primary)] text-white">
+              <Timer className="h-4 w-4" />
             </div>
-            <span className="text-xs font-extrabold text-slate-900 dark:text-white">FocusForge</span>
+            <span className="text-xs font-extrabold text-[var(--color-text-primary)]">FocusForge</span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            © {new Date().getFullYear()} FocusForge. Built for students worldwide.
+          <p className="text-xs font-medium text-[var(--color-text-secondary)]">
+            © {new Date().getFullYear()} FocusForge Pro. Built for students worldwide.
           </p>
         </div>
       </footer>
