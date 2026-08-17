@@ -99,24 +99,24 @@ export function TasksPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
             Task Management Studio
           </h1>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            {isLoading ? 'Loading workspace tasks…' : `${totalElements} total study task${totalElements !== 1 ? 's' : ''}`} · Inspired by ClickUp & Paymo
+          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">
+            {isLoading ? 'Loading workspace tasks…' : `${totalElements} total study task${totalElements !== 1 ? 's' : ''}`} · Inspired by Todoist & Stitch
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* View Switcher Pills */}
-          <div className="flex items-center gap-1 rounded-full border border-slate-200/90 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-white p-1 shadow-xs dark:bg-slate-900">
             <button
               type="button"
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all ${
                 viewMode === 'list'
-                  ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400'
+                  ? 'bg-[var(--color-primary)] text-white shadow-xs'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
               }`}
             >
               <ListIcon className="h-3.5 w-3.5" />
@@ -125,10 +125,10 @@ export function TasksPage() {
             <button
               type="button"
               onClick={() => setViewMode('kanban')}
-              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all ${
                 viewMode === 'kanban'
-                  ? 'bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400'
+                  ? 'bg-[var(--color-primary)] text-white shadow-xs'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
               }`}
             >
               <LayoutGrid className="h-3.5 w-3.5" />
@@ -139,8 +139,7 @@ export function TasksPage() {
           <button
             type="button"
             onClick={() => setIsCreateOpen(true)}
-            className="flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
-            style={{ background: activePalette.gradient }}
+            className="flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-105"
           >
             <Plus className="h-4 w-4" />
             New Task

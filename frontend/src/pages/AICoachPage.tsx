@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Bot, Send, Sparkles, User, BookOpen, Lightbulb, Zap, HelpCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useTheme } from '@/hooks/useTheme';
+import { Bot, Send, Sparkles, User } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
+import { cn } from '@/utils/cn';
 
 type Message = {
   id: string;
@@ -12,14 +11,13 @@ type Message = {
 };
 
 const SUGGESTED_PROMPTS = [
-  "Create a 3-day exam review schedule for Calculus II",
+  "Create a 3-day exam review schedule for Organic Chemistry",
   "Explain Neural Networks and Backpropagation in simple terms",
-  "Give me 5 memory tricks for learning organic chemistry mechanisms",
-  "Help me structure my essay introduction on Artificial Intelligence ethics",
+  "Give me 5 active recall memory techniques for exam prep",
+  "Help me structure my research essay introduction",
 ];
 
 export function AICoachPage() {
-  const { activePalette } = useTheme();
   const user = useAuthStore((s) => s.user);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -69,104 +67,109 @@ export function AICoachPage() {
   };
 
   return (
-    <div className="space-y-6 font-sans h-[calc(100vh-120px)] flex flex-col">
+    <div className="space-y-4 font-sans h-[calc(100vh-120px)] flex flex-col max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between flex-none">
+      <div className="flex items-center justify-between flex-none pb-2 border-b border-[var(--color-border)]">
         <div className="flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-md"
-            style={{ background: activePalette.gradient }}
-          >
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-xs">
             <Bot className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-              AI Study Assistant & Tutor
+            <h1 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+              FocusForge AI Coach
             </h1>
-            <p className="text-xs text-slate-500">24/7 Gemini-Powered Personal Tutor</p>
+            <p className="text-xs font-semibold text-[var(--color-text-secondary)]">
+              Personalized 24/7 Academic Study Assistant
+            </p>
           </div>
         </div>
+
+        <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-surface-container)] px-3 py-1 text-xs font-bold text-[var(--color-primary)] border border-[var(--color-border-strong)]">
+          <Sparkles className="h-3.5 w-3.5" />
+          GPT-4o Study Engine
+        </span>
       </div>
 
-      {/* Main Chat Box Container */}
-      <div className="flex-1 rounded-3xl border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm flex flex-col overflow-hidden">
-        {/* Messages Scroll Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex items-start gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
-            >
-              <div
-                className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-xs font-bold ${
-                  msg.sender === 'user'
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                    : 'text-white'
-                }`}
-                style={{ background: msg.sender === 'ai' ? activePalette.gradient : undefined }}
-              >
-                {msg.sender === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-              </div>
-
-              <div
-                className={`max-w-lg rounded-2xl px-4 py-3 text-xs leading-relaxed ${
-                  msg.sender === 'user'
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                    : 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100'
-                }`}
-              >
-                <p className="whitespace-pre-line">{msg.text}</p>
-                <span className="mt-1 block text-[10px] opacity-60 text-right">{msg.time}</span>
-              </div>
-            </div>
-          ))}
-
-          {isTyping && (
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Bot className="h-4 w-4 animate-spin text-[var(--color-primary)]" />
-              <span>AI Study Coach is thinking…</span>
-            </div>
-          )}
-        </div>
-
-        {/* Suggested Quick Prompts Bar */}
-        <div className="px-6 py-2 border-t border-slate-100 dark:border-slate-800/60 overflow-x-auto flex items-center gap-2">
-          {SUGGESTED_PROMPTS.map((p, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleSend(p)}
-              className="flex-none rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
-            >
-              💡 {p}
-            </button>
-          ))}
-        </div>
-
-        {/* Input Box */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
-          }}
-          className="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3"
-        >
-          <input
-            type="text"
-            placeholder="Ask your AI Study Coach anything (e.g. explain derivatives, make a study plan)..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white"
-          />
+      {/* Suggested Quick Prompts */}
+      <div className="flex flex-wrap gap-2 flex-none">
+        {SUGGESTED_PROMPTS.map((prompt) => (
           <button
-            type="submit"
-            className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-md transition-transform hover:scale-105"
-            style={{ background: activePalette.gradient }}
+            key={prompt}
+            type="button"
+            onClick={() => handleSend(prompt)}
+            className="rounded-full border border-[var(--color-border)] bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--color-text-secondary)] shadow-xs transition-all hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary)] dark:bg-slate-900"
           >
-            <Send className="h-4 w-4" />
+            💡 {prompt}
           </button>
-        </form>
+        ))}
       </div>
+
+      {/* Chat Messages Log */}
+      <div className="flex-1 space-y-4 overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-xs dark:bg-slate-900">
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={cn('flex gap-3 max-w-2xl', msg.sender === 'user' ? 'ml-auto flex-row-reverse' : '')}
+          >
+            <div
+              className={cn(
+                'flex h-8 w-8 flex-none items-center justify-center rounded-full text-xs font-bold text-white shadow-xs',
+                msg.sender === 'user' ? 'bg-slate-800' : 'bg-[var(--color-primary)]',
+              )}
+            >
+              {msg.sender === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+            </div>
+
+            <div
+              className={cn(
+                'rounded-2xl p-4 text-xs font-medium leading-relaxed shadow-xs',
+                msg.sender === 'user'
+                  ? 'bg-[var(--color-primary)] text-white rounded-tr-none'
+                  : 'bg-slate-50 text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-tl-none dark:bg-slate-800',
+              )}
+            >
+              <p className="whitespace-pre-line">{msg.text}</p>
+              <span className="mt-1.5 block text-[10px] opacity-70 text-right">{msg.time}</span>
+            </div>
+          </div>
+        ))}
+
+        {isTyping && (
+          <div className="flex gap-3 max-w-xs">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-primary)] text-white">
+              <Bot className="h-4 w-4" />
+            </div>
+            <div className="rounded-2xl bg-slate-50 border border-[var(--color-border)] p-3 text-xs font-semibold text-[var(--color-text-secondary)] animate-pulse dark:bg-slate-800">
+              AI Coach is thinking…
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Input Box */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend();
+        }}
+        className="flex gap-2 flex-none"
+      >
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask your AI Study Coach anything (e.g. Explain quantum mechanics, schedule my week)..."
+          className="h-11 flex-1 rounded-full border border-[var(--color-border)] bg-white px-5 text-xs font-medium text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] shadow-xs focus:border-[var(--color-primary)] focus:outline-none dark:bg-slate-900"
+        />
+        <button
+          type="submit"
+          disabled={!input.trim() || isTyping}
+          className="flex h-11 px-6 flex-none items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] disabled:opacity-40"
+        >
+          <span>Send</span>
+          <Send className="h-3.5 w-3.5" />
+        </button>
+      </form>
     </div>
   );
 }

@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MailCheck, Timer, CheckCircle2, Sparkles, ShieldCheck, Flame, Trophy } from 'lucide-react';
+import { MailCheck, Timer, CheckCircle2, Flame, Trophy } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Button, Input } from '@/components/common';
+import { Input } from '@/components/common';
 import { useRegister } from '@/hooks/useAuth';
-import { useTheme } from '@/hooks/useTheme';
 import { paths } from '@/routes/paths';
 import { useAuthStore } from '@/store/auth.store';
 
@@ -39,7 +38,6 @@ function getPasswordStrength(pass: string) {
 }
 
 export function SignupPage() {
-  const { activePalette } = useTheme();
   const token = useAuthStore((state) => state.token);
   const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
   const { mutate: registerAccount, isPending } = useRegister({
@@ -58,14 +56,11 @@ export function SignupPage() {
   if (token) return <Navigate to={paths.dashboard} replace />;
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 font-sans">
+    <div className="flex min-h-screen bg-[var(--color-background)] font-sans antialiased text-[var(--color-text-primary)]">
       {/* Left Feature Branding Panel */}
-      <div
-        className="hidden flex-col justify-between p-12 lg:flex lg:w-[480px] text-white relative overflow-hidden"
-        style={{ background: activePalette.gradient }}
-      >
+      <div className="hidden flex-col justify-between p-12 lg:flex lg:w-[480px] text-white relative overflow-hidden bg-gradient-to-br from-[#E44332] via-[#B31F14] to-[#782D40]">
         <div className="flex items-center gap-3 relative z-10">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-sm">
             <Timer className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-extrabold tracking-tight text-white">FocusForge</span>
@@ -77,15 +72,15 @@ export function SignupPage() {
               <CheckCircle2 className="h-4 w-4 text-emerald-300" />
               <p className="text-sm font-bold text-white">Multi-View Task Studio</p>
             </div>
-            <p className="mt-1 text-xs text-white/80">List View, Kanban Boards, and priority tag filters.</p>
+            <p className="mt-1 text-xs text-white/90">List View, circular checkboxes, and priority tags P1-P3.</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20">
             <div className="flex items-center gap-2">
-              <Flame className="h-4 w-4 text-orange-300" />
+              <Flame className="h-4 w-4 text-amber-300" />
               <p className="text-sm font-bold text-white">Pomodoro Focus & Soundscapes</p>
             </div>
-            <p className="mt-1 text-xs text-white/80">Ambient audio player with Rain, Space, and White Noise.</p>
+            <p className="mt-1 text-xs text-white/90">Ambient audio player with Rain, Space, and White Noise.</p>
           </div>
 
           <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20">
@@ -93,43 +88,39 @@ export function SignupPage() {
               <Trophy className="h-4 w-4 text-amber-300" />
               <p className="text-sm font-bold text-white">24/7 AI Coach & Rewards</p>
             </div>
-            <p className="mt-1 text-xs text-white/80">Instant study plans, flashcards, and streak XP badges.</p>
+            <p className="mt-1 text-xs text-white/90">Instant study plans, flashcards, and streak XP badges.</p>
           </div>
         </div>
 
-        <p className="text-xs text-white/70 relative z-10">© 2026 FocusForge AI Study Coach</p>
+        <p className="text-xs text-white/80 relative z-10">© 2026 FocusForge Pro Suite</p>
       </div>
 
       {/* Right Signup Form Box */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md rounded-3xl border border-slate-200/90 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-xl text-white shadow-sm"
-              style={{ background: activePalette.gradient }}
-            >
-              <Timer className="h-4 w-4" />
+        <div className="w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-white p-8 shadow-xs dark:bg-slate-900">
+          <div className="mb-8 flex items-center gap-2.5 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white shadow-xs">
+              <Timer className="h-5 w-5" />
             </div>
-            <span className="text-base font-bold text-slate-900 dark:text-white">FocusForge</span>
+            <span className="text-lg font-bold text-[var(--color-text-primary)]">FocusForge</span>
           </div>
 
           {registeredEmail ? (
             <div className="space-y-5" role="status">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
                 <MailCheck className="h-6 w-6" aria-hidden="true" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Account Created!</h1>
-                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Account Created!</h1>
+                <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-secondary)]">
                   Your FocusForge study workspace is ready. You can log in directly with your email:
                 </p>
-                <p className="mt-2 text-sm font-bold text-slate-900 dark:text-white">{registeredEmail}</p>
+                <p className="mt-2 text-sm font-bold text-[var(--color-text-primary)]">{registeredEmail}</p>
               </div>
               <Link to={paths.login} className="block pt-2">
                 <button
                   type="button"
-                  className="w-full rounded-full py-3 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
-                  style={{ background: activePalette.gradient }}
+                  className="w-full rounded-full bg-[var(--color-primary)] py-3 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-105"
                 >
                   Proceed to Login
                 </button>
@@ -138,10 +129,10 @@ export function SignupPage() {
           ) : (
             <>
               <div className="mb-6">
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                   Create Your Account
                 </h1>
-                <p className="mt-1 text-xs text-slate-500">Join FocusForge and build your study momentum</p>
+                <p className="mt-1 text-xs font-medium text-[var(--color-text-secondary)]">Join FocusForge and build your study momentum</p>
               </div>
 
               <form onSubmit={handleSubmit((values) => registerAccount(values))} className="space-y-4" noValidate>
@@ -176,8 +167,8 @@ export function SignupPage() {
                   {watchPassword && (
                     <div className="mt-2 space-y-1">
                       <div className="flex justify-between text-[10px] font-bold">
-                        <span className="text-slate-500">Password Strength</span>
-                        <span className="text-slate-700 dark:text-slate-300">{strength.label}</span>
+                        <span className="text-[var(--color-text-tertiary)]">Password Strength</span>
+                        <span className="text-[var(--color-text-primary)]">{strength.label}</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                         <div
@@ -201,14 +192,13 @@ export function SignupPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="mt-2 w-full rounded-full py-3 text-xs font-bold text-white shadow-md transition-all hover:scale-105 disabled:opacity-50"
-                  style={{ background: activePalette.gradient }}
+                  className="mt-2 w-full rounded-full bg-[var(--color-primary)] py-3 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-[1.01] active:scale-98 disabled:opacity-50"
                 >
                   {isPending ? 'Creating Account...' : 'Create Account'}
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-xs text-slate-500">
+              <p className="mt-6 text-center text-xs font-medium text-[var(--color-text-secondary)]">
                 Already have an account?{' '}
                 <Link to={paths.login} className="font-bold text-[var(--color-primary)] hover:underline">
                   Log in
@@ -221,4 +211,3 @@ export function SignupPage() {
     </div>
   );
 }
-
