@@ -10,12 +10,12 @@ import {
   Plus,
   Target,
   TrendingUp,
+  Hash,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth.store';
 import { useTasks, useCreateTask, useCompleteTask } from '@/hooks/useTasks';
 import { usePomodoro } from '@/hooks/usePomodoro';
-import { useTheme } from '@/hooks/useTheme';
 import { paths } from '@/routes/paths';
 import { cn } from '@/utils/cn';
 import type { Task, TaskStatus } from '@/types/task';
@@ -54,23 +54,23 @@ function StatCard({ label, value, change, icon: Icon, color }: {
   color: string;
 }) {
   return (
-    <div className="bento-card flex flex-col gap-3 p-5">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-xs dark:bg-slate-900 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div
-          className="flex h-10 w-10 items-center justify-center rounded-xl"
+          className="flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-xs"
           style={{ background: color }}
         >
-          <Icon className="h-5 w-5 text-white" />
+          <Icon className="h-5 w-5" />
         </div>
         {change && (
-          <span className="text-xs font-medium text-success">{change}</span>
+          <span className="text-xs font-bold text-emerald-600">{change}</span>
         )}
       </div>
       <div>
-        <p className="text-3xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+        <p className="text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
           {value}
         </p>
-        <p className="mt-0.5 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="mt-0.5 text-xs font-semibold text-[var(--color-text-secondary)]">
           {label}
         </p>
       </div>
@@ -78,49 +78,47 @@ function StatCard({ label, value, change, icon: Icon, color }: {
   );
 }
 
-function PomodoroCard() {
+function StitchPomodoroWidget() {
   const { mode, display, progress, isRunning, sessionCount, start, pause, reset } = usePomodoro();
-  const modeLabel = mode === 'work' ? 'Focus' : mode === 'short-break' ? 'Short Break' : 'Long Break';
+  const modeLabel = mode === 'work' ? 'Focus Mode' : mode === 'short-break' ? 'Short Break' : 'Long Rest';
 
   return (
-    <div className="bento-card flex flex-col gap-4 p-6">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-xs dark:bg-slate-900 flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" style={{ color: 'var(--color-accent)' }} />
-            <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-              Pomodoro Timer
+            <Clock className="h-4 w-4 text-[var(--color-primary)]" />
+            <p className="text-sm font-bold text-[var(--color-text-primary)]">
+              Pomodoro Focus Engine
             </p>
           </div>
-          <p className="mt-0.5 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="mt-0.5 text-xs font-medium text-[var(--color-text-secondary)]">
             {modeLabel}
           </p>
         </div>
-        <span className="text-xs font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+        <span className="rounded-full bg-[var(--color-surface-container)] border border-[var(--color-border-strong)] px-2.5 py-0.5 text-[10px] font-bold text-[var(--color-primary)]">
           {sessionCount} sessions
         </span>
       </div>
 
       {/* Timer Display with Ring */}
-      <div className="relative mx-auto">
+      <div className="relative mx-auto my-1 flex items-center justify-center">
         <svg width="140" height="140" className="transform -rotate-90">
-          {/* Background ring */}
           <circle
             cx="70"
             cy="70"
             r="60"
             fill="none"
-            stroke="var(--color-border)"
+            stroke="var(--color-surface-secondary)"
             strokeWidth="8"
           />
-          {/* Progress ring */}
           <circle
             cx="70"
             cy="70"
             r="60"
             fill="none"
-            stroke="var(--color-accent)"
+            stroke="var(--color-primary)"
             strokeWidth="8"
             strokeDasharray={`${2 * Math.PI * 60}`}
             strokeDashoffset={`${2 * Math.PI * 60 * (1 - progress)}`}
@@ -128,11 +126,14 @@ function PomodoroCard() {
             style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
         </svg>
-        {/* Timer text centered */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="font-mono text-3xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+          <p className="font-mono text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
             {display}
           </p>
+          <span className="text-[10px] font-bold text-[var(--color-primary)] flex items-center gap-0.5 mt-0.5">
+            <Flame className="h-3 w-3 fill-[var(--color-primary)]" />
+            {isRunning ? 'In Flow' : 'Paused'}
+          </span>
         </div>
       </div>
 
@@ -141,16 +142,14 @@ function PomodoroCard() {
         <button
           type="button"
           onClick={isRunning ? pause : start}
-          className="flex-1 rounded-xl px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.02]"
-          style={{ background: 'var(--color-primary)' }}
+          className="flex-1 rounded-full bg-[var(--color-primary)] px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] active:scale-98"
         >
-          {isRunning ? 'Pause' : 'Start'}
+          {isRunning ? 'Pause' : 'Start Focus'}
         </button>
         <button
           type="button"
           onClick={reset}
-          className="rounded-xl border border-[var(--color-border)] px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-surface-secondary)]"
-          style={{ color: 'var(--color-text-primary)' }}
+          className="rounded-full border border-[var(--color-border)] px-4 py-2 text-xs font-semibold text-[var(--color-text-secondary)] transition-all hover:bg-slate-100 dark:hover:bg-slate-800"
         >
           Reset
         </button>
@@ -159,7 +158,7 @@ function PomodoroCard() {
   );
 }
 
-function TaskListCard() {
+function StitchTaskListWidget() {
   const { data: tasksData, isLoading } = useTasks({ size: 6 });
   const { mutate: createTask } = useCreateTask();
   const { mutate: completeTask } = useCompleteTask();
@@ -182,40 +181,37 @@ function TaskListCard() {
   };
 
   return (
-    <div className="bento-card flex flex-col p-6">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-xs dark:bg-slate-900 flex flex-col">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4" style={{ color: 'var(--color-secondary)' }} />
-          <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-            Task List
+          <CheckCircle2 className="h-4 w-4 text-[var(--color-primary)]" />
+          <p className="text-sm font-bold text-[var(--color-text-primary)]">
+            Active Workspace Tasks
           </p>
         </div>
         <Link
           to={paths.tasks}
-          className="flex items-center gap-1 text-xs font-medium transition-colors"
-          style={{ color: 'var(--color-secondary)' }}
+          className="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] hover:underline"
         >
           View all
           <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
 
-      {/* Quick add */}
+      {/* Quick Add */}
       <form onSubmit={handleAddTask} className="mb-3 flex gap-2">
         <input
           type="text"
           value={newTaskValue}
           onChange={(e) => setNewTaskValue(e.target.value)}
-          placeholder="Add a task..."
-          className="h-9 flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-secondary)] px-3 text-sm transition-all duration-200 placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-border-strong)] focus:outline-none"
-          style={{ color: 'var(--color-text-primary)' }}
+          placeholder="Add a task e.g. Finish growth report #ExamPrep..."
+          className="h-9 flex-1 rounded-full border border-[var(--color-border)] bg-slate-50 px-4 text-xs font-medium text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-primary)] focus:outline-none dark:bg-slate-950"
         />
         <button
           type="submit"
           disabled={!newTaskValue.trim()}
-          className="flex h-9 w-9 flex-none items-center justify-center rounded-xl text-white transition-all duration-200 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed"
-          style={{ background: 'var(--color-primary)' }}
+          className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] disabled:opacity-40"
           aria-label="Add task"
         >
           <Plus className="h-4 w-4" />
@@ -223,55 +219,61 @@ function TaskListCard() {
       </form>
 
       {/* Task rows */}
-      <div className="flex-1 space-y-1 overflow-y-auto" style={{ maxHeight: '280px' }}>
+      <div className="flex-1 space-y-1.5 overflow-y-auto" style={{ maxHeight: '280px' }}>
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 rounded-lg px-2 py-2">
-              <div className="h-4 w-4 animate-pulse rounded-full bg-[var(--color-surface-secondary)]" />
-              <div className="h-3 flex-1 animate-pulse rounded bg-[var(--color-surface-secondary)]" />
+              <div className="h-5 w-5 animate-pulse rounded-full bg-slate-100 dark:bg-slate-800" />
+              <div className="h-3 flex-1 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
             </div>
           ))
         ) : tasks.length === 0 ? (
-          <div className="py-8 text-center text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            No tasks yet. Add one above!
+          <div className="py-8 text-center text-xs font-medium text-[var(--color-text-secondary)]">
+            No tasks yet. Type a task title above to add one!
           </div>
         ) : (
           tasks.map((task) => {
-            const Icon = STATUS_ICON[task.status];
             const isCompleted = task.status === 'COMPLETED';
             return (
               <div
                 key={task.id}
-                className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-[var(--color-surface-secondary)]"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleToggle(task)}
-                  disabled={isCompleted}
-                  className={cn(
-                    'flex-none transition-colors',
-                    isCompleted
-                      ? 'text-success cursor-default'
-                      : 'text-[var(--color-text-tertiary)] hover:text-success',
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                </button>
-                <span
-                  className={cn(
-                    'flex-1 truncate text-sm',
-                    isCompleted
-                      ? 'text-[var(--color-text-secondary)] line-through opacity-60'
-                      : 'text-[var(--color-text-primary)]',
-                  )}
-                >
-                  {task.title}
-                </span>
-                {task.dueDate && !isCompleted && (
-                  <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                    {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </span>
+                className={cn(
+                  'flex items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] p-3 transition-all hover:bg-slate-50 dark:hover:bg-slate-800',
+                  isCompleted && 'opacity-60 bg-slate-50/60 dark:bg-slate-950/60',
                 )}
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <button
+                    type="button"
+                    onClick={() => handleToggle(task)}
+                    disabled={isCompleted}
+                    className={cn(
+                      'flex h-5 w-5 flex-none items-center justify-center rounded-full border transition-all',
+                      isCompleted
+                        ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white'
+                        : 'border-[var(--color-border-strong)] bg-white hover:border-[var(--color-primary)] text-transparent dark:bg-slate-900',
+                    )}
+                  >
+                    <CheckCircle2 className="h-3.5 w-3.5 stroke-[2.5]" />
+                  </button>
+                  <span
+                    className={cn(
+                      'truncate text-xs font-semibold',
+                      isCompleted
+                        ? 'text-[var(--color-text-tertiary)] line-through'
+                        : 'text-[var(--color-text-primary)]',
+                    )}
+                  >
+                    {task.title}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 flex-none">
+                  <span className="inline-flex items-center gap-0.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-container)] px-2 py-0.5 text-[9px] font-bold text-[var(--color-primary)]">
+                    <Hash className="h-2.5 w-2.5" />
+                    ExamPrep
+                  </span>
+                </div>
               </div>
             );
           })
@@ -281,45 +283,40 @@ function TaskListCard() {
   );
 }
 
-function StreakCard({ tasks = [] }: { tasks?: Task[] }) {
-  const { activePalette } = useTheme();
+function StitchStreakCard({ tasks = [] }: { tasks?: Task[] }) {
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   const completedCount = tasks.filter((t) => t.status === 'COMPLETED').length;
   const streakDays = completedCount > 0 ? Math.min(7, Math.max(1, completedCount)) : 0;
   const activeDays = days.map((_, idx) => idx < streakDays);
 
   return (
-    <div
-      className="bento-card relative overflow-hidden p-5 text-white shadow-lg transition-transform hover:scale-[1.02]"
-      style={{ background: activePalette.gradient }}
-    >
-      <div className="relative z-10 flex flex-col justify-between h-full gap-3">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[#E44332] via-[#B31F14] to-[#782D40] p-5 text-white shadow-md">
+      <div className="flex flex-col justify-between h-full gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Flame className="h-5 w-5 fill-white text-white animate-bounce" />
+            <Flame className="h-5 w-5 fill-amber-400 text-amber-400" />
             <p className="text-xs font-bold uppercase tracking-wider text-white/90">Study Streak</p>
           </div>
-          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-md">
-            {streakDays > 0 ? '🔥 On Fire!' : '🌱 Start Today'}
+          <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-md">
+            {streakDays > 0 ? '🔥 On Fire' : '🌱 Active'}
           </span>
         </div>
 
         <div>
-          <p className="text-4xl font-extrabold text-white">{streakDays} {streakDays === 1 ? 'Day' : 'Days'}</p>
-          <p className="mt-0.5 text-xs text-white/80">
+          <p className="text-3xl font-extrabold text-white">{streakDays} {streakDays === 1 ? 'Day' : 'Days'}</p>
+          <p className="mt-0.5 text-xs text-white/80 font-medium">
             {streakDays > 0 ? 'Active daily learning momentum' : 'Complete tasks to build your streak!'}
           </p>
         </div>
 
-        {/* 7-day visual tracker */}
         <div className="flex items-center justify-between pt-2 border-t border-white/20">
           {days.map((d, i) => (
             <div key={i} className="flex flex-col items-center gap-1">
               <span className="text-[10px] font-bold text-white/70">{d}</span>
               <div
-                className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
                   activeDays[i]
-                    ? 'bg-white text-slate-900 shadow-sm'
+                    ? 'bg-white text-[#B31F14] shadow-xs'
                     : 'bg-white/10 text-white/40'
                 }`}
               >
@@ -333,9 +330,7 @@ function StreakCard({ tasks = [] }: { tasks?: Task[] }) {
   );
 }
 
-function SubjectDistributionCard({ tasks = [] }: { tasks?: Task[] }) {
-  const { activePalette } = useTheme();
-
+function StitchSubjectBreakdownCard({ tasks = [] }: { tasks?: Task[] }) {
   const subjectMap: Record<string, number> = {};
   tasks.forEach((t) => {
     let subject = 'General Revision';
@@ -351,8 +346,8 @@ function SubjectDistributionCard({ tasks = [] }: { tasks?: Task[] }) {
   });
 
   const totalCount = Object.values(subjectMap).reduce((a, b) => a + b, 0);
+  const colors = ['#E44332', '#0058BF', '#006B1D', '#FF7A00'];
 
-  const colors = ['#4F46E5', '#0EA5E9', '#10B981', '#F59E0B', '#EC4899'];
   const subjects = Object.entries(subjectMap).map(([name, count], index) => ({
     name,
     count,
@@ -362,19 +357,19 @@ function SubjectDistributionCard({ tasks = [] }: { tasks?: Task[] }) {
   }));
 
   return (
-    <div className="bento-card flex flex-col gap-4 p-5">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-xs dark:bg-slate-900 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-[var(--color-primary)]" />
-          <p className="text-sm font-bold text-slate-900 dark:text-white">Subject Time Breakdown</p>
+          <p className="text-sm font-bold text-[var(--color-text-primary)]">Subject Breakdown</p>
         </div>
-        <span className="text-xs font-semibold text-slate-500">
-          {totalCount > 0 ? `${(totalCount * 1.5).toFixed(1)} hrs total` : '0.0 hrs total'}
+        <span className="text-xs font-semibold text-[var(--color-text-secondary)]">
+          {totalCount > 0 ? `${(totalCount * 1.5).toFixed(1)} hrs total` : '0.0 hrs'}
         </span>
       </div>
 
       {subjects.length === 0 ? (
-        <div className="py-6 text-center text-xs font-medium text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="py-6 text-center text-xs font-medium text-[var(--color-text-secondary)] border border-dashed border-[var(--color-border)] rounded-xl">
           No tasks logged yet. Add your study tasks above to view subject breakdown!
         </div>
       ) : (
@@ -382,8 +377,8 @@ function SubjectDistributionCard({ tasks = [] }: { tasks?: Task[] }) {
           {subjects.map((s) => (
             <div key={s.name} className="space-y-1">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-slate-700 dark:text-slate-300">{s.name}</span>
-                <span className="text-slate-500">{s.hours}h ({s.pct}%)</span>
+                <span className="text-[var(--color-text-primary)]">{s.name}</span>
+                <span className="text-[var(--color-text-secondary)]">{s.hours}h ({s.pct}%)</span>
               </div>
               <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                 <div
@@ -399,42 +394,6 @@ function SubjectDistributionCard({ tasks = [] }: { tasks?: Task[] }) {
   );
 }
 
-function DailyTargetCard({ tasks = [] }: { tasks?: Task[] }) {
-  const completedToday = tasks.filter((t) => t.status === 'COMPLETED').length;
-  const focusHours = (completedToday * 0.5).toFixed(1) + 'h';
-
-  return (
-    <div className="bento-card flex flex-col gap-4 p-5">
-      <div className="flex items-center gap-2">
-        <Target className="h-4 w-4 text-[var(--color-primary)]" />
-        <p className="text-sm font-bold text-slate-900 dark:text-white">
-          Today's Daily Target
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3.5 dark:border-slate-800 dark:bg-slate-950">
-          <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
-            {completedToday}
-          </p>
-          <p className="mt-0.5 text-xs font-semibold text-slate-500">
-            Tasks Completed
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3.5 dark:border-slate-800 dark:bg-slate-950">
-          <p className="text-2xl font-extrabold text-slate-900 dark:text-white">
-            {focusHours}
-          </p>
-          <p className="mt-0.5 text-xs font-semibold text-slate-500">
-            Focus Time Done
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function QuickLinksCard() {
   const links = [
     { label: 'Set study goals', to: paths.goals, icon: Target },
@@ -443,10 +402,10 @@ function QuickLinksCard() {
   ];
 
   return (
-    <div className="bento-card flex flex-col gap-3 p-5">
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5 shadow-xs dark:bg-slate-900 flex flex-col gap-3">
       <div className="flex items-center gap-2">
-        <Calendar className="h-4 w-4 text-slate-500" />
-        <p className="text-sm font-bold text-slate-900 dark:text-white">
+        <Calendar className="h-4 w-4 text-[var(--color-text-secondary)]" />
+        <p className="text-sm font-bold text-[var(--color-text-primary)]">
           Quick Actions
         </p>
       </div>
@@ -456,7 +415,7 @@ function QuickLinksCard() {
           <Link
             key={to}
             to={to}
-            className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+            className="flex items-center gap-2.5 rounded-full px-4 py-2.5 text-xs font-semibold text-[var(--color-text-secondary)] transition-all hover:bg-slate-50 hover:text-[var(--color-text-primary)] dark:hover:bg-slate-800"
           >
             <Icon className="h-4 w-4 flex-none text-[var(--color-primary)]" />
             <span className="flex-1">{label}</span>
@@ -483,8 +442,8 @@ export function DashboardPage() {
   const inProgressCount = tasks.filter((t) => t.status === 'IN_PROGRESS').length;
 
   return (
-    <div className="space-y-8 pb-8 font-sans">
-      {/* ── Header ── */}
+    <div className="space-y-8 pb-8 font-sans bg-[var(--color-background)]">
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -492,24 +451,24 @@ export function DashboardPage() {
         className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
       >
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
             {getGreeting()}, {firstName}! 👋
           </h1>
-          <p className="mt-1 text-xs font-semibold text-slate-500">
+          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">
             {getFormattedDate()} · FocusForge Active Workspace
           </p>
         </div>
 
         <Link
           to={paths.tasks}
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white px-4 py-2 text-xs font-bold text-slate-800 shadow-sm transition-all hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+          className="inline-flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-105"
         >
-          <Plus className="h-3.5 w-3.5 text-[var(--color-primary)]" />
+          <Plus className="h-4 w-4" />
           Create New Task
         </Link>
       </motion.div>
 
-      {/* ── Bento Grid Row 1: Key Metrics ── */}
+      {/* Row 1: Key Metrics */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -520,40 +479,39 @@ export function DashboardPage() {
           label="Total Workspace Tasks"
           value={totalTasks}
           icon={CheckCircle2}
-          color="#4F46E5"
+          color="#E44332"
         />
         <StatCard
           label="Tasks To Do"
           value={todoCount}
           icon={Circle}
-          color="#F59E0B"
+          color="#FF7A00"
         />
         <StatCard
           label="In Progress"
           value={inProgressCount}
           icon={Clock}
-          color="#0EA5E9"
+          color="#0058BF"
         />
-        <StreakCard tasks={tasks} />
+        <StitchStreakCard tasks={tasks} />
       </motion.div>
 
-      {/* ── Bento Grid Row 2: Main Workspace Content ── */}
+      {/* Row 2: Main Workspace Content */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
         className="grid gap-5 lg:grid-cols-3"
       >
-        {/* Left 2 Columns: Today's Tasks */}
+        {/* Left 2 Columns: Tasks & Subject Breakdown */}
         <div className="lg:col-span-2 space-y-5">
-          <TaskListCard />
-          <SubjectDistributionCard tasks={tasks} />
+          <StitchTaskListWidget />
+          <StitchSubjectBreakdownCard tasks={tasks} />
         </div>
 
-        {/* Right Column: Pomodoro + Stats + Actions */}
+        {/* Right Column: Pomodoro + Quick Links */}
         <div className="space-y-5">
-          <PomodoroCard />
-          <DailyTargetCard tasks={tasks} />
+          <StitchPomodoroWidget />
           <QuickLinksCard />
         </div>
       </motion.div>

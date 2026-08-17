@@ -1,24 +1,22 @@
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Mail, Timer, Sparkles, Flame, KeyRound, ArrowRight } from 'lucide-react';
+import { Mail, Timer, Sparkles, KeyRound, ArrowRight } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Input } from '@/components/common';
 import { useLogin, useResendVerification } from '@/hooks/useAuth';
-import { useTheme } from '@/hooks/useTheme';
 import { paths } from '@/routes/paths';
 import { useAuthStore } from '@/store/auth.store';
 
 const schema = z.object({
-  email: z.string().email('Enter a valid email'),
+  email: z.string().email('Enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 export function LoginPage() {
-  const { activePalette } = useTheme();
   const token = useAuthStore((state) => state.token);
   const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
   const { mutate: login, isPending } = useLogin({ onUnverified: setUnverifiedEmail });
@@ -44,14 +42,11 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 font-sans">
-      {/* Left Feature Branding Panel */}
-      <div
-        className="hidden flex-col justify-between p-12 lg:flex lg:w-[480px] text-white relative overflow-hidden"
-        style={{ background: activePalette.gradient }}
-      >
+    <div className="flex min-h-screen bg-[var(--color-background)] font-sans antialiased text-[var(--color-text-primary)]">
+      {/* Left Feature Branding Panel (Stitch Coral Red Gradient) */}
+      <div className="hidden flex-col justify-between p-12 lg:flex lg:w-[480px] text-white relative overflow-hidden bg-gradient-to-br from-[#E44332] via-[#B31F14] to-[#782D40]">
         <div className="flex items-center gap-3 relative z-10">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-sm">
             <Timer className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-extrabold tracking-tight text-white">FocusForge</span>
@@ -63,44 +58,41 @@ export function LoginPage() {
               <Sparkles className="h-5 w-5 text-amber-300" />
               <p className="text-sm font-bold text-white">Welcome Back to Your Workspace</p>
             </div>
-            <p className="mt-2 text-xs leading-relaxed text-white/80">
-              Pick up where you left off. Continue your Pomodoro sprints, review daily task deadlines, and get 24/7 assistance from your AI Study Coach.
+            <p className="mt-2 text-xs leading-relaxed text-white/90">
+              Pick up where you left off. Continue your Pomodoro focus sprints, track daily deadlines, and consult your 24/7 AI Study Coach.
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-white/70 relative z-10">© 2026 FocusForge AI Study Coach</p>
+        <p className="text-xs text-white/80 relative z-10">© 2026 FocusForge Pro Suite</p>
       </div>
 
-      {/* Right Login Form Box */}
+      {/* Right Login Form Box (Stitch Design Container) */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md rounded-3xl border border-slate-200/90 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-xl text-white shadow-sm"
-              style={{ background: activePalette.gradient }}
-            >
-              <Timer className="h-4 w-4" />
+        <div className="w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-white p-8 shadow-xs dark:bg-slate-900">
+          <div className="mb-8 flex items-center gap-2.5 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white shadow-xs">
+              <Timer className="h-5 w-5" />
             </div>
-            <span className="text-base font-bold text-slate-900 dark:text-white">FocusForge</span>
+            <span className="text-lg font-bold text-[var(--color-text-primary)]">FocusForge</span>
           </div>
 
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                 Log In
               </h1>
-              <p className="mt-1 text-xs text-slate-500">Access your study dashboard</p>
+              <p className="mt-1 text-xs font-medium text-[var(--color-text-secondary)]">Access your focus workspace</p>
             </div>
 
             {/* Quick Demo Fill Pill */}
             <button
               type="button"
               onClick={fillDemoAccount}
-              className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"
+              className="flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-container)] px-3 py-1.5 text-[11px] font-bold text-[var(--color-primary)] transition-all hover:bg-[var(--color-primary-light)]"
               title="Click to auto-fill demo credentials"
             >
-              <KeyRound className="h-3 w-3 text-[var(--color-primary)]" />
+              <KeyRound className="h-3.5 w-3.5" />
               Demo Account
             </button>
           </div>
@@ -144,8 +136,7 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-full py-3 text-xs font-bold text-white shadow-md transition-all hover:scale-105 disabled:opacity-50"
-              style={{ background: activePalette.gradient }}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] py-3 text-xs font-bold text-white shadow-xs transition-all hover:bg-[var(--color-primary-hover)] hover:scale-[1.01] active:scale-98 disabled:opacity-50"
             >
               {isPending ? 'Logging in...' : 'Log In to Workspace'}
               <ArrowRight className="h-4 w-4" />
@@ -153,7 +144,7 @@ export function LoginPage() {
           </form>
 
           {unverifiedEmail ? (
-            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950" role="alert">
+            <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950" role="alert">
               <div className="flex gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" aria-hidden="true" />
                 <div className="min-w-0">
@@ -173,7 +164,7 @@ export function LoginPage() {
             </div>
           ) : null}
 
-          <p className="mt-6 text-center text-xs text-slate-500">
+          <p className="mt-6 text-center text-xs font-medium text-[var(--color-text-secondary)]">
             Don't have an account?{' '}
             <Link to={paths.signup} className="font-bold text-[var(--color-primary)] hover:underline">
               Create an account
@@ -184,4 +175,3 @@ export function LoginPage() {
     </div>
   );
 }
-
