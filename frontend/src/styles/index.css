@@ -12,51 +12,52 @@
   /* ── Font ── */
   --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
 
-  /* ── Core Surfaces ── */
-  --color-background:          #F8FAFC;
+  /* ── Stitch Design System Core Surfaces ── */
+  --color-background:          #FAF9F7;
   --color-surface:             #FFFFFF;
-  --color-surface-secondary:   #F1F5F9;
+  --color-surface-secondary:   #FFE9E6;
+  --color-surface-container:   #FFF0EE;
 
   /* ── Borders ── */
-  --color-border:              #E2E8F0;
-  --color-border-strong:       #CBD5E1;
+  --color-border:              #E6E4E0;
+  --color-border-strong:       #E3BEB8;
 
   /* ── Text ── */
-  --color-text-primary:        #0F172A;
-  --color-text-secondary:      #64748B;
-  --color-text-tertiary:       #94A3B8;
+  --color-text-primary:        #25181A;
+  --color-text-secondary:      #584044;
+  --color-text-tertiary:       #8F706B;
 
-  /* ── Primary — Indigo ── */
-  --color-primary:             #4F46E5;
-  --color-primary-hover:       #4338CA;
-  --color-primary-light:       #EEF2FF;
-  --color-primary-subtle:      #C7D2FE;
+  /* ── Primary — Stitch Coral Red ── */
+  --color-primary:             #E44332;
+  --color-primary-hover:       #B31F14;
+  --color-primary-light:       #FFDAD4;
+  --color-primary-subtle:      #FFE9E6;
 
-  /* ── Secondary — Azure Blue ── */
-  --color-secondary:           #2563EB;
-  --color-secondary-light:     #EFF6FF;
+  /* ── Secondary — Blueberry Blue ── */
+  --color-secondary:           #0058BF;
+  --color-secondary-light:     #D8E2FF;
 
-  /* ── Accent — Emerald ── */
-  --color-accent:              #10B981;
-  --color-accent-light:        #ECFDF5;
+  /* ── Accent — Clover Green ── */
+  --color-accent:              #006B1D;
+  --color-accent-light:        #EEFFEC;
 
-  /* ── Warning — Amber ── */
-  --color-warning:             #F59E0B;
-  --color-warning-light:       #FFFBEB;
+  /* ── Warning — Tangerine ── */
+  --color-warning:             #FF7A00;
+  --color-warning-light:       #FFF3E6;
 
   /* ── Danger — Rose ── */
-  --color-danger:              #F43F5E;
-  --color-danger-light:        #FFF1F2;
+  --color-danger:              #E44332;
+  --color-danger-light:        #FFDAD4;
 
-  /* ── Success — Emerald ── */
-  --color-success:             #10B981;
-  --color-success-light:       #ECFDF5;
+  /* ── Success — Clover Green ── */
+  --color-success:             #006B1D;
+  --color-success-light:       #EEFFEC;
 
   /* ── Shadows ── */
-  --shadow-card:               0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-  --shadow-card-hover:         0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-elevated:           0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-nav:                0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card:               0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover:         0px 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-elevated:           0 12px 28px rgba(0, 0, 0, 0.08);
+  --shadow-nav:                0 1px 2px 0 rgba(0, 0, 0, 0.04);
 
   /* ── Border Radii ── */
   --radius-sm:                 8px;

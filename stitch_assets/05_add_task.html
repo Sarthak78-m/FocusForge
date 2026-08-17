@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FocusForge - Quick Add Task</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#3f0016", "on-tertiary-fixed": "#00210b", "secondary-fixed": "#ffd9de", "on-secondary-fixed-variant": "#782d40", outline: "#8c7074", "outline-variant": "#e0bec3", "tertiary-fixed": "#8df9a6", "surface-container-highest": "#f6dcdf", "inverse-on-surface": "#ffecee", "surface-container": "#ffe9eb", "secondary-container": "#fe99ad", "on-tertiary-container": "#eeffec", "on-background": "#25181a", "on-tertiary": "#ffffff", "surface-tint": "#b41f51", surface: "#fff8f7", "inverse-primary": "#ffb2bf", "surface-dim": "#edd4d7", "on-primary-container": "#fff8f8", "tertiary-fixed-dim": "#71dc8c", "primary-fixed": "#ffd9de", "surface-container-lowest": "#ffffff", "on-surface-variant": "#584044", "error-container": "#ffdad6", "surface-variant": "#f6dcdf", "on-tertiary-fixed-variant": "#005225", "surface-bright": "#fff8f7", error: "#ba1a1a", "inverse-surface": "#3c2c2f", "on-primary-fixed-variant": "#90003b", "primary-container": "#d03765", "on-secondary": "#ffffff", "on-secondary-container": "#792d40", "on-error": "#ffffff", tertiary: "#006931", "surface-container-low": "#fff0f1", "secondary-fixed-dim": "#ffb2bf", "tertiary-container": "#008540", background: "#fff8f7", secondary: "#964457", "on-error-container": "#93000a", "on-secondary-fixed": "#3f0116", "primary-fixed-dim": "#ffb2bf", "surface-container-high": "#fce2e5", primary: "#ae1a4d", "on-primary": "#ffffff", "on-surface": "#25181a"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {md: "16px", sm: "8px", "container-padding": "24px", unit: "4px", gutter: "16px", xs: "4px", lg: "24px", xl: "32px"}, fontFamily: {"body-lg": ["Inter"], "label-sm": ["Inter"], "label-md": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "display-lg": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-sm": ["11px", {lineHeight: "16px", fontWeight: "600"}], "label-md": ["13px", {lineHeight: "18px", fontWeight: "500"}], "headline-sm": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["24px", {lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600"}], "display-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700"}]}}}};</script>
+<style>
+        /* Custom scrollbar for text area to keep it clean */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #e3beb8;
+            border-radius: 20px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-lg text-on-background min-h-screen relative overflow-hidden flex items-center justify-center">
+<!-- Mock Background (Today View blurred/dimmed) -->
+<div aria-hidden="true" class="absolute inset-0 bg-surface-container-low p-container-padding flex flex-col gap-lg z-0">
+<div class="h-16 w-full flex items-center justify-between border-b border-outline-variant">
+<span class="font-headline-md text-headline-md text-primary tracking-tight">FocusForge</span>
+</div>
+<div class="w-full max-w-screen-xl mx-auto flex gap-gutter">
+<!-- Sidebar mock -->
+<div class="hidden md:flex flex-col w-[280px] h-full gap-sm opacity-50">
+<div class="h-10 bg-surface-container rounded-lg"></div>
+<div class="h-10 bg-surface-container rounded-lg"></div>
+<div class="h-10 bg-surface-container rounded-lg"></div>
+</div>
+<!-- Main Content mock -->
+<div class="flex-1 flex flex-col gap-sm opacity-50 max-w-[800px] mx-auto w-full">
+<div class="h-12 bg-surface rounded-lg border border-outline-variant"></div>
+<div class="h-12 bg-surface rounded-lg border border-outline-variant"></div>
+<div class="h-12 bg-surface rounded-lg border border-outline-variant"></div>
+</div>
+</div>
+</div>
+<!-- Overlay Dimming -->
+<div class="absolute inset-0 bg-on-background/20 backdrop-blur-[2px] z-10 transition-opacity duration-300"></div>
+<!-- Quick Add Task Modal -->
+<div aria-labelledby="modal-title" aria-modal="true" class="relative z-20 w-full max-w-[600px] mx-gutter bg-surface rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant flex flex-col overflow-hidden animate-[slideUp_0.2s_ease-out]" role="dialog">
+<!-- Header -->
+<div class="flex justify-between items-center px-lg py-md border-b border-outline-variant bg-surface-container-lowest">
+<h2 class="font-headline-sm text-headline-sm text-on-surface" id="modal-title">Add Task</h2>
+<button aria-label="Close modal" class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container p-xs rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Body -->
+<div class="p-lg flex flex-col gap-lg bg-surface-container-lowest">
+<!-- Task Name / Description Input -->
+<div class="relative group">
+<textarea autofocus="" class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-b-0 focus:outline-none focus:bg-surface-container-lowest focus:rounded-lg focus:border focus:border-primary text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant/50 resize-none transition-all duration-200 py-sm px-sm -ml-sm" placeholder="Task name e.g. Finish growth report #Work @Tomorrow P1" rows="3"></textarea>
+</div>
+<!-- Quick Actions Container -->
+<div class="flex flex-col gap-md">
+<!-- Date Selectors -->
+<div class="flex flex-wrap gap-xs items-center">
+<span class="material-symbols-outlined text-on-surface-variant mr-xs text-[18px]" data-icon="calendar_month">calendar_month</span>
+<button class="px-sm py-[4px] rounded-full border border-outline-variant text-label-md font-label-md text-on-surface hover:bg-surface-container-low transition-colors bg-surface-container-lowest flex items-center gap-[2px]">
+                        Today
+                    </button>
+<button class="px-sm py-[4px] rounded-full border border-primary text-label-md font-label-md text-primary hover:bg-surface-container-low transition-colors bg-surface-container-lowest flex items-center gap-[2px]">
+                        Tomorrow
+                    </button>
+<button class="px-sm py-[4px] rounded-full border border-outline-variant text-label-md font-label-md text-on-surface hover:bg-surface-container-low transition-colors bg-surface-container-lowest flex items-center gap-[2px]">
+                        This Weekend
+                    </button>
+<button aria-label="Select Custom Date" class="px-sm py-[4px] rounded-full border border-outline-variant text-label-md font-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors bg-surface-container-lowest flex items-center gap-[2px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+<!-- Project & Priority Dropdowns -->
+<div class="flex flex-wrap gap-sm items-center">
+<!-- Project Dropdown (Simulated) -->
+<div class="relative">
+<button class="h-8 px-sm rounded-lg border border-outline-variant bg-surface-container-lowest flex items-center gap-[4px] text-label-md font-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="tag">tag</span>
+                            Inbox
+                            <span class="material-symbols-outlined text-[16px] text-on-surface-variant ml-xs" data-icon="arrow_drop_down">arrow_drop_down</span>
+</button>
+</div>
+<!-- Priority Dropdown (Simulated) -->
+<div class="relative">
+<button class="h-8 px-sm rounded-lg border border-outline-variant bg-surface-container-lowest flex items-center gap-[4px] text-label-md font-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="flag">flag</span>
+                            Priority
+                            <span class="material-symbols-outlined text-[16px] text-on-surface-variant ml-xs" data-icon="arrow_drop_down">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<div class="px-lg py-md border-t border-outline-variant flex justify-end gap-sm bg-surface">
+<button class="px-md py-sm rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+                Cancel
+            </button>
+<button class="px-md py-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-[4px] shadow-[0px_1px_2px_rgba(0,0,0,0.1)]">
+                Add Task
+                <span class="material-symbols-outlined text-[16px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- Inline script for simple entrance animation logic if needed, but handled mostly via CSS -->
+<style>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</body></html>

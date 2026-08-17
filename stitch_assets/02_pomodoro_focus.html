@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindSprint - Pomodoro Focus</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#3f0016", "on-tertiary-fixed": "#00210b", "secondary-fixed": "#ffd9de", "on-secondary-fixed-variant": "#782d40", outline: "#8c7074", "outline-variant": "#e0bec3", "tertiary-fixed": "#8df9a6", "surface-container-highest": "#f6dcdf", "inverse-on-surface": "#ffecee", "surface-container": "#ffe9eb", "secondary-container": "#fe99ad", "on-tertiary-container": "#eeffec", "on-background": "#25181a", "on-tertiary": "#ffffff", "surface-tint": "#b41f51", surface: "#fff8f7", "inverse-primary": "#ffb2bf", "surface-dim": "#edd4d7", "on-primary-container": "#fff8f8", "tertiary-fixed-dim": "#71dc8c", "primary-fixed": "#ffd9de", "surface-container-lowest": "#ffffff", "on-surface-variant": "#584044", "error-container": "#ffdad6", "surface-variant": "#f6dcdf", "on-tertiary-fixed-variant": "#005225", "surface-bright": "#fff8f7", error: "#ba1a1a", "inverse-surface": "#3c2c2f", "on-primary-fixed-variant": "#90003b", "primary-container": "#d03765", "on-secondary": "#ffffff", "on-secondary-container": "#792d40", "on-error": "#ffffff", tertiary: "#006931", "surface-container-low": "#fff0f1", "secondary-fixed-dim": "#ffb2bf", "tertiary-container": "#008540", background: "#fff8f7", secondary: "#964457", "on-error-container": "#93000a", "on-secondary-fixed": "#3f0116", "primary-fixed-dim": "#ffb2bf", "surface-container-high": "#fce2e5", primary: "#ae1a4d", "on-primary": "#ffffff", "on-surface": "#25181a"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {md: "16px", sm: "8px", "container-padding": "24px", unit: "4px", gutter: "16px", xs: "4px", lg: "24px", xl: "32px"}, fontFamily: {"body-lg": ["Inter"], "label-sm": ["Inter"], "label-md": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"], "display-lg": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-sm": ["11px", {lineHeight: "16px", fontWeight: "600"}], "label-md": ["13px", {lineHeight: "18px", fontWeight: "500"}], "headline-sm": ["20px", {lineHeight: "28px", fontWeight: "600"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["24px", {lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600"}], "display-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700"}]}}}};</script>
+<style>
+        .timer-glow {
+            box-shadow: 0 0 40px rgba(179, 31, 20, 0.2);
+        }
+        .timer-ring {
+            stroke-dasharray: 880;
+            stroke-dashoffset: 220;
+            transition: stroke-dashoffset 1s linear;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md antialiased overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-container-padding h-16 max-w-screen-xl mx-auto bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline flat no shadows docked full-width top-0 z-40 relative">
+<div class="flex items-center gap-md">
+<!-- Leading Avatar Placeholder (Usually drawer toggle or profile) -->
+<button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary transition-colors hover:bg-surface-container-low">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, minimalist profile picture avatar placeholder showing a simple geometric silhouette against a warm off-white background. The lighting is soft and flat, emphasizing the corporate modern minimalism aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3XB4-trttR643WoSjXtaAn0mrUv7Ip921K92itgQ56Z1pM1OCHt5Rdf3M4EupL9rRCi_G7wQTFK2Lx3CXAzsH2awsUWAijm5Oa_4yK8bVgAfz1Gn6iO4nNHw_mhEFhVJvExz-TV5DMgQSwUClS7Dt6g0jT4-xcR8-5kEy2ZfZD_9YzLa4693r7r7Ry_W8yc9f-9R7upnytj-ictnCK0bFhSv77hcVFXAOBbJQZ9t-6Ra06tcl7JVt')"></div>
+</button>
+<h1 class="text-headline-md font-headline-md text-primary dark:text-primary-fixed-dim tracking-tight">FocusForge</h1>
+</div>
+<div>
+<!-- Trailing Icon -->
+<button class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-[800px] mx-auto px-container-padding pb-32 pt-8 flex flex-col items-center justify-center min-h-[calc(100vh-128px)]">
+<!-- Context / Breadcrumb -->
+<div class="mb-8 text-center animate-fade-in-up">
+<span class="inline-block px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md border border-outline-variant mb-2">Focus Mode</span>
+<h2 class="text-headline-sm font-headline-sm text-on-background">Session 1 of 4</h2>
+</div>
+<!-- Pomodoro Timer Component -->
+<div class="relative w-72 h-72 md:w-80 md:h-80 flex items-center justify-center mb-12 animate-fade-in">
+<!-- SVG Ring -->
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 300 300">
+<!-- Track -->
+<circle class="text-surface-container-highest" cx="150" cy="150" fill="none" r="140" stroke="currentColor" stroke-width="8"></circle>
+<!-- Progress -->
+<circle class="text-primary timer-ring" cx="150" cy="150" fill="none" r="140" stroke="currentColor" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<!-- Timer Display -->
+<div class="z-10 flex flex-col items-center timer-glow bg-surface rounded-full w-56 h-56 md:w-64 md:h-64 justify-center border border-outline-variant">
+<span class="font-display-lg text-[64px] leading-none tracking-tighter text-on-background font-bold mb-1">25:00</span>
+<span class="text-body-md font-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="local_fire_department">local_fire_department</span>
+                    In Flow
+                </span>
+</div>
+</div>
+<!-- Active Task Card -->
+<div class="w-full max-w-md bg-surface border border-outline-variant rounded-xl p-md mb-8 flex items-start gap-md hover:shadow-lg transition-shadow duration-300 animate-fade-in-up" style="animation-delay: 100ms;">
+<button class="w-6 h-6 rounded-full border border-outline-variant flex-shrink-0 flex items-center justify-center text-transparent hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined text-[16px]" data-icon="check">check</span>
+</button>
+<div class="flex-1">
+<h3 class="text-body-lg font-body-lg text-on-background font-medium mb-1">Reading Chapter 4</h3>
+<span class="inline-block text-primary font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded border border-outline-variant">#ExamPrep</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 focus:outline-none rounded">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Controls -->
+<div class="flex items-center justify-center gap-lg mb-12 animate-fade-in-up" style="animation-delay: 200ms;">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined" data-icon="restart_alt">restart_alt</span>
+</button>
+<button class="w-20 h-20 flex items-center justify-center rounded-full bg-primary text-on-primary shadow-lg hover:bg-primary-container hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-fixed">
+<span class="material-symbols-outlined text-[36px]" data-icon="pause" data-weight="fill" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+<span class="material-symbols-outlined" data-icon="skip_next">skip_next</span>
+</button>
+</div>
+<!-- Daily Goal Progress -->
+<div class="w-full max-w-xs text-center animate-fade-in-up" style="animation-delay: 300ms;">
+<div class="flex justify-between items-end mb-2">
+<span class="text-label-md font-label-md text-on-surface-variant">Daily Focus Goal</span>
+<span class="text-label-md font-label-md text-primary font-medium">2.5 / 4 hrs</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-1000 ease-out" style="width: 62.5%;"></div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-all group w-16 focus:outline-none" href="#">
+<div class="p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</div>
+<span class="text-label-sm font-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-all group w-16 focus:outline-none" href="#">
+<div class="p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</div>
+<span class="text-label-sm font-label-sm mt-1">Upcoming</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-semibold hover:text-primary dark:hover:text-primary-fixed-dim transition-all group w-16 Active: scale-95 duration-200 focus:outline-none" href="#">
+<div class="p-1 rounded-full bg-surface-container-highest dark:bg-surface-container-highest group-hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="timer" data-weight="fill" style="font-variation-settings: 'FILL' 1;">timer</span>
+</div>
+<span class="text-label-sm font-label-sm mt-1">Pomodoro</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-all group w-16 focus:outline-none" href="#">
+<div class="p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+</div>
+<span class="text-label-sm font-label-sm mt-1">AI Coach</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-all group w-16 focus:outline-none" href="#">
+<div class="p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+</div>
+<span class="text-label-sm font-label-sm mt-1">Analytics</span>
+</a>
+</nav>
+<!-- SideNav (Desktop) - Hidden on mobile, persistent on desktop -->
+<nav class="hidden md:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-72 bg-surface-container-low dark:bg-surface-container border-r border-outline-variant dark:border-outline p-4 z-[60] overflow-y-auto">
+<!-- Header Info -->
+<div class="mb-8 flex items-center gap-md">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-outline-variant flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center" data-alt="A clean, minimalist profile picture avatar placeholder showing a simple geometric silhouette against a warm off-white background. The lighting is soft and flat, emphasizing the corporate modern minimalism aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGN6yU-qbE5q_pCAwGrzfF-0RAYhNpXTPA9yeq2MWtj8ENP0CxCb_2qJ1Rmyi2D-P9I6zVWdnDO77RlQVCyrS-EzobcsSxrDpgYb2fnYVc2I9DamnIDh_7_5Dbbmh-5wty9sUTrdaU8rjXPnhg5ch3Q7LgqMLzg66MR941-i-zlufK_Px7T7eFtLj5iA8dC9nU6AolO8hXYfkrsTndkLwk9XSFF_wGo2QbtE8VvlE_Ux9qe_GEnIGu')"></div>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-primary dark:text-primary-fixed-dim leading-tight">FocusForge Pro</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Focusing since 2023</p>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-md px-4 py-3 rounded-full text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-inverse-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="person">person</span>
+<span class="text-body-lg font-body-lg font-medium">Personal</span>
+</a>
+<a class="flex items-center gap-md px-4 py-3 rounded-full text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-inverse-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="business_center">business_center</span>
+<span class="text-body-lg font-body-lg font-medium">Work</span>
+</a>
+<a class="flex items-center gap-md px-4 py-3 rounded-full text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-inverse-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="favorite">favorite</span>
+<span class="text-body-lg font-body-lg font-medium">Health</span>
+</a>
+<a class="flex items-center gap-md px-4 py-3 rounded-full text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-highest dark:hover:bg-inverse-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="lightbulb">lightbulb</span>
+<span class="text-body-lg font-body-lg font-medium">Ideas</span>
+</a>
+</div>
+</nav>
+</body></html>
