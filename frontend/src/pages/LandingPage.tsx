@@ -277,7 +277,7 @@ export function LandingPage() {
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-1.5 shadow-xs dark:bg-slate-900">
             <Sparkles className="h-3.5 w-3.5 text-[var(--color-primary)]" />
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
-              Stitch & Todoist Inspired Focus Suite
+              AI-POWERED FOCUS & STUDY SUITE
             </span>
           </div>
 

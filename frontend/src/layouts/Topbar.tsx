@@ -5,10 +5,8 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
-  Moon,
   Search,
   Settings,
-  Sun,
   Timer,
   User,
   X,
@@ -30,7 +28,7 @@ const NAV_ITEMS = [
 
 export function Topbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { mode, toggleMode } = useTheme();
+  const { activePalette } = useTheme();
   const { isRunning, display } = usePomodoro();
   const user  = useAuthStore((s) => s.user);
   const clearSession = useAuthStore((s) => s.clearSession);
@@ -56,21 +54,21 @@ export function Topbar() {
           {/* ── Left: Logo ── */}
           <div className="flex flex-none items-center gap-2.5">
             <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl"
-              style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' }}
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-xs"
+              style={{ background: activePalette.gradient }}
               aria-hidden="true"
             >
-              <Timer className="h-4.5 w-4.5 text-white" style={{ width: '18px', height: '18px' }} />
+              <Timer className="h-4.5 w-4.5 text-white" />
             </div>
             <span
-              className="text-base font-bold tracking-tight"
-              style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}
+              className="text-base font-extrabold tracking-tight"
+              style={{ color: 'var(--color-text-primary)' }}
             >
               FocusForge
             </span>
           </div>
 
-          {/* ── Center: Nav pills (desktop) ── */}
+          {/* ── Center: Dynamic Nav pills (desktop) ── */}
           <nav
             className="hidden md:flex items-center gap-1 rounded-full px-1.5 py-1.5"
             style={{ background: 'var(--color-surface-secondary)', border: '1px solid var(--color-border)' }}
@@ -83,9 +81,9 @@ export function Topbar() {
                 end={end}
                 className={({ isActive }) =>
                   cn(
-                    'relative flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 select-none',
+                    'relative flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 select-none',
                     isActive
-                      ? 'text-white'
+                      ? 'text-white font-bold'
                       : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]',
                   )
                 }
@@ -97,8 +95,8 @@ export function Topbar() {
                         layoutId="nav-pill"
                         className="absolute inset-0 rounded-full"
                         style={{
-                          background: 'var(--color-secondary)',
-                          boxShadow: '0 2px 8px rgba(52,120,246,0.30)',
+                          background: activePalette.gradient,
+                          boxShadow: `0 2px 8px ${activePalette.glow}`,
                         }}
                         transition={{ type: 'spring', stiffness: 500, damping: 38 }}
                       />
@@ -118,7 +116,8 @@ export function Topbar() {
             {isRunning && (
               <NavLink
                 to={paths.pomodoro}
-                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white bg-indigo-600 animate-pulse shadow-md hover:scale-105 transition-all"
+                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white shadow-xs animate-pulse"
+                style={{ background: activePalette.gradient }}
                 title="Active Pomodoro Focus Sprint"
               >
                 <Timer className="h-3.5 w-3.5" />
@@ -135,7 +134,7 @@ export function Topbar() {
               <Search className="h-4 w-4" />
             </button>
 
-            {/* Theme customizer */}
+            {/* Live Theme customizer */}
             <ThemeCustomizer />
 
             {/* Divider */}
@@ -149,12 +148,12 @@ export function Topbar() {
             <div className="hidden sm:flex items-center gap-2.5 mr-0.5">
               <div
                 className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-sm font-semibold text-white select-none"
-                style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' }}
+                style={{ background: activePalette.gradient }}
                 aria-hidden="true"
               >
                 {userInitial}
               </div>
-              <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+              <span className="text-xs font-bold" style={{ color: 'var(--color-text-primary)' }}>
                 {firstName}
               </span>
             </div>
@@ -173,12 +172,12 @@ export function Topbar() {
               type="button"
               aria-label="Log out"
               onClick={handleLogout}
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--color-text-secondary)] hover:bg-danger-light hover:text-danger transition-all duration-150"
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--color-text-secondary)] hover:bg-rose-50 hover:text-rose-600 transition-all duration-150 dark:hover:bg-rose-950"
             >
               <LogOut className="h-4 w-4" />
             </button>
 
-            {/* Hamburger (mobile) */}
+            {/* Mobile menu hamburger */}
             <button
               type="button"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
@@ -191,104 +190,6 @@ export function Topbar() {
           </div>
         </div>
       </header>
-
-      {/* ── Mobile dropdown menu ── */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="sticky top-16 z-30 w-full border-b border-[var(--color-border)] bg-[var(--color-surface)] px-4 pb-4 pt-3 md:hidden"
-            style={{ boxShadow: 'var(--shadow-elevated)' }}
-          >
-            <nav className="space-y-1" aria-label="Mobile navigation">
-              {NAV_ITEMS.map(({ label, path, icon: Icon, end }) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  end={end}
-                  onClick={() => setMobileOpen(false)}
-                  className={({ isActive }) =>
-                    cn(
-                      'flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-150',
-                      isActive
-                        ? 'bg-[var(--color-secondary)] text-white'
-                        : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-secondary)] hover:text-[var(--color-text-primary)]',
-                    )
-                  }
-                >
-                  <Icon className="h-4 w-4 flex-none" aria-hidden="true" />
-                  {label}
-                </NavLink>
-              ))}
-            </nav>
-
-            {/* Mobile user row */}
-            {user && (
-              <div className="mt-3 flex items-center gap-3 rounded-xl border border-[var(--color-border)] px-4 py-2.5">
-                <div
-                  className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-sm font-semibold text-white"
-                  style={{ background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' }}
-                >
-                  {userInitial}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                    {user.name}
-                  </p>
-                  <p className="truncate text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                    {user.email}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="flex h-8 w-8 flex-none items-center justify-center rounded-xl text-[var(--color-text-secondary)] hover:text-danger transition-colors"
-                  aria-label="Log out"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Mobile bottom tab bar ── */}
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-[var(--color-border)] bg-[var(--color-surface)]/95 px-2 pb-safe pt-2 backdrop-blur-xl md:hidden"
-        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))', boxShadow: '0 -1px 3px rgba(0,0,0,0.06)' }}
-        aria-label="Bottom navigation"
-      >
-        {NAV_ITEMS.map(({ label, path, icon: Icon, end }) => (
-          <NavLink
-            key={path}
-            to={path}
-            end={end}
-            className={({ isActive }) =>
-              cn(
-                'flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-[10px] font-medium transition-all duration-150',
-                isActive
-                  ? 'text-[var(--color-secondary)]'
-                  : 'text-[var(--color-text-tertiary)]',
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <Icon
-                  className="h-5 w-5"
-                  style={{ strokeWidth: isActive ? 2.5 : 1.75 }}
-                  aria-hidden="true"
-                />
-                {label}
-              </>
-            )}
-          </NavLink>
-        ))}
-      </nav>
     </>
   );
 }

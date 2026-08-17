@@ -2,6 +2,15 @@ import { useEffect, useMemo } from 'react';
 import { useThemeStore, type ThemeAccent } from '@/store/theme.store';
 
 export const ACCENT_PALETTES: Record<ThemeAccent, { primary: string; hover: string; light: string; gradient: string; glow: string; label: string; bgClass: string }> = {
+  coral: {
+    label: 'Todoist Coral',
+    primary: '#E44332',
+    hover: '#B31F14',
+    light: '#FFDAD4',
+    gradient: 'linear-gradient(135deg, #E44332 0%, #B31F14 100%)',
+    glow: 'rgba(228, 67, 50, 0.35)',
+    bgClass: 'bg-rose-600',
+  },
   indigo: {
     label: 'Indigo Violet',
     primary: '#4F46E5',
@@ -19,15 +28,6 @@ export const ACCENT_PALETTES: Record<ThemeAccent, { primary: string; hover: stri
     gradient: 'linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%)',
     glow: 'rgba(14, 165, 233, 0.35)',
     bgClass: 'bg-sky-500',
-  },
-  coral: {
-    label: 'Paymo Sunset',
-    primary: '#F97316',
-    hover: '#EA580C',
-    light: '#FFF7ED',
-    gradient: 'linear-gradient(135deg, #F97316 0%, #FB923C 100%)',
-    glow: 'rgba(249, 115, 22, 0.35)',
-    bgClass: 'bg-orange-500',
   },
   emerald: {
     label: 'Emerald Mint',
@@ -51,7 +51,7 @@ export const ACCENT_PALETTES: Record<ThemeAccent, { primary: string; hover: stri
 
 export function useTheme() {
   const mode = useThemeStore((state) => state.mode);
-  const accent = useThemeStore((state) => state.accent || 'indigo');
+  const accent = useThemeStore((state) => state.accent || 'coral');
   const setMode = useThemeStore((state) => state.setMode);
   const setAccent = useThemeStore((state) => state.setAccent);
   const toggleMode = useThemeStore((state) => state.toggleMode);
@@ -69,11 +69,12 @@ export function useTheme() {
     root.classList.toggle('dark', shouldUseDark);
     root.setAttribute('data-accent', accent);
 
-    const palette = ACCENT_PALETTES[accent] || ACCENT_PALETTES.indigo;
+    const palette = ACCENT_PALETTES[accent] || ACCENT_PALETTES.coral;
     root.style.setProperty('--color-primary', palette.primary);
     root.style.setProperty('--color-primary-hover', palette.hover);
     root.style.setProperty('--color-primary-light', palette.light);
+    root.style.setProperty('--color-primary-subtle', palette.light);
   }, [mode, accent, prefersDark]);
 
-  return { mode, accent, setMode, setAccent, toggleMode, activePalette: ACCENT_PALETTES[accent] || ACCENT_PALETTES.indigo };
+  return { mode, accent, setMode, setAccent, toggleMode, activePalette: ACCENT_PALETTES[accent] || ACCENT_PALETTES.coral };
 }

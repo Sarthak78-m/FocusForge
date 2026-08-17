@@ -124,8 +124,8 @@ export function ThemeCustomizer() {
               </div>
 
               <div className="mt-4 border-t border-slate-100 pt-3 text-center dark:border-slate-800">
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Inspired by Notion & Paymo Themes
+                <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                  FocusForge Custom Color Engine
                 </p>
               </div>
             </motion.div>
