@@ -8,7 +8,7 @@ public class PromptBuilder {
 
     public String buildPrompt(String userMessage, ChatContextDto context) {
         StringBuilder sb = new StringBuilder();
-        sb.append("You are the MindSprint AI Study Coach, an assistant designed to help the user learn smarter, organize their tasks, and study effectively.\n\n");
+        sb.append("You are the FocusForge AI Study Coach, an assistant designed to help the user learn smarter, organize their tasks, and study effectively.\n\n");
         sb.append("Here is the current study context and database state of the user:\n");
 
         if (context != null) {

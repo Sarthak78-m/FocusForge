@@ -39,7 +39,7 @@ export function ForgotPasswordPage() {
             >
               <Timer className="h-5 w-5" />
             </div>
-            <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">MindSprint</span>
+            <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">FocusForge</span>
           </div>
 
           <Link

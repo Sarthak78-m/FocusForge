@@ -49,7 +49,7 @@ export function ChatHeader({ className }: ChatHeaderProps) {
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-[var(--color-text-primary)]">
-            MindSprint Coach
+            FocusForge Coach
           </p>
           <p className="text-[10px] leading-none text-text-secondary dark:text-[var(--color-text-secondary)]">
             {isTyping ? (

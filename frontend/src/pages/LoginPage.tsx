@@ -39,7 +39,7 @@ export function LoginPage() {
   };
 
   const fillDemoAccount = () => {
-    setValue('email', 'alex.study@mindsprint.ai');
+    setValue('email', 'alex.study@focusforge.ai');
     setValue('password', 'Password123!');
   };
 
@@ -54,7 +54,7 @@ export function LoginPage() {
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-md">
             <Timer className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-white">MindSprint</span>
+          <span className="text-xl font-extrabold tracking-tight text-white">FocusForge</span>
         </div>
 
         <div className="space-y-6 relative z-10 max-w-sm">
@@ -69,7 +69,7 @@ export function LoginPage() {
           </div>
         </div>
 
-        <p className="text-xs text-white/70 relative z-10">© 2026 MindSprint AI Study Coach</p>
+        <p className="text-xs text-white/70 relative z-10">© 2026 FocusForge AI Study Coach</p>
       </div>
 
       {/* Right Login Form Box */}
@@ -82,7 +82,7 @@ export function LoginPage() {
             >
               <Timer className="h-4 w-4" />
             </div>
-            <span className="text-base font-bold text-slate-900 dark:text-white">MindSprint</span>
+            <span className="text-base font-bold text-slate-900 dark:text-white">FocusForge</span>
           </div>
 
           <div className="mb-6 flex items-center justify-between">

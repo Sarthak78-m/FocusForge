@@ -18,11 +18,11 @@ import org.springframework.util.StringUtils;
 public class PhoneCryptoConverter implements AttributeConverter<String, String> {
 
     private static final String ALGORITHM = "AES";
-    private static final byte[] DEFAULT_SECRET = "MindSprintEncryptKey32BytesLong!".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] DEFAULT_SECRET = "FocusForgeEncryptKey32BytesLong!".getBytes(StandardCharsets.UTF_8);
 
     private final Key key;
 
-    public PhoneCryptoConverter(@Value("${app.security.phone-crypto-secret:MindSprintEncryptKey32BytesLong!}") String secret) {
+    public PhoneCryptoConverter(@Value("${app.security.phone-crypto-secret:FocusForgeEncryptKey32BytesLong!}") String secret) {
         byte[] keyBytes = StringUtils.hasText(secret) && secret.length() >= 32
                 ? secret.substring(0, 32).getBytes(StandardCharsets.UTF_8)
                 : DEFAULT_SECRET;

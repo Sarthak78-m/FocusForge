@@ -33,15 +33,15 @@ function NavBar() {
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
+        <Link to={paths.landing} className="flex items-center gap-2.5">
           <div
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-md transition-transform group-hover:scale-105"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-md"
             style={{ background: activePalette.gradient }}
           >
             <Timer className="h-4.5 w-4.5" />
           </div>
           <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">
-            MindSprint
+            FocusForge
           </span>
         </Link>
 
@@ -289,7 +289,7 @@ function InteractiveWorkspaceDemo() {
                   <Bot className="h-4 w-4" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">MindSprint AI Coach</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">FocusForge AI Coach</p>
                   <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">{aiMessage}</p>
                 </div>
               </div>
@@ -357,7 +357,7 @@ export function LandingPage() {
 
           {/* Subtitle */}
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
-            MindSprint merges task management, Pomodoro focus sprints, and AI coaching into one
+            FocusForge merges task management, Pomodoro focus sprints, and AI coaching into one
             vibrant, customizable workspace — built for student success.
           </p>
 
@@ -449,10 +449,10 @@ export function LandingPage() {
             >
               <Timer className="h-3.5 w-3.5" />
             </div>
-            <span className="text-xs font-extrabold text-slate-900 dark:text-white">MindSprint</span>
+            <span className="text-xs font-extrabold text-slate-900 dark:text-white">FocusForge</span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            © {new Date().getFullYear()} MindSprint. Built for students worldwide.
+            © {new Date().getFullYear()} FocusForge. Built for students worldwide.
           </p>
         </div>
       </footer>

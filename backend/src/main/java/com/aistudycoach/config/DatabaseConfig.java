@@ -65,8 +65,8 @@ public class DatabaseConfig {
         String rawUrl = selectRawUrl();
         ResolvedDbDetails details = parseDbDetails(rawUrl);
 
-        log.info("[MindSprint DatabaseConfig] Resolved JDBC URL: {}", details.jdbcUrl);
-        log.info("[MindSprint DatabaseConfig] Resolved Username: {}", details.username);
+        log.info("[FocusForge DatabaseConfig] Resolved JDBC URL: {}", details.jdbcUrl);
+        log.info("[FocusForge DatabaseConfig] Resolved Username: {}", details.username);
 
         HikariConfig config = new HikariConfig();
         if (details.jdbcUrl.contains("h2")) {
@@ -88,10 +88,10 @@ public class DatabaseConfig {
         try {
             return new HikariDataSource(config);
         } catch (Exception e) {
-            log.error("[MindSprint DatabaseConfig] PostgreSQL connection failed: {}. Falling back to H2 in-memory DB.", e.getMessage());
+            log.error("[FocusForge DatabaseConfig] PostgreSQL connection failed: {}. Falling back to H2 in-memory DB.", e.getMessage());
             HikariConfig h2Config = new HikariConfig();
             h2Config.setDriverClassName("org.h2.Driver");
-            h2Config.setJdbcUrl("jdbc:h2:mem:mindsprint_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+            h2Config.setJdbcUrl("jdbc:h2:mem:focusforge_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
             h2Config.setUsername("sa");
             h2Config.setPassword("");
             return new HikariDataSource(h2Config);

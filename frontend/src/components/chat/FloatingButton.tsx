@@ -12,7 +12,7 @@ export function FloatingButton() {
     <motion.button
       type="button"
       onClick={toggleChat}
-      title="Ask MindSprint Coach (Ctrl+K)"
+      title="Ask FocusForge Coach (Ctrl+K)"
       aria-label={isOpen ? 'Close AI coach' : 'Open AI coach'}
       aria-expanded={isOpen}
       initial={false}

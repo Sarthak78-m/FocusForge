@@ -14,7 +14,7 @@ export function App() {
       <Suspense
         fallback={
           <div className="flex min-h-screen items-center justify-center">
-            <LoadingSpinner label="Loading MindSprint" />
+            <LoadingSpinner label="Loading FocusForge" />
           </div>
         }
       >

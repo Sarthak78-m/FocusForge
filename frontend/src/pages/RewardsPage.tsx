@@ -110,7 +110,7 @@ export function RewardsPage() {
                 Level {currentLevel} Scholar
               </span>
               <h2 className="mt-1 text-2xl font-extrabold text-white">
-                {xp} Total MindSprint XP
+                {xp} Total FocusForge XP
               </h2>
             </div>
           </div>

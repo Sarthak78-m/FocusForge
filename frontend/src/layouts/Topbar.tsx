@@ -66,7 +66,7 @@ export function Topbar() {
               className="text-base font-bold tracking-tight"
               style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}
             >
-              MindSprint
+              FocusForge
             </span>
           </div>
 

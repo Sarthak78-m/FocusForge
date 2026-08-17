@@ -25,7 +25,7 @@ export function AICoachPage() {
     {
       id: '1',
       sender: 'ai',
-      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'there'}! I'm your MindSprint AI Study Coach. How can I help you accelerate your learning today?`,
+      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'there'}! I'm your FocusForge AI Study Coach. How can I help you accelerate your learning today?`,
       time: 'Just now',
     },
   ]);
@@ -51,7 +51,7 @@ export function AICoachPage() {
       let responseText = "That's a great study topic! Break it down into 25-minute Pomodoro sprints. Would you like me to generate a personalized task checklist or flashcard review set for this subject?";
 
       if (query.toLowerCase().includes('schedule') || query.toLowerCase().includes('plan')) {
-        responseText = "Here is your suggested 3-Day Focus Sprint Schedule:\n\n• **Day 1**: Core concepts breakdown & formula sheets (2 hours)\n• **Day 2**: Active recall practice questions & weak area drills (2.5 hours)\n• **Day 3**: Full mock exam simulation under timed conditions (2 hours)\n\nWould you like me to automatically add these tasks to your MindSprint Task Studio?";
+        responseText = "Here is your suggested 3-Day Focus Sprint Schedule:\n\n• **Day 1**: Core concepts breakdown & formula sheets (2 hours)\n• **Day 2**: Active recall practice questions & weak area drills (2.5 hours)\n• **Day 3**: Full mock exam simulation under timed conditions (2 hours)\n\nWould you like me to automatically add these tasks to your FocusForge Task Studio?";
       } else if (query.toLowerCase().includes('explain') || query.toLowerCase().includes('simple')) {
         responseText = "Here is a simple analogy:\n\nThink of a **Neural Network** like a team of decision-makers. Each layer passes hints to the next. **Backpropagation** is the feedback loop — when the final answer is wrong, the team works backward to refine everyone's voting weight until accuracy improves!";
       }

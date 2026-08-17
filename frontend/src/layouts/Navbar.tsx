@@ -14,7 +14,7 @@ export function Navbar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-500 text-white shadow-sm">
             <Timer className="h-4 w-4" />
           </span>
-          <span>MindSprint</span>
+          <span>FocusForge</span>
         </Link>
         <div className="flex items-center gap-2">
           <Button type="button" variant="ghost" size="icon" onClick={toggleMode} aria-label="Toggle theme">

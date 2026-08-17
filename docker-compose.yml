@@ -1,6 +1,6 @@
 version: '3.9'
 
-# ─── MindSprint Full-Stack Docker Compose ─────────────────────────────────────
+# ─── FocusForge Full-Stack Docker Compose ─────────────────────────────────────
 #
 # Services:
 #   postgres  — PostgreSQL 16 database
@@ -17,7 +17,7 @@ services:
   # ── PostgreSQL ────────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    container_name: mindsprint-postgres
+    container_name: focusforge-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-AIStudyCoachDB}
@@ -39,7 +39,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: mindsprint-backend
+    container_name: focusforge-backend
     restart: unless-stopped
     depends_on:
       postgres:
@@ -73,7 +73,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: mindsprint-frontend
+    container_name: focusforge-frontend
     restart: unless-stopped
     depends_on:
       backend:
@@ -93,4 +93,4 @@ volumes:
 
 networks:
   default:
-    name: mindsprint-network
+    name: focusforge-network

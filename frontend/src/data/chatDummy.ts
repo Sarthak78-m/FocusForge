@@ -20,7 +20,7 @@ export const DUMMY_CONVERSATIONS: Conversation[] = [
         id: 'm2',
         role: 'bot',
         content:
-          'The **Pomodoro Technique** is a time management method that breaks work into focused intervals:\n\n- Work for **25 minutes** without interruption\n- Take a **5-minute** short break\n- After **4 cycles**, take a longer **15–30 minute** break\n\nThis rhythm helps maintain high focus while preventing mental fatigue. Your MindSprint timer is already set up for this! 🍅',
+          'The **Pomodoro Technique** is a time management method that breaks work into focused intervals:\n\n- Work for **25 minutes** without interruption\n- Take a **5-minute** short break\n- After **4 cycles**, take a longer **15–30 minute** break\n\nThis rhythm helps maintain high focus while preventing mental fatigue. Your FocusForge timer is already set up for this! 🍅',
         timestamp: new Date(Date.now() - 1000 * 60 * 9),
       },
       {
@@ -33,7 +33,7 @@ export const DUMMY_CONVERSATIONS: Conversation[] = [
         id: 'm4',
         role: 'bot',
         content:
-          'Great question! Here are proven strategies to stay consistent:\n\n1. **Start small** — commit to just 2 Pomodoros per day initially\n2. **Track your sessions** — MindSprint logs your completed sessions\n3. **Remove distractions** — put your phone face-down during focus time\n4. **Honor the breaks** — don\'t skip them, they\'re part of the system\n\nConsistency builds momentum. After 2 weeks, it becomes automatic. 💪',
+          'Great question! Here are proven strategies to stay consistent:\n\n1. **Start small** — commit to just 2 Pomodoros per day initially\n2. **Track your sessions** — FocusForge logs your completed sessions\n3. **Remove distractions** — put your phone face-down during focus time\n4. **Honor the breaks** — don\'t skip them, they\'re part of the system\n\nConsistency builds momentum. After 2 weeks, it becomes automatic. 💪',
         timestamp: new Date(Date.now() - 1000 * 60 * 5),
       },
     ],
@@ -88,14 +88,14 @@ export const DUMMY_CONVERSATIONS: Conversation[] = [
 
 export const BOT_RESPONSES: Record<string, string> = {
   default:
-    'That\'s a great question! As your MindSprint study coach, I\'m here to help you learn smarter, not harder. Could you tell me more about what you\'re working on so I can give you the most relevant advice?',
+    'That\'s a great question! As your FocusForge study coach, I\'m here to help you learn smarter, not harder. Could you tell me more about what you\'re working on so I can give you the most relevant advice?',
   schedule:
     'Building a great study schedule starts with knowing your peak energy hours. Most students focus best in the **morning (8–11 AM)** or **early evening (5–8 PM)**.\n\nHere\'s a template:\n\n1. **Identify** your top 3 tasks for the day\n2. **Block** 90-minute deep work sessions for complex topics\n3. **Reserve** lighter tasks for post-lunch dips\n4. **End** each day with a 10-minute review\n\nWant me to create a more personalized schedule based on your current tasks?',
   tip: 'Here\'s a study tip that top students swear by:\n\n**Active Recall > Passive Reading**\n\nInstead of re-reading your notes, close them and try to recall the key points from memory. This forces your brain to strengthen the neural pathways.\n\n> 💡 *Studies show active recall can improve retention by up to 50% compared to passive review.*\n\nTry it with your next study session!',
   pomodoro:
-    'The Pomodoro Technique is already built into MindSprint! Here\'s how to get the most from it:\n\n- **Work sessions**: 25 minutes of deep focus\n- **Short breaks**: 5 minutes to rest\n- **Long breaks**: 15 minutes after every 4 sessions\n\n**Pro tip**: Use breaks to *physically* move — stand up, stretch, or take a short walk. This restores mental energy faster than scrolling your phone. 🚶',
+    'The Pomodoro Technique is already built into FocusForge! Here\'s how to get the most from it:\n\n- **Work sessions**: 25 minutes of deep focus\n- **Short breaks**: 5 minutes to rest\n- **Long breaks**: 15 minutes after every 4 sessions\n\n**Pro tip**: Use breaks to *physically* move — stand up, stretch, or take a short walk. This restores mental energy faster than scrolling your phone. 🚶',
   tasks:
-    'Managing tasks effectively is a skill. Here\'s what works:\n\n**The 3-task rule**\nPick only 3 tasks per day as "must complete." This prevents overwhelm and gives you a clear target.\n\n**Capture everything**\nAnytime a task appears in your mind, add it to MindSprint immediately. Don\'t trust your memory.\n\n**Review weekly**\nEvery Sunday, spend 15 minutes reviewing what\'s done, what\'s pending, and what\'s no longer relevant.\n\nYour MindSprint task board is perfect for this workflow!',
+    'Managing tasks effectively is a skill. Here\'s what works:\n\n**The 3-task rule**\nPick only 3 tasks per day as "must complete." This prevents overwhelm and gives you a clear target.\n\n**Capture everything**\nAnytime a task appears in your mind, add it to FocusForge immediately. Don\'t trust your memory.\n\n**Review weekly**\nEvery Sunday, spend 15 minutes reviewing what\'s done, what\'s pending, and what\'s no longer relevant.\n\nYour FocusForge task board is perfect for this workflow!',
 };
 
 // ─── Quick Reply Suggestions ──────────────────────────────────────────────────

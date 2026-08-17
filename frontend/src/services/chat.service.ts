@@ -1,7 +1,7 @@
 /**
  * chatService.ts
  *
- * Aggregates context from all MindSprint modules into a single snapshot
+ * Aggregates context from all FocusForge modules into a single snapshot
  * that can be attached to AI coach requests.
  *
  * Architecture:

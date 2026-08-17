@@ -496,7 +496,7 @@ export function DashboardPage() {
             {getGreeting()}, {firstName}! 👋
           </h1>
           <p className="mt-1 text-xs font-semibold text-slate-500">
-            {getFormattedDate()} · MindSprint Active Workspace
+            {getFormattedDate()} · FocusForge Active Workspace
           </p>
         </div>
 

@@ -11,7 +11,7 @@ export function Sidebar() {
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-500 shadow-sm">
           <Timer className="h-3.5 w-3.5 text-white" aria-hidden="true" />
         </div>
-        <span className="text-sm font-semibold text-[var(--color-text-primary)]">MindSprint</span>
+        <span className="text-sm font-semibold text-[var(--color-text-primary)]">FocusForge</span>
       </div>
 
       {/* Nav */}
@@ -43,7 +43,7 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-[var(--color-border)] px-5 py-4">
-        <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">MindSprint © {new Date().getFullYear()}</p>
+        <p className="text-xs text-text-secondary dark:text-[var(--color-text-secondary)]">FocusForge © {new Date().getFullYear()}</p>
       </div>
     </aside>
   );

@@ -73,7 +73,7 @@ export function FocusModeOverlay({ isOpen, onClose }: FocusModeOverlayProps) {
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                MindSprint Distraction-Free Focus Mode
+                FocusForge Distraction-Free Focus Mode
               </p>
               <p className="text-xs font-medium text-slate-300">
                 {sessionCount} Sessions Completed Today 🔥
