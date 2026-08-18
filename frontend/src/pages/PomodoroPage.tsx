@@ -603,17 +603,17 @@ export function PomodoroPage() {
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-xs space-y-4">
           {/* Header with Master Stop/Play Toggle */}
           <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-2.5">
-            <div>
+            <div className="min-w-0 flex-1 pr-2">
               <div className="flex items-center gap-1.5">
-                <Music className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
+                <Music className="h-3.5 w-3.5 shrink-0 text-[var(--color-primary)]" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] truncate">
                   Focus MP3 Audio & Saved Music
                 </h3>
               </div>
               {audioState.isPlaying && (
-                <div className="flex items-center gap-1.5 text-2xs font-bold text-[var(--color-primary)] mt-0.5">
-                  <span className="inline-block h-2 w-2 rounded-full bg-[var(--color-primary)] animate-ping" />
-                  <span className="truncate">Playing: {audioState.activeName}</span>
+                <div className="flex items-center gap-1.5 text-2xs font-bold text-[var(--color-primary)] mt-0.5 min-w-0">
+                  <span className="inline-block shrink-0 h-2 w-2 rounded-full bg-[var(--color-primary)] animate-ping" />
+                  <span className="truncate block">Playing: {audioState.activeName}</span>
                 </div>
               )}
             </div>
@@ -623,7 +623,7 @@ export function PomodoroPage() {
               type="button"
               onClick={handleMasterAudioToggle}
               className={cn(
-                'flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold transition-colors border',
+                'shrink-0 flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold transition-colors border',
                 audioState.isPlaying
                   ? 'bg-rose-50 border-rose-200 text-rose-600 hover:bg-rose-100'
                   : 'bg-[var(--color-surface-secondary)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
