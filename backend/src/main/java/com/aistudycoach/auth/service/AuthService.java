@@ -206,6 +206,21 @@ public class AuthService {
         return toUserResponse(saved);
     }
 
+    @Transactional
+    public UserResponse updateProfile(Authentication authentication, com.aistudycoach.auth.dto.UpdateProfileRequest request) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new BadCredentialsException("Authentication is required");
+        }
+
+        User user = userRepository.findByEmail(authentication.getName().toLowerCase())
+                .orElseThrow(() -> new BadCredentialsException("Authentication is required"));
+
+        user.setName(request.getName().trim());
+        User saved = userRepository.save(user);
+
+        return toUserResponse(saved);
+    }
+
     private UserResponse toUserResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())

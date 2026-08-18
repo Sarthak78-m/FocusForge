@@ -11,10 +11,10 @@ type Message = {
 };
 
 const SUGGESTED_PROMPTS = [
-  "Create a 3-day exam review schedule for Organic Chemistry",
-  "Explain Neural Networks and Backpropagation in simple terms",
-  "Give me 5 active recall memory techniques for exam prep",
-  "Help me structure my research essay introduction",
+  "Break down my study goals for today into focus sessions",
+  "How can I eliminate distractions during deep work?",
+  "Suggest a 25-minute Pomodoro study routine",
+  "Help me structure a review session for my notes",
 ];
 
 export function AICoachPage() {
@@ -23,10 +23,11 @@ export function AICoachPage() {
     {
       id: '1',
       sender: 'ai',
-      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'there'}! I'm your FocusForge AI Study Coach. How can I help you accelerate your learning today?`,
+      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'there'}! How can I assist with your study planning today?`,
       time: 'Just now',
     },
   ]);
+
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 

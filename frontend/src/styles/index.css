@@ -1,76 +1,77 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════
-   DESIGN TOKENS — Light Theme
+   DESIGN TOKENS — Light Theme (Warm Yellowish-Red Accent)
    ═══════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Font ── */
-  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Plus Jakarta Sans', sans-serif;
 
-  /* ── Stitch Design System Core Surfaces ── */
-  --color-background:          #FAF9F7;
-  --color-surface:             #FFFFFF;
-  --color-surface-secondary:   #FFE9E6;
-  --color-surface-container:   #FFF0EE;
+  /* ── Minimalist Clean Surfaces ── */
+  --color-background:          #fafafa;
+  --color-surface:             #ffffff;
+  --color-surface-secondary:   #f5f5f5;
+  --color-surface-container:   #fdf8f6;
+
+  /* ── Compatibility variables ── */
+  --color-bg:                  #fafafa;
+  --color-bg-elevated:         #ffffff;
+  --color-sidebar:             #fafafa;
+  --color-card:                #ffffff;
+  --color-card-hover:          #fdf8f6;
+  --color-text:                #1c1917;
+  --color-text-secondary:      #78716c;
+  --color-text-tertiary:       #a8a29e;
+  --color-accent:              #E45834;
+  --color-accent-hover:        #CD4725;
+  --color-accent-soft:         #FDF2EE;
 
   /* ── Borders ── */
-  --color-border:              #E6E4E0;
-  --color-border-strong:       #E3BEB8;
+  --color-border:              #e7e5e4;
+  --color-border-strong:       #d6d3d1;
 
   /* ── Text ── */
-  --color-text-primary:        #25181A;
-  --color-text-secondary:      #584044;
-  --color-text-tertiary:       #8F706B;
+  --color-text-primary:        #1c1917;
+  --color-text-secondary:      #78716c;
+  --color-text-tertiary:       #a8a29e;
 
-  /* ── Primary — Stitch Coral Red ── */
-  --color-primary:             #E44332;
-  --color-primary-hover:       #B31F14;
-  --color-primary-light:       #FFDAD4;
-  --color-primary-subtle:      #FFE9E6;
+  /* ── Light Yellowish-Red (Warm Terracotta / Coral) ── */
+  --color-primary:             #E45834;
+  --color-primary-hover:       #CD4725;
+  --color-primary-light:       #FDF2EE;
+  --color-primary-subtle:      #FFF7F4;
 
-  /* ── Secondary — Blueberry Blue ── */
-  --color-secondary:           #0058BF;
-  --color-secondary-light:     #D8E2FF;
+  /* ── Semantic flags ── */
+  --color-secondary:           #44403c;
+  --color-secondary-light:     #f5f5f4;
+  --color-warning:             #d97706;
+  --color-warning-light:       #fef3c7;
+  --color-danger:              #dc2626;
+  --color-danger-light:        #fee2e2;
+  --color-success:             #16a34a;
+  --color-success-light:       #dcfce7;
 
-  /* ── Accent — Clover Green ── */
-  --color-accent:              #006B1D;
-  --color-accent-light:        #EEFFEC;
-
-  /* ── Warning — Tangerine ── */
-  --color-warning:             #FF7A00;
-  --color-warning-light:       #FFF3E6;
-
-  /* ── Danger — Rose ── */
-  --color-danger:              #E44332;
-  --color-danger-light:        #FFDAD4;
-
-  /* ── Success — Clover Green ── */
-  --color-success:             #006B1D;
-  --color-success-light:       #EEFFEC;
-
-  /* ── Shadows ── */
-  --shadow-card:               0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
-  --shadow-card-hover:         0px 4px 12px rgba(0, 0, 0, 0.05);
-  --shadow-elevated:           0 12px 28px rgba(0, 0, 0, 0.08);
-  --shadow-nav:                0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  /* ── Flat Clean Shadows ── */
+  --shadow-card:               0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover:         0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-elevated:           0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-nav:                0 1px 2px rgba(0, 0, 0, 0.03);
 
   /* ── Border Radii ── */
-  --radius-sm:                 8px;
-  --radius-md:                 12px;
-  --radius-lg:                 16px;
-  --radius-xl:                 20px;
+  --radius-sm:                 6px;
+  --radius-md:                 8px;
+  --radius-lg:                 12px;
+  --radius-xl:                 16px;
   --radius-full:               9999px;
 
   /* ── Transitions ── */
-  --transition-fast:           150ms ease;
-  --transition-normal:         200ms ease;
-  --transition-smooth:         300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring:         400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast:           120ms ease;
+  --transition-normal:         180ms ease;
+  --transition-smooth:         250ms ease;
 
   color-scheme: light;
   font-synthesis: none;
@@ -80,36 +81,49 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   DESIGN TOKENS — Dark Theme
+   DESIGN TOKENS — Dark Theme (Warm Yellowish-Red Accent)
    ═══════════════════════════════════════════════════════ */
 
-.dark {
-  --color-background:          #0D0D0F;
-  --color-surface:             #1C1C1E;
-  --color-surface-secondary:   #2C2C2E;
+.dark,
+[data-theme="dark"] {
+  --color-background:          #141211;
+  --color-surface:             #1c1a19;
+  --color-surface-secondary:   #262423;
+  --color-surface-container:   #181615;
 
-  --color-border:              #38383A;
-  --color-border-strong:       #48484A;
+  --color-bg:                  #141211;
+  --color-bg-elevated:         #1c1a19;
+  --color-sidebar:             #181615;
+  --color-card:                #1c1a19;
+  --color-card-hover:          #262423;
+  --color-text:                #fafaf9;
+  --color-accent-soft:         rgba(228, 88, 52, 0.15);
 
-  --color-text-primary:        #F5F5F7;
-  --color-text-secondary:      #98989D;
-  --color-text-tertiary:       #636366;
+  --color-border:              #292524;
+  --color-border-strong:       #44403c;
 
-  /* Accent tints darkened for dark mode */
-  --color-primary-light:       #2D1A0E;
-  --color-secondary-light:     #0F1F3D;
-  --color-accent-light:        #0D2E2B;
-  --color-warning-light:       #2D1F00;
-  --color-danger-light:        #2D0A12;
-  --color-success-light:       #0D2616;
+  --color-text-primary:        #fafaf9;
+  --color-text-secondary:      #a8a29e;
+  --color-text-tertiary:       #78716c;
 
-  --shadow-card:               0 1px 3px rgba(0,0,0,0.20), 0 1px 2px rgba(0,0,0,0.15);
-  --shadow-card-hover:         0 4px 12px rgba(0,0,0,0.30), 0 2px 4px rgba(0,0,0,0.20);
-  --shadow-elevated:           0 8px 30px rgba(0,0,0,0.40);
-  --shadow-nav:                0 1px 3px rgba(0,0,0,0.20);
+  --color-primary:             #E45834;
+  --color-primary-hover:       #EB6C4A;
+  --color-primary-light:       #331c17;
+  --color-primary-subtle:      #261511;
+
+  --shadow-card:               0 1px 3px rgba(0,0,0,0.30);
+  --shadow-card-hover:         0 2px 8px rgba(0,0,0,0.40);
+  --shadow-elevated:           0 4px 16px rgba(0,0,0,0.50);
+  --shadow-nav:                0 1px 3px rgba(0,0,0,0.30);
 
   color-scheme: dark;
 }
+
+
+
+
+
+
 
 /* ═══════════════════════════════════════════════════════
    BASE
@@ -228,3 +242,103 @@ body {
   .muted-text { color: var(--color-text-secondary); }
   .divider    { border-top: 1px solid var(--color-border); }
 }
+
+/* ── Markdown preview styles ── */
+.prose-note {
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 1.75;
+}
+.prose-note h1,
+.prose-note h2,
+.prose-note h3,
+.prose-note h4 {
+  color: var(--color-text);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.4em 0 0.5em;
+}
+.prose-note h1 { font-size: 1.6em; }
+.prose-note h2 { font-size: 1.3em; }
+.prose-note h3 { font-size: 1.1em; }
+.prose-note h4 { font-size: 1em; }
+.prose-note p  { margin: 0.75em 0; }
+.prose-note a  {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-note a:hover { color: var(--color-accent-hover); }
+.prose-note strong { color: var(--color-text); font-weight: 600; }
+.prose-note em     { font-style: italic; }
+.prose-note ul,
+.prose-note ol {
+  padding-left: 1.5em;
+  margin: 0.75em 0;
+}
+.prose-note li { margin: 0.3em 0; }
+.prose-note blockquote {
+  border-left: 3px solid var(--color-accent);
+  margin: 1em 0;
+  padding: 0.25em 0 0.25em 1em;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+.prose-note code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.85em;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose-note pre {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1em 1.25em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+.prose-note pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875em;
+}
+.prose-note hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1.5em 0;
+}
+.prose-note table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+.prose-note th,
+.prose-note td {
+  border: 1px solid var(--color-border);
+  padding: 0.4em 0.75em;
+  text-align: left;
+}
+.prose-note th {
+  background: var(--color-card);
+  font-weight: 600;
+}
+.prose-note .wiki-link {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 4px;
+  padding: 0.05em 0.3em;
+  font-size: 0.9em;
+  cursor: pointer;
+  text-decoration: none;
+}
+.prose-note .wiki-link:hover {
+  background: var(--color-accent-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+

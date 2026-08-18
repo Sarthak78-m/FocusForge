@@ -161,7 +161,7 @@ export const chatService = {
     const activeGoals = (activeGoalsResult ?? []).map((g) => ({
       id: g.id,
       title: g.title,
-      progressPercent: g.progressPercent,
+      progressPercent: g.progressPercentage,
       targetDate: g.targetDate,
     }));
 
@@ -170,7 +170,7 @@ export const chatService = {
       ? {
           todaySessions: pomodoroStatsResult.todaySessions,
           todayWorkMinutes: pomodoroStatsResult.todayWorkMinutes,
-          currentStreak: pomodoroStatsResult.currentStreak,
+          currentStreak: pomodoroStatsResult.todaySessions > 0 ? 1 : 0,
           weeklyWorkMinutes: pomodoroStatsResult.totalWorkMinutes,
         }
       : null;
@@ -178,11 +178,11 @@ export const chatService = {
     // ── Transform analytics ────────────────────────────────────────────────────
     const analytics = analyticsSummaryResult
       ? {
-          weeklyCompletedTasks: analyticsSummaryResult.weeklyCompletedTasks,
-          taskCompletionRate: analyticsSummaryResult.taskCompletionRate,
-          weakSubjects: analyticsSummaryResult.weakSubjects,
-          strongSubjects: analyticsSummaryResult.strongSubjects,
-          mostStudiedSubject: analyticsSummaryResult.mostStudiedSubject,
+          weeklyCompletedTasks: analyticsSummaryResult.completedTasks,
+          taskCompletionRate: analyticsSummaryResult.productivityScore / 100,
+          weakSubjects: [] as string[],
+          strongSubjects: [] as string[],
+          mostStudiedSubject: null as string | null,
         }
       : null;
 

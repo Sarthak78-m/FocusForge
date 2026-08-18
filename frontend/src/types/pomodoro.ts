@@ -1,33 +1,29 @@
 // ─── Pomodoro Session Types ───────────────────────────────────────────────────
-// Endpoint prefix: /api/pomodoro/sessions
+// Aligned to backend SessionResponse / CreateSessionRequest DTOs
 
 export type PomodoroSessionType = 'WORK' | 'SHORT_BREAK' | 'LONG_BREAK';
 
 export type PomodoroSession = {
   id: number;
-  type: PomodoroSessionType;
-  durationMinutes: number;   // actual duration (may differ from target if stopped early)
-  completed: boolean;
-  linkedTaskId?: number | null;
+  durationMinutes: number;
+  sessionType: PomodoroSessionType;
+  taskId: number | null;
+  notes: string | null;
   startedAt: string;
   endedAt: string;
+  createdAt: string;
 };
 
 export type PomodoroStats = {
-  totalSessions: number;
-  totalWorkMinutes: number;
-  completedWorkSessions: number;
-  currentStreak: number;      // consecutive days with ≥1 work session
-  longestStreak: number;
   todaySessions: number;
   todayWorkMinutes: number;
+  totalWorkMinutes: number;
+  totalSessions: number;
 };
 
-export type LogPomodoroSessionPayload = {
-  type: PomodoroSessionType;
+export type CreateSessionPayload = {
   durationMinutes: number;
-  completed: boolean;
-  linkedTaskId?: number;
-  startedAt: string;
-  endedAt: string;
+  sessionType: PomodoroSessionType;
+  taskId?: number | null;
+  notes?: string | null;
 };

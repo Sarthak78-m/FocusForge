@@ -17,9 +17,26 @@ export const authService = {
       return unwrapApiResponse(response.data);
     } catch (err: any) {
       if (!err.response || err.response.status === 404 || err.code === 'ERR_NETWORK') {
+        const stored = localStorage.getItem('focusforge_mock_user');
+        let resolvedName = '';
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (parsed?.name && parsed?.email?.toLowerCase() === payload.email.toLowerCase()) {
+              resolvedName = parsed.name;
+            }
+          } catch {}
+        }
+        if (!resolvedName) {
+          const rawPrefix = payload.email.split('@')[0].replace(/[0-9]+/g, '').replace(/[._-]/g, ' ').trim();
+          resolvedName = rawPrefix
+            ? rawPrefix.split(' ').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+            : payload.email.split('@')[0];
+        }
+
         const mockUser: CurrentUser = {
           id: 1,
-          name: payload.email.split('@')[0].replace('.', ' '),
+          name: resolvedName,
           email: payload.email,
           role: 'USER',
         };
@@ -97,6 +114,24 @@ export const authService = {
     } catch (err: any) {
       if (!err.response || err.response.status === 404 || err.code === 'ERR_NETWORK') {
         return;
+      }
+      throw err;
+    }
+  },
+
+  async updateProfile(payload: { name: string }): Promise<CurrentUser> {
+    try {
+      const response = await http.put<ApiResponse<CurrentUser>>('/auth/profile', payload);
+      return unwrapApiResponse(response.data);
+    } catch (err: any) {
+      if (!err.response || err.response.status === 404 || err.code === 'ERR_NETWORK') {
+        const stored = localStorage.getItem('focusforge_mock_user');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          parsed.name = payload.name;
+          localStorage.setItem('focusforge_mock_user', JSON.stringify(parsed));
+          return parsed;
+        }
       }
       throw err;
     }

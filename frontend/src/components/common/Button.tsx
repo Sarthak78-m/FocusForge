@@ -13,13 +13,14 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary-500 text-white hover:bg-primary-600 hover:shadow-md hover:-translate-y-0.5 disabled:bg-primary-300 dark:disabled:bg-primary-900',
+    'bg-[var(--color-primary)] text-white hover:opacity-90 shadow-xs active:scale-98 disabled:opacity-50',
   secondary:
-    'border border-border bg-white text-text-primary hover:bg-primary-50 hover:border-primary-200 dark:border-border dark:bg-[var(--color-surface)] dark:text-[var(--color-text-primary)] dark:hover:bg-primary-950',
+    'border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-secondary)] dark:border-[var(--color-border)] dark:bg-[var(--color-surface)] dark:text-[var(--color-text-primary)]',
   ghost:
-    'text-text-primary hover:bg-primary-50 dark:text-[var(--color-text-primary)] dark:hover:bg-primary-950',
-  danger: 'bg-error-600 text-white hover:bg-error-700 disabled:bg-error-300',
+    'text-[var(--color-text-primary)] hover:bg-[var(--color-surface-secondary)] dark:text-[var(--color-text-primary)]',
+  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
 };
+
 
 const sizes: Record<ButtonSize, string> = {
   sm: 'h-9 px-3 text-sm',

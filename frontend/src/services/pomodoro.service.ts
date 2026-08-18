@@ -1,82 +1,106 @@
 /**
  * pomodoroService.ts
  *
- * API layer for /api/pomodoro
- *
- * Backend status: NOT YET IMPLEMENTED
- * The frontend Pomodoro timer is currently fully client-side (usePomodoro hook).
- * These service methods will persist sessions server-side once the backend is built.
+ * API layer for /api/pomodoro with localStorage fallback.
  */
 
 import { http, unwrapApiResponse } from '@/api/http';
-import type { ApiResponse, PaginatedResponse } from '@/types/api';
-import type {
-  PomodoroSession,
-  PomodoroStats,
-  LogPomodoroSessionPayload,
-  PomodoroSessionType,
-} from '@/types/pomodoro';
+import type { ApiResponse } from '@/types/api';
+import type { PomodoroSession, PomodoroStats, CreateSessionPayload } from '@/types/pomodoro';
 
-export type GetSessionsParams = {
-  type?: PomodoroSessionType;
-  from?: string;   // ISO date YYYY-MM-DD
-  to?: string;     // ISO date YYYY-MM-DD
-  page?: number;
-  size?: number;
-};
+// ── Local storage fallback ───────────────────────────────────────────────
+
+function getStorageKey(): string {
+  try {
+    const user = localStorage.getItem('focusforge_mock_user');
+    if (user) {
+      const parsed = JSON.parse(user);
+      if (parsed?.email) return `mindsprint_pomo_sessions_${parsed.email.toLowerCase()}`;
+    }
+  } catch {}
+  return 'mindsprint_pomo_sessions_default';
+}
+
+function getStoredSessions(): PomodoroSession[] {
+  try {
+    const raw = localStorage.getItem(getStorageKey());
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredSessions(sessions: PomodoroSession[]): void {
+  try {
+    localStorage.setItem(getStorageKey(), JSON.stringify(sessions));
+  } catch {}
+}
+
+function isNetworkError(err: any): boolean {
+  return !err.response || err.response.status === 404 || err.code === 'ERR_NETWORK';
+}
+
+// ── Service ──────────────────────────────────────────────────────────────
 
 export const pomodoroService = {
-  /**
-   * POST /api/pomodoro/sessions
-   * Record a completed (or interrupted) Pomodoro session.
-   * Call this when the timer ends or the user manually stops.
-   */
-  async logSession(payload: LogPomodoroSessionPayload) {
-    const response = await http.post<ApiResponse<PomodoroSession>>(
-      '/pomodoro/sessions',
-      payload,
-    );
-    return unwrapApiResponse(response.data);
+  /** POST /api/pomodoro/sessions — record a completed session */
+  async logSession(payload: CreateSessionPayload): Promise<PomodoroSession> {
+    try {
+      const res = await http.post<ApiResponse<PomodoroSession>>('/pomodoro/sessions', payload);
+      const created = unwrapApiResponse(res.data);
+      saveStoredSessions([created, ...getStoredSessions()]);
+      return created;
+    } catch (err: any) {
+      if (isNetworkError(err)) {
+        const now = new Date().toISOString();
+        const local: PomodoroSession = {
+          id: Date.now(),
+          durationMinutes: payload.durationMinutes,
+          sessionType: payload.sessionType,
+          taskId: payload.taskId ?? null,
+          notes: payload.notes ?? null,
+          startedAt: new Date(Date.now() - payload.durationMinutes * 60000).toISOString(),
+          endedAt: now,
+          createdAt: now,
+        };
+        saveStoredSessions([local, ...getStoredSessions()]);
+        return local;
+      }
+      throw err;
+    }
   },
 
-  /**
-   * GET /api/pomodoro/sessions
-   * Paginated session history with optional date-range and type filter.
-   */
-  async getSessions(params: GetSessionsParams = {}) {
-    const { page = 0, size = 20, ...filters } = params;
-    const response = await http.get<ApiResponse<PaginatedResponse<PomodoroSession>>>(
-      '/pomodoro/sessions',
-      { params: { ...filters, page, size } },
-    );
-    return unwrapApiResponse(response.data);
+  /** GET /api/pomodoro/sessions — list all sessions */
+  async getSessions(): Promise<PomodoroSession[]> {
+    try {
+      const res = await http.get<ApiResponse<PomodoroSession[]>>('/pomodoro/sessions');
+      const sessions = unwrapApiResponse(res.data);
+      if (sessions.length > 0) saveStoredSessions(sessions);
+      return sessions;
+    } catch (err: any) {
+      if (isNetworkError(err)) return getStoredSessions();
+      throw err;
+    }
   },
 
-  /**
-   * GET /api/pomodoro/sessions/stats
-   * Aggregated statistics: streaks, today's sessions, weekly total, etc.
-   */
-  async getStats() {
-    const response = await http.get<ApiResponse<PomodoroStats>>('/pomodoro/sessions/stats');
-    return unwrapApiResponse(response.data);
-  },
-
-  /**
-   * GET /api/pomodoro/sessions/today
-   * All sessions for the current calendar day.
-   */
-  async getTodaySessions() {
-    const response = await http.get<ApiResponse<PomodoroSession[]>>(
-      '/pomodoro/sessions/today',
-    );
-    return unwrapApiResponse(response.data);
-  },
-
-  /**
-   * DELETE /api/pomodoro/sessions/:sessionId
-   * Remove a mistakenly logged session.
-   */
-  async deleteSession(sessionId: number) {
-    await http.delete<ApiResponse<void>>(`/pomodoro/sessions/${sessionId}`);
+  /** GET /api/pomodoro/sessions/stats — aggregated statistics */
+  async getStats(): Promise<PomodoroStats> {
+    try {
+      const res = await http.get<ApiResponse<PomodoroStats>>('/pomodoro/sessions/stats');
+      return unwrapApiResponse(res.data);
+    } catch (err: any) {
+      if (isNetworkError(err)) {
+        const sessions = getStoredSessions().filter((s) => s.sessionType === 'WORK');
+        const today = new Date().toISOString().split('T')[0];
+        const todaySessions = sessions.filter((s) => s.startedAt.startsWith(today));
+        return {
+          todaySessions: todaySessions.length,
+          todayWorkMinutes: todaySessions.reduce((sum, s) => sum + s.durationMinutes, 0),
+          totalWorkMinutes: sessions.reduce((sum, s) => sum + s.durationMinutes, 0),
+          totalSessions: sessions.length,
+        };
+      }
+      throw err;
+    }
   },
 };

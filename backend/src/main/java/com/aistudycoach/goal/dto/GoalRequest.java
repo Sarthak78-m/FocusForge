@@ -1,6 +1,5 @@
 package com.aistudycoach.goal.dto;
 
-import com.aistudycoach.goal.GoalCategory;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,8 +21,9 @@ public class GoalRequest {
     @Size(max = 200, message = "Goal title cannot exceed 200 characters")
     private String title;
 
-    @NotNull(message = "Goal category is required")
-    private GoalCategory category;
+    @NotBlank(message = "Goal category is required")
+    @Size(max = 100, message = "Goal category cannot exceed 100 characters")
+    private String category;
 
     @NotNull(message = "Target date is required")
     @FutureOrPresent(message = "Target date must be in the present or future")

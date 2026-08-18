@@ -1,116 +1,122 @@
-import { useState } from 'react';
-import { Gem, Flame, CheckCircle2, Lock } from 'lucide-react';
+import { useTasks } from '@/hooks/useTasks';
+import { usePomodoro } from '@/hooks/usePomodoro';
+import { useRewards } from '@/hooks/useRewards';
+import { Flame, CheckCircle2, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-type Badge = {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  unlocked: boolean;
-  xp: number;
-};
-
-const BADGES: Badge[] = [
-  {
-    id: '1',
-    title: 'First Sprint Champion',
-    description: 'Complete your first 25-minute Pomodoro focus session',
-    icon: '⚡',
-    unlocked: true,
-    xp: 50,
-  },
-  {
-    id: '2',
-    title: '7-Day Streak Warrior',
-    description: 'Maintain a 7-day active daily study streak',
-    icon: '🔥',
-    unlocked: true,
-    xp: 200,
-  },
-  {
-    id: '3',
-    title: 'Night Owl Focus',
-    description: 'Complete 3 focus sessions past 10 PM',
-    icon: '🦉',
-    unlocked: true,
-    xp: 150,
-  },
-  {
-    id: '4',
-    title: 'Pomodoro Titan',
-    description: 'Accumulate 50 total Pomodoro focus sprints',
-    icon: '🏆',
-    unlocked: false,
-    xp: 500,
-  },
-  {
-    id: '5',
-    title: 'Task Crusher',
-    description: 'Complete 25 study tasks in a single week',
-    icon: '🎯',
-    unlocked: false,
-    xp: 300,
-  },
-  {
-    id: '6',
-    title: 'Deep Work Master',
-    description: 'Log 4 hours of uninterrupted study in one day',
-    icon: '🧠',
-    unlocked: false,
-    xp: 400,
-  },
-];
-
 export function RewardsPage() {
-  const [xp] = useState(1450);
-  const currentLevel = Math.floor(xp / 500) + 1;
+  const { data: serverRewards, isLoading } = useRewards();
+  const { data: tasksData } = useTasks({ size: 100 });
+  const { sessionCount } = usePomodoro();
+
+  const tasks = tasksData?.content ?? [];
+  const completedTasks = tasks.filter((t) => t.status === 'COMPLETED').length;
+
+  // Compute fallback if backend data is not yet loaded
+  const fallbackXp = completedTasks * 50 + sessionCount * 100;
+  const fallbackLevel = Math.floor(fallbackXp / 500) + 1;
+  const xp = serverRewards?.currentXp ?? fallbackXp;
+  const currentLevel = serverRewards?.level ?? fallbackLevel;
   const levelProgress = Math.round(((xp % 500) / 500) * 100);
 
+  const badges = serverRewards?.badges && serverRewards.badges.length > 0
+    ? serverRewards.badges.map((b) => ({
+        id: b.id,
+        title: b.name,
+        description: b.description,
+        icon: b.icon,
+        unlocked: b.unlocked,
+        xp: 50,
+      }))
+    : [
+        {
+          id: '1',
+          title: 'First Sprint Champion',
+          description: 'Complete your first Pomodoro focus sprint',
+          icon: '⚡',
+          unlocked: sessionCount >= 1,
+          xp: 50,
+        },
+        {
+          id: '2',
+          title: 'Task Completer',
+          description: 'Complete at least 5 study tasks',
+          icon: '✓',
+          unlocked: completedTasks >= 5,
+          xp: 150,
+        },
+        {
+          id: '3',
+          title: 'Focus Sprint Master',
+          description: 'Complete 4 deep work focus sessions',
+          icon: '⏱️',
+          unlocked: sessionCount >= 4,
+          xp: 200,
+        },
+        {
+          id: '4',
+          title: 'Task Crusher',
+          description: 'Complete 15 study tasks in your workspace',
+          icon: '🎯',
+          unlocked: completedTasks >= 15,
+          xp: 300,
+        },
+        {
+          id: '5',
+          title: 'Deep Work Champion',
+          description: 'Complete 10 total Pomodoro focus sessions',
+          icon: '🏆',
+          unlocked: sessionCount >= 10,
+          xp: 500,
+        },
+      ];
+
+  const unlockedCount = badges.filter((b) => b.unlocked).length;
+
   return (
-    <div className="mx-auto max-w-[800px] space-y-8 py-4">
+    <div className="mx-auto max-w-3xl space-y-6 py-4">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-            Rewards & Streaks
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Productivity Milestones
           </h1>
-          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">
-            Earn XP, unlock milestone badges, and level up your study consistency
+          <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
+            Track your study consistency and milestone progress
           </p>
         </div>
 
-        <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-bold text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-          <Flame className="h-4 w-4 fill-amber-500 text-amber-500" />
-          7-Day Active Streak 🔥
+        <div className="flex items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--color-text-primary)]">
+          <Flame className="h-4 w-4 text-[var(--color-primary)] fill-[var(--color-primary)]" />
+          <span>{serverRewards?.streakDays ?? sessionCount} Focus Sprints Completed</span>
         </div>
       </div>
 
-      {/* Level Banner Card (Stitch Red Gradient) */}
-      <div className="rounded-2xl bg-gradient-to-br from-[#E44332] via-[#B31F14] to-[#782D40] p-6 text-white shadow-md relative overflow-hidden">
+      {/* Level Banner Card */}
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-xs relative overflow-hidden">
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 text-3xl backdrop-blur-md shadow-xs">
-              👑
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--color-surface-secondary)] text-xl border border-[var(--color-border)]">
+              🏆
             </div>
             <div>
-              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold backdrop-blur-md">
-                Level {currentLevel} Scholar
+              <span className="rounded px-2 py-0.5 text-2xs font-bold bg-[var(--color-primary-light)] text-[var(--color-primary)]">
+                Level {currentLevel}
               </span>
-              <h2 className="mt-1 text-2xl font-extrabold text-white">
-                {xp} Total FocusForge XP
+              <h2 className="mt-1 text-lg font-bold text-[var(--color-text-primary)]">
+                {xp} Total Study Points
               </h2>
             </div>
           </div>
 
           <div className="w-full max-w-xs space-y-1.5">
-            <div className="flex justify-between text-xs font-bold text-white/90">
-              <span>Progress to Level {currentLevel + 1}</span>
+            <div className="flex justify-between text-xs font-medium text-[var(--color-text-secondary)]">
+              <span>Next Level Progress</span>
               <span>{xp % 500} / 500 XP</span>
             </div>
-            <div className="h-3 w-full rounded-full bg-black/20 overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-[var(--color-surface-secondary)] overflow-hidden">
               <div
-                className="h-full bg-white rounded-full transition-all duration-500"
+                className="h-full bg-[var(--color-primary)] rounded-full transition-all duration-500"
                 style={{ width: `${levelProgress}%` }}
               />
             </div>
@@ -120,42 +126,40 @@ export function RewardsPage() {
 
       {/* Milestone Badges Grid */}
       <div>
-        <h2 className="text-sm font-bold text-[var(--color-text-primary)] mb-4">
-          Milestone Badges ({BADGES.filter((b) => b.unlocked).length} / {BADGES.length} Unlocked)
+        <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-3">
+          Milestones ({unlockedCount} of {badges.length} Achieved)
         </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {BADGES.map((badge) => (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {badges.map((badge) => (
             <motion.div
               key={badge.id}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`rounded-2xl border p-5 shadow-xs transition-all ${
+              className={`rounded-lg border p-4 transition-all ${
                 badge.unlocked
-                  ? 'border-[var(--color-border)] bg-white dark:bg-slate-900'
-                  : 'border-[var(--color-border)] bg-slate-50/50 opacity-60 dark:bg-slate-950/50'
+                  ? 'border-[var(--color-border)] bg-[var(--color-surface)] shadow-xs'
+                  : 'border-[var(--color-border)] bg-[var(--color-surface-secondary)] opacity-60'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-3xl">{badge.icon}</span>
-                <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+                <span className="text-2xl">{badge.icon}</span>
+                <span className="rounded px-2 py-0.5 text-2xs font-bold bg-[var(--color-surface-container)] text-[var(--color-text-secondary)] border border-[var(--color-border)]">
                   +{badge.xp} XP
                 </span>
               </div>
 
-              <h3 className="mt-3 text-xs font-bold text-[var(--color-text-primary)]">
+              <h3 className="mt-2.5 text-xs font-semibold text-[var(--color-text-primary)]">
                 {badge.title}
               </h3>
-              <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{badge.description}</p>
+              <p className="mt-0.5 text-2xs text-[var(--color-text-secondary)]">{badge.description}</p>
 
-              <div className="mt-4 flex items-center justify-between pt-3 border-t border-[var(--color-border)]">
-                <span className="text-[10px] font-bold text-[var(--color-text-tertiary)]">
-                  {badge.unlocked ? '✓ Unlocked' : '🔒 Locked'}
-                </span>
+              <div className="mt-3 flex items-center justify-between pt-2.5 border-t border-[var(--color-border)] text-2xs font-medium text-[var(--color-text-tertiary)]">
+                <span>{badge.unlocked ? 'Achieved' : 'In Progress'}</span>
                 {badge.unlocked ? (
-                  <CheckCircle2 className="h-4 w-4 text-[var(--color-accent)]" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
                 ) : (
-                  <Lock className="h-4 w-4 text-[var(--color-text-tertiary)]" />
+                  <Lock className="h-3.5 w-3.5" />
                 )}
               </div>
             </motion.div>

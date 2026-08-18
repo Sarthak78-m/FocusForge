@@ -110,4 +110,17 @@ public class AuthController {
         UserResponse response = authService.updatePhone(authentication, request);
         return ResponseEntity.ok(ApiResponse.success("Mobile phone updated securely with AES-256 encryption", response));
     }
+
+    @Operation(
+            summary = "Update user profile details",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @PutMapping("/profile")
+    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
+            Authentication authentication,
+            @Valid @RequestBody com.aistudycoach.auth.dto.UpdateProfileRequest request
+    ) {
+        UserResponse response = authService.updateProfile(authentication, request);
+        return ResponseEntity.ok(ApiResponse.success("Profile updated successfully", response));
+    }
 }

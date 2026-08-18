@@ -89,12 +89,14 @@ export const taskService = {
         }
         return {
           content: filtered,
-          pageNumber: 0,
-          pageSize: Math.max(20, filtered.length),
+          number: 0,
+          size: Math.max(20, filtered.length),
           totalElements: filtered.length,
           totalPages: 1,
+          first: true,
           last: true,
         };
+
       }
       throw err;
     }

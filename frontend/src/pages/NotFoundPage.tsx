@@ -1,47 +1,44 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Home, Sparkles } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
-import { paths } from '@/routes/paths';
+import { useNavigate } from 'react-router-dom';
+import { FileQuestion, ArrowLeft, Home } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 export function NotFoundPage() {
-  const { activePalette } = useTheme();
+  const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 px-6 font-sans text-center">
-      <div className="relative flex items-center justify-center">
-        <p
-          className="text-9xl font-black tracking-tighter text-transparent bg-clip-text opacity-90 select-none"
-          style={{ backgroundImage: activePalette.gradient }}
-        >
+    <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center px-4">
+      <div className="max-w-md w-full text-center animate-fade-in">
+        <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-accent-soft)] text-[var(--color-accent)] mb-6">
+          <FileQuestion className="h-8 w-8" />
+        </div>
+
+        <h1 className="text-5xl font-bold tracking-tight text-[var(--color-text)] mb-3">
           404
+        </h1>
+        <h2 className="text-xl font-semibold text-[var(--color-text)] mb-2">
+          Page not found
+        </h2>
+        <p className="text-sm text-[var(--color-text-secondary)] mb-8">
+          The page you're looking for doesn't exist or may have been moved.
         </p>
-      </div>
 
-      <h1 className="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white">
-        Lost in Space? Page Not Found
-      </h1>
-      <p className="mt-2 max-w-sm text-xs leading-relaxed text-slate-500">
-        The page you are looking for doesn't exist or may have been relocated. Let's get you back on track with your study goals.
-      </p>
-
-      <div className="mt-8 flex items-center gap-3">
-        <Link
-          to={paths.dashboard}
-          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-xs font-bold text-white shadow-md transition-all hover:scale-105"
-          style={{ background: activePalette.gradient }}
-        >
-          <Home className="h-4 w-4" />
-          Go to Dashboard
-        </Link>
-        <Link
-          to={paths.landing}
-          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-5 py-3 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to Home
-        </Link>
+        <div className="flex items-center justify-center gap-3">
+          <Button
+            variant="secondary"
+            iconLeft={<ArrowLeft className="h-4 w-4" />}
+            onClick={() => navigate(-1)}
+          >
+            Go back
+          </Button>
+          <Button
+            variant="primary"
+            iconLeft={<Home className="h-4 w-4" />}
+            onClick={() => navigate('/')}
+          >
+            Home
+          </Button>
+        </div>
       </div>
     </div>
   );
 }
-

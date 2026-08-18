@@ -5,11 +5,11 @@ export type CurrentUser = {
   name: string;
   email: string;
   role: UserRole;
-  emailVerified: boolean;
+  emailVerified?: boolean;
   maskedPhoneNumber?: string;
   phoneNotificationsEnabled?: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type AuthTokens = {
@@ -19,8 +19,9 @@ export type AuthTokens = {
 export type LoginRequest = {
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
 };
+
 
 export type RegisterRequest = {
   name: string;

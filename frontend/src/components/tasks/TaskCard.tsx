@@ -4,9 +4,9 @@ import { cn } from '@/utils/cn';
 import type { Task, TaskPriority } from '@/types/task';
 
 const PRIORITY_FLAGS: Record<TaskPriority, { label: string; flagColor: string; bgClass: string }> = {
-  HIGH: { label: 'P1', flagColor: '#E44332', bgClass: 'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-950 dark:text-rose-300' },
-  MEDIUM: { label: 'P2', flagColor: '#FF7A00', bgClass: 'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950 dark:text-amber-300' },
-  LOW: { label: 'P3', flagColor: '#0058BF', bgClass: 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950 dark:text-blue-300' },
+  HIGH: { label: 'P1', flagColor: '#db4c3f', bgClass: 'bg-[#fff5f5] text-[#db4c3f] border-[#fee2e2] dark:bg-[#3d2524] dark:border-[#5c3331] dark:text-[#ff8f85]' },
+  MEDIUM: { label: 'P2', flagColor: '#ff9a00', bgClass: 'bg-[#fffbf0] text-[#ff9a00] border-[#fff3e0] dark:bg-[#332b1a] dark:border-[#524424] dark:text-[#ffc066]' },
+  LOW: { label: 'P3', flagColor: '#4073ff', bgClass: 'bg-[#f5f8ff] text-[#4073ff] border-[#e0e7ff] dark:bg-[#1a233a] dark:border-[#2b395e] dark:text-[#8cb0ff]' },
 };
 
 type TaskCardProps = {
@@ -37,35 +37,35 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
   return (
     <div
       className={cn(
-        'group relative flex items-start justify-between gap-4 rounded-xl border p-4 transition-all duration-200',
-        'border-[var(--color-border)] bg-white shadow-xs dark:bg-[var(--color-surface)]',
-        'hover:shadow-md hover:border-[var(--color-primary-subtle)] hover:-translate-y-0.5',
-        isCompleted && 'opacity-60 bg-slate-50/70 dark:bg-slate-900/50',
+        'group relative flex items-start justify-between gap-4 rounded-lg border p-3.5 transition-all duration-150',
+        'border-[var(--color-border)] bg-[var(--color-surface)] shadow-card',
+        'hover:border-[var(--color-border-strong)]',
+        isCompleted && 'opacity-50 bg-[var(--color-surface-secondary)]',
       )}
     >
-      <div className="flex items-start gap-3.5 min-w-0 flex-1">
-        {/* Stitch Circular 24px Checkbox */}
+      <div className="flex items-start gap-3 min-w-0 flex-1">
+        {/* Todoist Circular Checkbox */}
         <button
           type="button"
           onClick={() => !isCompleted && onComplete(task.id)}
           disabled={isCompleted || isCompleting}
           aria-label={isCompleted ? 'Task completed' : 'Mark as complete'}
           className={cn(
-            'mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]',
+            'mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border transition-all duration-150 focus:outline-none',
             isCompleted
               ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white'
-              : 'border-[var(--color-border-strong)] bg-white hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-light)] text-transparent hover:text-[var(--color-primary)] dark:bg-slate-900',
+              : 'border-[#999999] hover:border-[var(--color-primary)] hover:bg-[#fff5f5] text-transparent hover:text-[var(--color-primary)] dark:hover:bg-[#3d2524]',
             isCompleting && 'animate-pulse',
           )}
         >
-          <CheckCircle2 className="h-4 w-4 stroke-[2.5]" />
+          <CheckCircle2 className="h-3.5 w-3.5 stroke-[2.5]" />
         </button>
 
         {/* Task Details */}
-        <div className="min-w-0 flex-1 space-y-1.5">
+        <div className="min-w-0 flex-1 space-y-1">
           <h3
             className={cn(
-              'text-sm font-semibold text-[var(--color-text-primary)] leading-tight',
+              'text-sm font-medium text-[var(--color-text-primary)] leading-tight',
               isCompleted && 'line-through text-[var(--color-text-tertiary)]',
             )}
           >
@@ -79,41 +79,42 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
           )}
 
           {/* Badges & Metadata */}
-          <div className="flex flex-wrap items-center gap-2 pt-1">
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
             {/* Priority Flag Badge */}
             <span
               className={cn(
-                'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-bold',
+                'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-bold border',
                 priority.bgClass,
               )}
             >
-              <Flag className="h-3 w-3" style={{ fill: priority.flagColor, color: priority.flagColor }} />
+              <Flag className="h-2.5 w-2.5" style={{ fill: priority.flagColor, color: priority.flagColor }} />
               {priority.label}
             </span>
 
-            {/* Hashtag Project Tag */}
-            <span className="inline-flex items-center gap-0.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-container)] px-2.5 py-0.5 text-[10px] font-bold text-[var(--color-primary)]">
+            {/* Project Tag */}
+            <span className="inline-flex items-center gap-0.5 rounded border border-[var(--color-border)] bg-[var(--color-surface-secondary)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-secondary)]">
               <Hash className="h-2.5 w-2.5" />
-              ExamPrep
+              General
             </span>
 
             {/* Due Date Pill */}
             {due && (
               <span
                 className={cn(
-                  'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold border',
+                  'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-medium border',
                   due.isOverdue && !isCompleted
-                    ? 'border-rose-200 bg-rose-50 text-rose-600 font-bold dark:bg-rose-950 dark:text-rose-300'
-                    : 'border-[var(--color-border)] text-[var(--color-text-secondary)] bg-slate-50 dark:bg-slate-900',
+                    ? 'border-[#fee2e2] bg-[#fff5f5] text-[#db4c3f] font-bold dark:bg-[#3d2524] dark:border-[#5c3331]'
+                    : 'border-[var(--color-border)] text-[var(--color-text-secondary)] bg-[var(--color-surface-secondary)]',
                 )}
               >
-                <Clock className="h-3 w-3" />
+                <Clock className="h-2.5 w-2.5" />
                 {due.label}
               </span>
             )}
           </div>
         </div>
       </div>
+
 
       {/* Context Actions Menu */}
       <div className="relative flex-none">

@@ -13,4 +13,18 @@ export const paths = {
   analytics: '/app/analytics',
   aiCoach: '/app/ai-coach',
   profile: '/app/profile',
+
+  // Note taking & Knowledge Pages
+  notes: '/app/notes',
+  noteEditor: '/app/notes/:id',
+  favorites: '/app/favorites',
+  recent: '/app/recent',
+  folders: '/app/folders',
+  tags: '/app/tags',
+  graph: '/app/graph',
+  backlinks: '/app/backlinks',
+  settings: '/app/settings',
+  help: '/app/help',
 } as const;
+
+

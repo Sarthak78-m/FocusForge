@@ -6,6 +6,7 @@ import { useTheme, ACCENT_PALETTES } from '@/hooks/useTheme';
 import { useNotificationStore } from '@/store/notification.store';
 import { type ThemeAccent } from '@/store/theme.store';
 import { cn } from '@/utils/cn';
+import { authService } from '@/services/auth.service';
 
 function ProfileField({
   icon: Icon,
@@ -134,9 +135,31 @@ function PhonePrivacyCard() {
 
 export function ProfilePage() {
   const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
   const clearSession = useAuthStore((s) => s.clearSession);
+  const notify = useNotificationStore((s) => s.notify);
   const { isLoading } = useCurrentUser();
   const { mode, accent, setMode, setAccent, activePalette } = useTheme();
+
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(user?.name || '');
+
+  const [isSavingName, setIsSavingName] = useState(false);
+
+  const handleSaveName = async () => {
+    if (!nameInput.trim()) return;
+    setIsSavingName(true);
+    try {
+      const updatedUser = await authService.updateProfile({ name: nameInput.trim() });
+      setUser(updatedUser);
+      setEditingName(false);
+      notify({ title: 'Profile name updated', tone: 'success' });
+    } catch (err) {
+      notify({ title: 'Failed to update name', tone: 'error' });
+    } finally {
+      setIsSavingName(false);
+    }
+  };
 
   const memberSince = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString('en-US', {
@@ -186,9 +209,8 @@ export function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700 dark:bg-orange-950 dark:text-orange-300">
-                <Flame className="h-3.5 w-3.5 fill-orange-500 text-orange-500" />
-                7-Day Streak
+              <div className="flex items-center gap-1 rounded-md bg-[var(--color-surface-secondary)] px-2.5 py-1 text-xs font-semibold text-[var(--color-text-secondary)] border border-[var(--color-border)]">
+                <span>Active Account</span>
               </div>
             </div>
           )}
@@ -196,11 +218,59 @@ export function ProfilePage() {
 
         {/* User Details */}
         <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h3 className="mb-2 text-xs font-extrabold uppercase tracking-wider text-slate-500">
-            Personal Details
-          </h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+              Personal Details
+            </h3>
+            {!editingName ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setNameInput(user?.name || '');
+                  setEditingName(true);
+                }}
+                className="text-xs font-bold text-[var(--color-primary)] hover:underline"
+              >
+                Edit Name
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingName(false)}
+                  className="text-xs font-semibold text-slate-400 hover:text-slate-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveName}
+                  disabled={isSavingName}
+                  className="rounded-md bg-[var(--color-primary)] px-2.5 py-1 text-xs font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {isSavingName ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            )}
+          </div>
+
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
-            <ProfileField icon={User} label="Full Name" value={user?.name} />
+            {editingName ? (
+              <div className="py-3 space-y-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  placeholder="Enter your actual name"
+                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-xs font-semibold text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                />
+              </div>
+            ) : (
+              <ProfileField icon={User} label="Full Name" value={user?.name} />
+            )}
             <ProfileField icon={Mail} label="Email Address" value={user?.email} />
             <ProfileField icon={Shield} label="Account Role" value={user?.role} />
             <ProfileField icon={Calendar} label="Member Since" value={memberSince} />

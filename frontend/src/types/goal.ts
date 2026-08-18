@@ -1,29 +1,31 @@
 // ─── Goal Types ───────────────────────────────────────────────────────────────
-// Endpoint prefix: /api/goals
+// Dynamic categories supported
 
-export type GoalStatus = 'ACTIVE' | 'COMPLETED' | 'PAUSED' | 'CANCELLED';
+export const DEFAULT_GOAL_CATEGORIES: string[] = [
+  'Exam Prep',
+  'Skill Mastery',
+  'Daily Habit',
+  'Project Milestone',
+];
 
 export type Goal = {
   id: number;
   title: string;
-  description?: string | null;
-  targetDate: string;       // ISO date YYYY-MM-DD
-  status: GoalStatus;
-  progressPercent: number;  // 0–100
-  linkedTaskIds: number[];
+  category: string;
+  targetDate: string; // YYYY-MM-DD
+  currentUnits: number;
+  totalUnits: number;
+  unitName: string;
+  progressPercentage: number; // 0–100
+  completed: boolean;
   createdAt: string;
   updatedAt: string;
 };
 
 export type CreateGoalPayload = {
   title: string;
-  description?: string;
+  category: string;
   targetDate: string;
-  linkedTaskIds?: number[];
-};
-
-export type UpdateGoalPayload = Partial<Omit<CreateGoalPayload, 'title'>> & {
-  title?: string;
-  status?: GoalStatus;
-  progressPercent?: number;
+  totalUnits: number;
+  unitName: string;
 };

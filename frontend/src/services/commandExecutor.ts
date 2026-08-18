@@ -154,7 +154,7 @@ async function handlePendingGoals(
     ? activeGoals.map((g) => ({
         id: g.id,
         title: g.title,
-        progressPercent: g.progressPercent,
+        progressPercent: g.progressPercentage,
         targetDate: g.targetDate,
       }))
     : (snapshot?.activeGoals ?? []).map((g) => ({
@@ -172,15 +172,15 @@ async function handlePendingGoals(
 
 async function handleCompletedGoals(): Promise<ExecutionResult> {
   const result = await safe(
-    () => goalService.getGoals({ status: 'COMPLETED', size: 20 }),
+    () => goalService.getGoals(),
     null,
   );
 
   const goals: GoalItem[] = result
-    ? result.content.map((g) => ({
+    ? result.filter((g) => g.completed).map((g) => ({
         id: g.id,
         title: g.title,
-        progressPercent: g.progressPercent,
+        progressPercent: g.progressPercentage,
         targetDate: g.targetDate,
       }))
     : [];
@@ -198,11 +198,11 @@ async function handleAnalytics(
 
   const analyticsData = summary
     ? {
-        weeklyCompletedTasks: summary.weeklyCompletedTasks,
-        taskCompletionRate: summary.taskCompletionRate,
-        weakSubjects: summary.weakSubjects,
-        strongSubjects: summary.strongSubjects,
-        mostStudiedSubject: summary.mostStudiedSubject,
+        weeklyCompletedTasks: summary.completedTasks,
+        taskCompletionRate: summary.productivityScore / 100,
+        weakSubjects: [] as string[],
+        strongSubjects: [] as string[],
+        mostStudiedSubject: null as string | null,
       }
     : snapshot?.analytics ?? null;
 
@@ -391,7 +391,7 @@ function handleStrongSubjects(snapshot: ChatContextSnapshot | null): ExecutionRe
 async function handleStudyStreak(snapshot: ChatContextSnapshot | null): Promise<ExecutionResult> {
   const stats = await safe(() => pomodoroService.getStats(), null);
 
-  const streak = stats?.currentStreak ?? snapshot?.pomodoroStats?.currentStreak ?? null;
+  const streak = (stats?.todaySessions ?? 0) > 0 ? 1 : (snapshot?.pomodoroStats?.currentStreak ?? null);
   const todayMinutes = stats?.todayWorkMinutes ?? snapshot?.pomodoroStats?.todayWorkMinutes ?? null;
   const weeklyMinutes = stats?.totalWorkMinutes ?? snapshot?.pomodoroStats?.weeklyWorkMinutes ?? null;
 

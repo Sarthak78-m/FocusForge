@@ -31,6 +31,7 @@ type PomodoroStoreState = {
 };
 
 import { useNotificationStore } from '@/store/notification.store';
+import { pomodoroService } from '@/services/pomodoro.service';
 
 function playAudioChime() {
   try {
@@ -159,13 +160,17 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
           durations: updatedDurations,
         };
 
-        if (mode === modeToSet && !isRunning) {
+        if (mode === modeToSet) {
           updates.secondsLeft = newSec;
           updates.totalSeconds = newSec;
+          if (isRunning) {
+            updates.targetEndTime = Date.now() + newSec * 1000;
+          }
         }
 
         set(updates);
       },
+
 
       tick: () => {
         const { isRunning, targetEndTime, mode, sessionCount, durations } = get();
@@ -176,6 +181,14 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
 
         if (diffSeconds <= 0) {
           triggerCompletionNotification(mode);
+
+          if (mode === 'work') {
+            const durationMin = Math.max(1, Math.round((durations.work || 1500) / 60));
+            pomodoroService.logSession({
+              durationMinutes: durationMin,
+              sessionType: 'WORK',
+            }).catch(() => {});
+          }
 
           const newSessionCount = mode === 'work' ? sessionCount + 1 : sessionCount;
           const nextMode: PomodoroMode =

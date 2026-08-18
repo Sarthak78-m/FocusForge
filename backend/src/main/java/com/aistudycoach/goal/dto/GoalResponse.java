@@ -1,6 +1,5 @@
 package com.aistudycoach.goal.dto;
 
-import com.aistudycoach.goal.GoalCategory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class GoalResponse {
     private Long id;
     private String title;
-    private GoalCategory category;
+    private String category;
     private LocalDate targetDate;
     private int currentUnits;
     private int totalUnits;

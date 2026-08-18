@@ -23,19 +23,13 @@ export function FloatingButton() {
       className={cn(
         'fixed bottom-4 right-4 z-50 sm:right-6',
         'flex h-14 w-14 items-center justify-center',
-        'rounded-full shadow-elevated transition-colors',
+        'rounded-full shadow-md transition-colors',
         isOpen
-          ? 'bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] hover:bg-primary-50 dark:hover:bg-primary-950'
-          : 'bg-primary-500 text-white hover:bg-primary-600 shadow-glow-primary',
+          ? 'bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] hover:bg-[var(--color-surface-secondary)]'
+          : 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)]',
       )}
     >
-      {/* Pulse ring — only when closed */}
-      {!isOpen && (
-        <span
-          className="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"
-          aria-hidden="true"
-        />
-      )}
+
 
       {/* Icon */}
       <motion.div

@@ -9,6 +9,16 @@ export default {
       },
 
       colors: {
+        bg: 'var(--color-bg)',
+        'bg-elevated': 'var(--color-bg-elevated)',
+        sidebar: 'var(--color-sidebar)',
+        card: 'var(--color-card)',
+        'card-hover': 'var(--color-card-hover)',
+        'border-strong': 'var(--color-border-strong)',
+        'text-base': 'var(--color-text)',
+        'accent-hover': 'var(--color-accent-hover)',
+        'accent-soft': 'var(--color-accent-soft)',
+
         /* ── Primary — Indigo ── */
         primary: {
           DEFAULT: '#4F46E5',

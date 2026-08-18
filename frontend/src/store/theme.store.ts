@@ -15,8 +15,8 @@ type ThemeState = {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
-      mode: 'system',
-      accent: 'indigo',
+      mode: 'light',
+      accent: 'coral',
       setMode: (mode) => set({ mode }),
       setAccent: (accent) => set({ accent }),
       toggleMode: () => {
@@ -25,7 +25,8 @@ export const useThemeStore = create<ThemeState>()(
       },
     }),
     {
-      name: 'ai-study-coach-theme-v2',
+      name: 'ai-study-coach-theme-v4',
     },
   ),
 );
+

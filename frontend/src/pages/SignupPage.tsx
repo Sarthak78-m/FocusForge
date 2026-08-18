@@ -57,43 +57,28 @@ export function SignupPage() {
 
   return (
     <div className="flex min-h-screen bg-[var(--color-background)] font-sans antialiased text-[var(--color-text-primary)]">
-      {/* Left Feature Branding Panel */}
-      <div className="hidden flex-col justify-between p-12 lg:flex lg:w-[480px] text-white relative overflow-hidden bg-gradient-to-br from-[#E44332] via-[#B31F14] to-[#782D40]">
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-sm">
-            <Timer className="h-5 w-5 text-white" />
+      {/* Left Feature Branding Panel (Warm Light Style) */}
+      <div className="hidden flex-col justify-between p-12 lg:flex lg:w-[440px] text-[var(--color-text-primary)] relative overflow-hidden bg-[var(--color-surface-container)] border-r border-[var(--color-border)]">
+        <div className="flex items-center gap-2.5 relative z-10">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-primary)] text-white font-bold text-xs shadow-sm">
+            <CheckCircle2 className="h-4 w-4" />
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-white">FocusForge</span>
+          <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">FocusForge</span>
         </div>
 
-        <div className="space-y-6 relative z-10 max-w-sm">
-          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-              <p className="text-sm font-bold text-white">Multi-View Task Studio</p>
-            </div>
-            <p className="mt-1 text-xs text-white/90">List View, circular checkboxes, and priority tags P1-P3.</p>
-          </div>
-
-          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20">
-            <div className="flex items-center gap-2">
-              <Flame className="h-4 w-4 text-amber-300" />
-              <p className="text-sm font-bold text-white">Pomodoro Focus & Soundscapes</p>
-            </div>
-            <p className="mt-1 text-xs text-white/90">Ambient audio player with Rain, Space, and White Noise.</p>
-          </div>
-
-          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20">
-            <div className="flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-amber-300" />
-              <p className="text-sm font-bold text-white">24/7 AI Coach & Rewards</p>
-            </div>
-            <p className="mt-1 text-xs text-white/90">Instant study plans, flashcards, and streak XP badges.</p>
-          </div>
+        <div className="space-y-4 relative z-10 max-w-xs">
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Create your study workspace.
+          </h2>
+          <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
+            Free forever for students. Organize your study tasks, stay in flow with Pomodoro sprint intervals, and keep connected Markdown notes.
+          </p>
         </div>
 
-        <p className="text-xs text-white/80 relative z-10">© 2026 FocusForge Pro Suite</p>
+        <p className="text-2xs text-[var(--color-text-tertiary)] relative z-10">FocusForge Workspace</p>
       </div>
+
+
 
       {/* Right Signup Form Box */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
@@ -140,7 +125,7 @@ export function SignupPage() {
                   id="signup-name"
                   type="text"
                   label="Full Name"
-                  placeholder="Sarthak Sharma"
+                  placeholder="Alex"
                   autoComplete="name"
                   error={errors.name?.message}
                   {...register('name')}
@@ -149,7 +134,7 @@ export function SignupPage() {
                   id="signup-email"
                   type="email"
                   label="Email Address"
-                  placeholder="you@example.com"
+                  placeholder="alex@example.com"
                   autoComplete="email"
                   error={errors.email?.message}
                   {...register('email')}
