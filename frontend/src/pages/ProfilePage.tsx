@@ -55,13 +55,8 @@ function PhonePrivacyCard() {
 
     setIsSaving(true);
     try {
-      const mockUser = localStorage.getItem('mindsprint_mock_user');
-      if (mockUser) {
-        const parsed = JSON.parse(mockUser);
-        parsed.maskedPhoneNumber = phone.length > 4 ? phone.slice(0, 3) + ' ***** **' + phone.slice(-4) : '*****';
-        parsed.phoneNotificationsEnabled = enabled;
-        localStorage.setItem('mindsprint_mock_user', JSON.stringify(parsed));
-      }
+      // TODO: Call backend API to save phone settings
+      // await authService.updatePhoneSettings({ phone, phoneNotificationsEnabled: enabled });
       notify({
         title: 'AES-256 Encrypted & Saved 🔒',
         message: 'Mobile number encrypted at rest and privacy settings updated.',

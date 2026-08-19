@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   taskService,
@@ -11,20 +10,9 @@ import { useNotificationStore } from '@/store/notification.store';
 export const TASKS_KEY = 'tasks';
 
 export function useTasks(params: GetTasksParams = {}) {
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [queryClient]);
-
   return useQuery({
     queryKey: [TASKS_KEY, params],
     queryFn: () => taskService.getTasks(params),
-    refetchInterval: 4000,
     refetchOnWindowFocus: true,
   });
 }

@@ -465,20 +465,8 @@ export function DashboardPage() {
   const openCreateTaskModal = useAppStore((s) => s.openCreateTaskModal);
   const { data: tasksData } = useTasks({ size: 100 });
 
-  // Resolve actual user name cleanly
-  const rawName = user?.name?.trim() || '';
-  let displayName = rawName;
-  if (!displayName || displayName.includes('@')) {
-    try {
-      const stored = localStorage.getItem('mindsprint_mock_user');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed?.name && !parsed.name.includes('@')) {
-          displayName = parsed.name;
-        }
-      }
-    } catch {}
-  }
+  // Resolve display name from auth store
+  const displayName = user?.name?.trim() || '';
   const firstName = displayName ? displayName.split(' ')[0] : 'user';
   const tasks = tasksData?.content ?? [];
   const totalTasks = tasksData?.totalElements ?? 0;
