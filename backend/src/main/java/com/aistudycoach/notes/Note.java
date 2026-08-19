@@ -1,4 +1,4 @@
-﻿package com.aistudycoach.notes;
+package com.aistudycoach.notes;
 
 import com.aistudycoach.user.User;
 import jakarta.persistence.Column;

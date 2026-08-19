@@ -1,4 +1,4 @@
-﻿package com.aistudycoach.notes;
+package com.aistudycoach.notes;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

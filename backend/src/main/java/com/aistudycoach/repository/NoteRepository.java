@@ -1,4 +1,4 @@
-﻿package com.aistudycoach.repository;
+package com.aistudycoach.repository;
 
 import com.aistudycoach.notes.Note;
 import java.util.List;

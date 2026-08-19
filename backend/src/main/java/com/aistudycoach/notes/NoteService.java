@@ -1,4 +1,4 @@
-﻿package com.aistudycoach.notes;
+package com.aistudycoach.notes;
 
 import com.aistudycoach.exception.ResourceNotFoundException;
 import com.aistudycoach.repository.NoteRepository;
