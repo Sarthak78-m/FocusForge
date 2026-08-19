@@ -11,11 +11,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.aistudycoach</groupId>
-    <artifactId>ai-study-coach</artifactId>
+    <groupId>com.mindsprint</groupId>
+    <artifactId>mindsprint</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ai-study-coach</name>
-    <description>AI Study Coach Backend</description>
+    <name>mindsprint</name>
+    <description>Mind Sprint Backend</description>
 
     <properties>
         <java.version>21</java.version>

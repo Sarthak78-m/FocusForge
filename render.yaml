@@ -1,7 +1,7 @@
 services:
   # Backend: Spring Boot
   - type: web
-    name: ai-study-coach-backend
+    name: mindsprint-backend
     env: docker
     plan: free
     dockerContext: .
@@ -14,18 +14,18 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
-        value: https://ai-study-coach-frontend.onrender.com
+        value: https://mindsprint-frontend.onrender.com
 
   # Frontend: React (Vite)
-  - type: static
-    name: ai-study-coach-frontend
+  - type: static_site
+    name: mindsprint-frontend
     plan: free
     rootDir: frontend
     buildCommand: "npm install && npm run build"
     staticPublishPath: "./dist"
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://ai-study-coach-backend.onrender.com
+        value: https://mindsprint-backend.onrender.com
     routes:
       - type: rewrite
         source: /*

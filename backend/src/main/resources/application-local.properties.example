@@ -8,7 +8,7 @@
 # The backend will pick it up automatically.
 
 # Database — matches docker compose or a local PostgreSQL install
-spring.datasource.url=jdbc:postgresql://localhost:5432/AIStudyCoachDB
+spring.datasource.url=jdbc:postgresql://localhost:5432/MindSprintDB
 spring.datasource.username=postgres
 spring.datasource.password=your_local_password
 

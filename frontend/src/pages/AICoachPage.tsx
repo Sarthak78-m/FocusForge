@@ -159,7 +159,7 @@ export function AICoachPage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask your AI Study Coach anything (e.g. Explain quantum mechanics, schedule my week)..."
+          placeholder="Ask your Mind Sprint anything (e.g. Explain quantum mechanics, schedule my week)..."
           className="h-11 flex-1 rounded-full border border-[var(--color-border)] bg-white px-5 text-xs font-medium text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] shadow-xs focus:border-[var(--color-primary)] focus:outline-none dark:bg-slate-900"
         />
         <button

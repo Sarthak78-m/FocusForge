@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>()(
         }),
     }),
     {
-      name: 'ai-study-coach-auth',
+      name: 'mindsprint-auth',
       partialize: (state) => ({
         token: state.token,
         user: state.user,

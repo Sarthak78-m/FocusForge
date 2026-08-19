@@ -25,7 +25,7 @@ export const useThemeStore = create<ThemeState>()(
       },
     }),
     {
-      name: 'ai-study-coach-theme-v4',
+      name: 'mindsprint-theme-v4',
     },
   ),
 );

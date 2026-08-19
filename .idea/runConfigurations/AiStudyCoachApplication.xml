@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AiStudyCoachApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="MAIN_CLASS_NAME" value="com.aistudycoach.AiStudyCoachApplication" />
-    <module name="ai-study-coach" />
+  <configuration default="false" name="MindSprintApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="MAIN_CLASS_NAME" value="com.mindsprint.MindSprintApplication" />
+    <module name="mindsprint" />
     <option name="VM_PARAMETERS" value="--enable-native-access=ALL-UNNAMED" />
     <method v="2">
       <option name="Make" enabled="true" />
