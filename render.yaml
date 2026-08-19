@@ -14,7 +14,7 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
-        value: https://mindsprint-frontend.onrender.com
+        value: https://mindsprint-frontend-do2m.onrender.com
 
   # Frontend: React (Vite)
   - type: web
@@ -25,7 +25,7 @@ services:
     staticPublishPath: "./dist"
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://mindsprint-backend.onrender.com/api
+        value: https://mindsprint-backend-e8uy.onrender.com/api
     routes:
       - type: rewrite
         source: /*
