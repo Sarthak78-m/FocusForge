@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI aiStudyCoachOpenApi() {
+    public OpenAPI mindsprintAppOpenApi() {
         return new OpenAPI()
                 .info(new Info()
                         .title("Mind Sprint API")

@@ -24,7 +24,7 @@ export function Sidebar() {
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="truncate text-sm font-bold text-[var(--color-text-primary)]">
-            {user?.name || 'FocusForge User'}
+            {user?.name || 'MindSprint User'}
           </h2>
           <p className="text-[11px] font-medium text-[var(--color-text-tertiary)]">Focusing since 2026</p>
         </div>
@@ -104,7 +104,7 @@ export function Sidebar() {
       {/* Footer */}
       <div className="border-t border-[var(--color-border)] pt-3 text-center">
         <p className="text-[11px] font-medium text-[var(--color-text-tertiary)]">
-          FocusForge Pro © {new Date().getFullYear()}
+          MindSprint Pro © {new Date().getFullYear()}
         </p>
       </div>
     </aside>

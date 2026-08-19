@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Notes", description = "Study notes and knowledge vault APIs")
+@Tag(name = "Notes", description = "Productivity notes and knowledge vault APIs")
 @RestController
 @RequestMapping("/api/notes")
 @RequiredArgsConstructor

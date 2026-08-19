@@ -1,4 +1,4 @@
-// ─── Copyright-Free MP3 Study Tracks & Offline Audio Engine ────────────────────
+// ─── Copyright-Free MP3 Productivity Tracks & Offline Audio Engine ────────────────────
 
 export type StudyTrack = {
   id: string;
@@ -11,14 +11,14 @@ export type StudyTrack = {
 export const CURATED_MP3_TRACKS: StudyTrack[] = [
   {
     id: 'mp3-lofi',
-    name: 'Lofi Chill Study Beats',
+    name: 'Lofi Chill Productivity Beats',
     subtitle: 'Relaxing Instrumental Beats',
     icon: '🎧',
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
   },
   {
     id: 'mp3-studybeats',
-    name: 'Deep Study Beats',
+    name: 'Deep Productivity Beats',
     subtitle: 'Upbeat Flow State Music',
     icon: '🚀',
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
@@ -47,7 +47,7 @@ export type CustomMp3Track = {
   data: ArrayBuffer;
 };
 
-const DB_NAME = 'focusforge_audio_db_v3';
+const DB_NAME = 'mindsprint_audio_db_v3';
 const STORE_NAME = 'custom_mp3_tracks';
 const MAX_CUSTOM_TRACKS = 5;
 

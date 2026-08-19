@@ -49,7 +49,7 @@ export function ChatHeader({ className }: ChatHeaderProps) {
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-[var(--color-text-primary)]">
-            FocusForge Coach
+            MindSprint Coach
           </p>
           <p className="text-[10px] leading-none text-text-secondary dark:text-[var(--color-text-secondary)]">
             {isTyping ? (
@@ -78,7 +78,7 @@ export function ChatHeader({ className }: ChatHeaderProps) {
         onClick={refreshContext}
         disabled={isLoadingContext}
         aria-label="Refresh context"
-        title="Refresh study context"
+        title="Refresh work context"
         className="flex h-7 w-7 items-center justify-center rounded-xl text-text-secondary transition-all duration-200 hover:bg-primary-50 hover:text-[var(--color-text-primary)] disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-primary-950"
       >
         <RefreshCw className={cn('h-3.5 w-3.5', isLoadingContext && 'animate-spin')} />

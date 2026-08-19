@@ -40,7 +40,7 @@ export function RewardsPage() {
         {
           id: '2',
           title: 'Task Completer',
-          description: 'Complete at least 5 study tasks',
+          description: 'Complete at least 5 tasks',
           icon: '✓',
           unlocked: completedTasks >= 5,
           xp: 150,
@@ -56,7 +56,7 @@ export function RewardsPage() {
         {
           id: '4',
           title: 'Task Crusher',
-          description: 'Complete 15 study tasks in your workspace',
+          description: 'Complete 15 tasks in your workspace',
           icon: '🎯',
           unlocked: completedTasks >= 15,
           xp: 300,
@@ -82,7 +82,7 @@ export function RewardsPage() {
             Productivity Milestones
           </h1>
           <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-            Track your study consistency and milestone progress
+            Track your work consistency and milestone progress
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export function RewardsPage() {
                 Level {currentLevel}
               </span>
               <h2 className="mt-1 text-lg font-bold text-[var(--color-text-primary)]">
-                {xp} Total Study Points
+                {xp} Total Productivity Points
               </h2>
             </div>
           </div>

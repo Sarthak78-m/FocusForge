@@ -17,7 +17,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Payload for updating a study task")
+@Schema(description = "Payload for updating a work task")
 public class UpdateTaskRequest {
 
     @Size(max = 160, message = "Title must not exceed 160 characters")

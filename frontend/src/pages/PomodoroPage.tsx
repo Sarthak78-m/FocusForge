@@ -190,7 +190,7 @@ export function PomodoroPage() {
       setCustomTracks((prev) => [...prev, saved]);
       notify({
         title: 'Song Saved Offline 🎵',
-        message: `"${saved.name}" stored for offline study focus.`,
+        message: `"${saved.name}" stored for offline work focus.`,
         tone: 'success',
       });
     } catch (err: any) {
@@ -287,7 +287,7 @@ export function PomodoroPage() {
             title="Common Master Audio Toggle (Play / Stop All)"
           >
             {audioState.isPlaying ? <Volume2 className="h-3.5 w-3.5 animate-pulse" /> : <VolumeX className="h-3.5 w-3.5" />}
-            <span>{audioState.isPlaying ? 'Stop Audio' : 'Study MP3 Music'}</span>
+            <span>{audioState.isPlaying ? 'Stop Audio' : 'Productivity MP3 Music'}</span>
           </button>
 
           {/* Settings button */}
@@ -523,7 +523,7 @@ export function PomodoroPage() {
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-xs space-y-3 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
-              Focus on a Study Task
+              Focus on a Productivity Task
             </h3>
             {selectedTask && (
               <button
@@ -599,7 +599,7 @@ export function PomodoroPage() {
           </div>
         </div>
 
-        {/* Column 2: Pure MP3 Study Tracks & Offline Saved Audio */}
+        {/* Column 2: Pure MP3 Productivity Tracks & Offline Saved Audio */}
         <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-xs space-y-4">
           {/* Header with Master Stop/Play Toggle */}
           <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-2.5">
@@ -682,10 +682,10 @@ export function PomodoroPage() {
             </div>
           )}
 
-          {/* 1. Curated Copyright-Free MP3 Study Tracks */}
+          {/* 1. Curated Copyright-Free MP3 Productivity Tracks */}
           <div className="space-y-1.5">
             <span className="text-2xs font-bold uppercase tracking-wider text-[var(--color-text-tertiary)]">
-              Calming MP3 Study Music
+              Calming MP3 Productivity Music
             </span>
             <div className="grid grid-cols-2 gap-2">
               {CURATED_MP3_TRACKS.map((t) => {
@@ -766,7 +766,7 @@ export function PomodoroPage() {
                   No offline songs added yet.
                 </p>
                 <p className="text-[10px] text-[var(--color-text-tertiary)]">
-                  Upload up to 5 favorite MP3/WAV tracks to listen offline anytime during your study sessions.
+                  Upload up to 5 favorite MP3/WAV tracks to listen offline anytime during your focus sessions.
                 </p>
               </div>
             ) : (

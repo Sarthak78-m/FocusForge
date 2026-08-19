@@ -11,9 +11,9 @@ type Message = {
 };
 
 const SUGGESTED_PROMPTS = [
-  "Break down my study goals for today into focus sessions",
+  "Break down my work goals for today into focus sessions",
   "How can I eliminate distractions during deep work?",
-  "Suggest a 25-minute Pomodoro study routine",
+  "Suggest a 25-minute Pomodoro work routine",
   "Help me structure a review session for my notes",
 ];
 
@@ -23,7 +23,7 @@ export function AICoachPage() {
     {
       id: '1',
       sender: 'ai',
-      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'there'}! How can I assist with your study planning today?`,
+      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'there'}! How can I assist with your work planning today?`,
       time: 'Just now',
     },
   ]);
@@ -47,10 +47,10 @@ export function AICoachPage() {
     setIsTyping(true);
 
     setTimeout(() => {
-      let responseText = "That's a great study topic! Break it down into 25-minute Pomodoro sprints. Would you like me to generate a personalized task checklist or flashcard review set for this subject?";
+      let responseText = "That's a great work topic! Break it down into 25-minute Pomodoro sprints. Would you like me to generate a personalized task checklist or flashcard review set for this subject?";
 
       if (query.toLowerCase().includes('schedule') || query.toLowerCase().includes('plan')) {
-        responseText = "Here is your suggested 3-Day Focus Sprint Schedule:\n\n• **Day 1**: Core concepts breakdown & formula sheets (2 hours)\n• **Day 2**: Active recall practice questions & weak area drills (2.5 hours)\n• **Day 3**: Full mock exam simulation under timed conditions (2 hours)\n\nWould you like me to automatically add these tasks to your FocusForge Task Studio?";
+        responseText = "Here is your suggested 3-Day Focus Sprint Schedule:\n\n• **Day 1**: Core concepts breakdown & formula sheets (2 hours)\n• **Day 2**: Active recall practice questions & weak area drills (2.5 hours)\n• **Day 3**: Full mock exam simulation under timed conditions (2 hours)\n\nWould you like me to automatically add these tasks to your MindSprint Task Studio?";
       } else if (query.toLowerCase().includes('explain') || query.toLowerCase().includes('simple')) {
         responseText = "Here is a simple analogy:\n\nThink of a **Neural Network** like a team of decision-makers. Each layer passes hints to the next. **Backpropagation** is the feedback loop — when the final answer is wrong, the team works backward to refine everyone's voting weight until accuracy improves!";
       }
@@ -77,17 +77,17 @@ export function AICoachPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
-              FocusForge AI Coach
+              MindSprint AI Coach
             </h1>
             <p className="text-xs font-semibold text-[var(--color-text-secondary)]">
-              Personalized 24/7 Academic Study Assistant
+              Personalized 24/7 Academic Productivity Assistant
             </p>
           </div>
         </div>
 
         <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-surface-container)] px-3 py-1 text-xs font-bold text-[var(--color-primary)] border border-[var(--color-border-strong)]">
           <Sparkles className="h-3.5 w-3.5" />
-          GPT-4o Study Engine
+          GPT-4o Productivity Engine
         </span>
       </div>
 

@@ -28,8 +28,8 @@ public class ChatService {
         // 3. Construct default suggestions
         List<String> suggestedReplies = List.of(
                 "📅 What are my deadlines?",
-                "🏆 Tell me my study streak",
-                "💡 Give me a study tip"
+                "🏆 Tell me my work streak",
+                "💡 Give me a work tip"
         );
 
         return ChatMessageResponseDto.builder()

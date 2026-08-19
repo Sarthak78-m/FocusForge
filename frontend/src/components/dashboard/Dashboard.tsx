@@ -67,7 +67,7 @@ export function Dashboard() {
             {greeting}
           </h1>
           <p className="mt-0.5 text-xs sm:text-sm text-[var(--color-text-secondary)]">
-            Focus workspace and connected study notebook.
+            Focus workspace and connected work notebook.
           </p>
         </div>
         <QuickActions />

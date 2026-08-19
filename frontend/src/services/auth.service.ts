@@ -17,7 +17,7 @@ export const authService = {
       return unwrapApiResponse(response.data);
     } catch (err: any) {
       if (!err.response || err.response.status === 404 || err.code === 'ERR_NETWORK') {
-        const stored = localStorage.getItem('focusforge_mock_user');
+        const stored = localStorage.getItem('mindsprint_mock_user');
         let resolvedName = '';
         if (stored) {
           try {
@@ -40,9 +40,9 @@ export const authService = {
           email: payload.email,
           role: 'USER',
         };
-        localStorage.setItem('focusforge_mock_user', JSON.stringify(mockUser));
+        localStorage.setItem('mindsprint_mock_user', JSON.stringify(mockUser));
         return {
-          token: 'focusforge_demo_jwt_token_' + Date.now(),
+          token: 'mindsprint_demo_jwt_token_' + Date.now(),
         };
       }
       throw err;
@@ -61,7 +61,7 @@ export const authService = {
           email: payload.email,
           role: 'USER',
         };
-        localStorage.setItem('focusforge_mock_user', JSON.stringify(mockUser));
+        localStorage.setItem('mindsprint_mock_user', JSON.stringify(mockUser));
         return {
           email: payload.email,
           emailVerificationRequired: false,
@@ -125,11 +125,11 @@ export const authService = {
       return unwrapApiResponse(response.data);
     } catch (err: any) {
       if (!err.response || err.response.status === 404 || err.code === 'ERR_NETWORK') {
-        const stored = localStorage.getItem('focusforge_mock_user');
+        const stored = localStorage.getItem('mindsprint_mock_user');
         if (stored) {
           const parsed = JSON.parse(stored);
           parsed.name = payload.name;
-          localStorage.setItem('focusforge_mock_user', JSON.stringify(parsed));
+          localStorage.setItem('mindsprint_mock_user', JSON.stringify(parsed));
           return parsed;
         }
       }
@@ -143,12 +143,12 @@ export const authService = {
       return unwrapApiResponse(response.data);
     } catch (err: any) {
       if (!err.response || err.response.status === 404 || err.code === 'ERR_NETWORK') {
-        const stored = localStorage.getItem('focusforge_mock_user');
+        const stored = localStorage.getItem('mindsprint_mock_user');
         if (stored) return JSON.parse(stored);
         return {
           id: 1,
           name: 'Sarthak Sharma',
-          email: 'alex.study@focusforge.ai',
+          email: 'alex.user@mindsprint.ai',
           role: 'USER',
         };
       }

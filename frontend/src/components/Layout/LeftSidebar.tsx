@@ -39,7 +39,7 @@ export function LeftSidebar() {
     { to: '/', icon: Home, label: 'Overview', end: true },
     { to: '/tasks', icon: CheckSquare, label: 'Tasks' },
     { to: '/focus', icon: Timer, label: 'Focus Timer' },
-    { to: '/chat', icon: MessageSquare, label: 'Study Chat' },
+    { to: '/chat', icon: MessageSquare, label: 'Productivity Chat' },
     { to: '/progress', icon: BarChart2, label: 'Progress & Stats' },
     { to: '/goals', icon: Target, label: 'Goals' },
   ];

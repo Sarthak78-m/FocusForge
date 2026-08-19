@@ -103,7 +103,7 @@ export function TasksPage() {
             Task Management Studio
           </h1>
           <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">
-            {isLoading ? 'Loading workspace tasks…' : `${totalElements} total study task${totalElements !== 1 ? 's' : ''}`}
+            {isLoading ? 'Loading workspace tasks…' : `${totalElements} total work task${totalElements !== 1 ? 's' : ''}`}
           </p>
         </div>
 

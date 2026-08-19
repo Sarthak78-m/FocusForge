@@ -70,8 +70,8 @@ export function useChatContext() {
 
 // ─── Helpers for Caching / Persistence ────────────────────────────────────────
 
-const STORAGE_CONVS_KEY = 'focusforge_chat_conversations';
-const STORAGE_ACTIVE_KEY = 'focusforge_chat_active_conv_id';
+const STORAGE_CONVS_KEY = 'mindsprint_chat_conversations';
+const STORAGE_ACTIVE_KEY = 'mindsprint_chat_active_conv_id';
 
 function parseConversations(str: string | null): Conversation[] {
   if (!str) return [];
@@ -104,7 +104,7 @@ const WELCOME_CONVERSATION: Conversation = {
       id: 'welcome-msg',
       role: 'bot',
       content:
-        "Hi! I'm your **FocusForge AI Coach** 👋\n\nI can help you with:\n- Building study schedules\n- Pomodoro tips and techniques\n- Managing tasks and priorities\n- Staying motivated and focused\n\nWhat would you like to work on today?",
+        "Hi! I'm your **MindSprint AI Coach** 👋\n\nI can help you with:\n- Building work schedules\n- Pomodoro tips and techniques\n- Managing tasks and priorities\n- Staying motivated and focused\n\nWhat would you like to work on today?",
       timestamp: new Date(),
     },
   ],
@@ -284,7 +284,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
           id: generateId(),
           role: 'bot',
           content:
-            "Hello again! 👋 What would you like to focus on in this session? I'm here to help you study smarter.",
+            "Hello again! 👋 What would you like to focus on in this session? I'm here to help you work smarter.",
           timestamp: new Date(),
         },
       ],

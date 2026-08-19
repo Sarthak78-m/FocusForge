@@ -24,7 +24,7 @@ function NavBar() {
             <CheckCircle2 className="h-4 w-4" />
           </div>
           <span className="text-sm font-bold tracking-tight text-[var(--color-text-primary)]">
-            FocusForge
+            MindSprint
           </span>
         </Link>
 
@@ -55,7 +55,7 @@ function InteractiveWorkspaceDemo() {
 
   // Tasks Demo State
   const [tasks, setTasks] = useState([
-    { id: 1, text: 'Plan weekly study schedule', done: true, priority: 'P1' },
+    { id: 1, text: 'Plan weekly work schedule', done: true, priority: 'P1' },
     { id: 2, text: 'Review chapter notes & practice problems', done: false, priority: 'P2' },
   ]);
   const [newTaskInput, setNewTaskInput] = useState('');
@@ -102,7 +102,7 @@ function InteractiveWorkspaceDemo() {
 
   // Note Demo State
   const [noteContent, setNoteContent] = useState(
-    `# Study Notes Example\n\n- Write structured notes using markdown.\n- Link concepts together and organize by subjects.\n\n*Review weekly to maintain long-term memory.*`
+    `# Productivity Notes Example\n\n- Write structured notes using markdown.\n- Link concepts together and organize by subjects.\n\n*Review weekly to maintain long-term memory.*`
   );
 
   return (
@@ -271,7 +271,7 @@ function InteractiveWorkspaceDemo() {
                 Formatted Preview
               </span>
               <div className="h-36 p-2.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] text-xs text-[var(--color-text-primary)] overflow-y-auto space-y-1.5">
-                <p className="font-bold text-sm">Study Notes Example</p>
+                <p className="font-bold text-sm">Productivity Notes Example</p>
                 <ul className="list-disc pl-4 space-y-0.5 text-xs text-[var(--color-text-secondary)]">
                   <li>Write structured notes using markdown.</li>
                   <li>Link concepts together and organize by subjects.</li>
@@ -297,12 +297,12 @@ function InteractiveWorkspaceDemo() {
    ══════════════════════════════════════════════════════════ */
 const FAQS = [
   {
-    q: 'What is FocusForge?',
-    a: 'FocusForge is a lightweight, distraction-free study workspace that brings your daily study tasks, Pomodoro sprint timer, and connected Markdown notes together in one clean interface.',
+    q: 'What is MindSprint?',
+    a: 'MindSprint is a lightweight, distraction-free productivity workspace that brings your daily tasks, Pomodoro sprint timer, and connected Markdown notes together in one clean interface.',
   },
   {
     q: 'Does it work offline?',
-    a: 'Yes. All your study notes and tasks automatically sync with local browser IndexedDB cache and sync with the Spring Boot backend whenever you are online.',
+    a: 'Yes. All your work notes and tasks automatically sync with local browser IndexedDB cache and sync with the Spring Boot backend whenever you are online.',
   },
   {
     q: 'Is there any complex setup needed?',
@@ -364,15 +364,15 @@ export function LandingPage() {
         <section className="mx-auto max-w-4xl text-center space-y-5 pt-8 pb-12">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-secondary)] text-xs font-semibold text-[var(--color-text-secondary)]">
             <span>✦</span>
-            <span>Distraction-Free Study System</span>
+            <span>Distraction-Free Productivity System</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] max-w-2xl mx-auto leading-tight">
-            Organize your study flow. Master your focus.
+            Organize your work flow. Master your focus.
           </h1>
 
           <p className="text-sm sm:text-base text-[var(--color-text-secondary)] max-w-xl mx-auto leading-relaxed">
-            A simple, fast workspace combining daily study tasks, Pomodoro sprint timers, and connected Markdown notes. Zero clutter, no filler.
+            A simple, fast workspace combining daily tasks, Pomodoro sprint timers, and connected Markdown notes. Zero clutter, no filler.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -416,7 +416,7 @@ export function LandingPage() {
               </div>
               <h3 className="text-sm font-bold text-[var(--color-text-primary)]">Quick Task Capture</h3>
               <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                Add and prioritize study tasks with P1–P3 flags, due dates, and subject tags in seconds.
+                Add and prioritize tasks with P1–P3 flags, due dates, and subject tags in seconds.
               </p>
             </div>
 
@@ -451,7 +451,7 @@ export function LandingPage() {
               Frequently Asked Questions
             </h2>
             <p className="text-xs text-[var(--color-text-secondary)]">
-              Clear answers to common questions about FocusForge.
+              Clear answers to common questions about MindSprint.
             </p>
           </div>
           <FAQSection />
@@ -464,7 +464,7 @@ export function LandingPage() {
               Ready to focus on your studies?
             </h2>
             <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] max-w-md mx-auto">
-              Create your account in seconds. Free forever for students.
+              Create your account in seconds. Free forever for users.
             </p>
             <div className="pt-2">
               <Link
@@ -486,8 +486,8 @@ export function LandingPage() {
             <div className="flex h-5 w-5 items-center justify-center rounded bg-[var(--color-primary)] text-white font-bold text-[10px]">
               ✓
             </div>
-            <span className="font-semibold text-[var(--color-text-primary)]">FocusForge</span>
-            <span>— Simple Study Workspace</span>
+            <span className="font-semibold text-[var(--color-text-primary)]">MindSprint</span>
+            <span>— Simple productivity workspace</span>
           </div>
           <div className="flex items-center gap-4 text-xs text-[var(--color-text-secondary)]">
             <Link to={paths.login} className="hover:text-[var(--color-text-primary)]">Log in</Link>

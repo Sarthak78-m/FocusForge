@@ -110,7 +110,7 @@ class AuthControllerTest {
                         .content("""
                                 {
                                   "name": "Disposable Email",
-                                  "email": "student@mailinator.com",
+                                  "email": "user@mailinator.com",
                                   "password": "Password123",
                                   "confirmPassword": "Password123"
                                 }

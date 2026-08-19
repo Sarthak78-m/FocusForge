@@ -24,7 +24,7 @@ const ResetPasswordPage = lazy(() =>
   import('@/pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage })),
 );
 
-// Protected Core Study Pages
+// Protected Core Productivity Pages
 const DashboardPage = lazy(() =>
   import('@/pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
 );
@@ -102,7 +102,7 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedLayout />,
     children: [
-      // Core Study Pages
+      // Core Productivity Pages
       { path: paths.dashboard, element: <DashboardPage /> },
       { path: paths.tasks, element: <TasksPage /> },
       { path: paths.pomodoro, element: <PomodoroPage /> },

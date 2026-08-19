@@ -215,7 +215,7 @@ const INTENT_DEFINITIONS: IntentDefinition[] = [
       ['my progress'],
       ['how am i doing'],
       ['performance'],
-      ['study stats'],
+      ['work stats'],
       ['productivity'],
       ['show stats'],
     ],
@@ -285,7 +285,7 @@ const INTENT_DEFINITIONS: IntentDefinition[] = [
   {
     type: 'STUDY_STREAK',
     patterns: [
-      ['study streak'],
+      ['work streak'],
       ['streak'],
       ['my streak'],
       ['day streak'],
@@ -322,7 +322,7 @@ const INTENT_DEFINITIONS: IntentDefinition[] = [
       ['what should i study'],
       ['study', 'priority', 'today'],
       ['suggest', 'what', 'study'],
-      ['study today'],
+      ['work today'],
     ],
   },
   {
@@ -335,7 +335,7 @@ const INTENT_DEFINITIONS: IntentDefinition[] = [
       ['completion', 'time'],
       ['time', 'finish', 'tasks'],
       ['how long', 'tasks', 'take'],
-      ['study speed'],
+      ['work speed'],
     ],
   },
 ];

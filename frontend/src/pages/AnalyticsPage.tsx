@@ -58,7 +58,7 @@ export function AnalyticsPage() {
             Productivity Analytics
           </h1>
           <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">
-            Real-time tracking of your study tasks, completed focus sprints, and consistency
+            Real-time tracking of your tasks, completed focus sprints, and consistency
           </p>
         </div>
 

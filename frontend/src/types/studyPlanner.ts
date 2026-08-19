@@ -1,4 +1,4 @@
-// ─── Study Planner Types ──────────────────────────────────────────────────────
+// ─── Productivity Planner Types ──────────────────────────────────────────────────────
 // Endpoint prefix: /api/study-planner
 
 export type StudyBlockStatus = 'PLANNED' | 'COMPLETED' | 'SKIPPED';

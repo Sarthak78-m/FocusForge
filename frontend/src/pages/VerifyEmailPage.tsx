@@ -48,7 +48,7 @@ export function VerifyEmailPage() {
             >
               <Timer className="h-5 w-5" />
             </div>
-            <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">FocusForge</span>
+            <span className="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">MindSprint</span>
           </div>
 
           <Link
@@ -79,7 +79,7 @@ export function VerifyEmailPage() {
             <div>
               <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Email Verified!</h1>
               <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
-                Your FocusForge account is verified. Redirecting you to login in 3 seconds...
+                Your MindSprint account is verified. Redirecting you to login in 3 seconds...
               </p>
             </div>
             <Link to={paths.login} className="block pt-2">

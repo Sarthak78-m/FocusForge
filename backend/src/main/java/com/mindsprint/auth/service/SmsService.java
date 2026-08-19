@@ -36,7 +36,7 @@ public class SmsService {
         }
 
         String recipientPhone = user.getPhoneNumber();
-        String messageBody = String.format("FocusForge Alert ⏰: Hi %s, your task '%s' is due in 1 hour (%s). Complete it now in your workspace!",
+        String messageBody = String.format("MindSprint Alert ⏰: Hi %s, your task '%s' is due in 1 hour (%s). Complete it now in your workspace!",
                 user.getName(), taskTitle, dueDate);
 
         if (isTwilioConfigured()) {

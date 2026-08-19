@@ -77,7 +77,7 @@ export function ChatWindow() {
             'bg-white dark:bg-[var(--color-surface)]',
           ].join(' ')}
           role="dialog"
-          aria-label="FocusForge AI Coach"
+          aria-label="MindSprint AI Coach"
           aria-modal="true"
         >
           {/* Sidebar */}

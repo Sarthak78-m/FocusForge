@@ -13,7 +13,7 @@ export function Logo({ className, size = 24 }: Props) {
       viewBox="0 0 32 32"
       fill="none"
       className={cn('text-[var(--color-accent)]', className)}
-      aria-label="FocusForge"
+      aria-label="MindSprint"
     >
       <rect width="32" height="32" rx="7" fill="currentColor" opacity="0.15" />
       <circle cx="9" cy="10" r="2.5" fill="currentColor" />

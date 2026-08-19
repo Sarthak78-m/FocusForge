@@ -23,7 +23,7 @@ export function Topbar() {
   const navigate = useNavigate();
 
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : '?';
-  const firstName = user?.name ? user.name.split(' ')[0] : 'Student';
+  const firstName = user?.name ? user.name.split(' ')[0] : 'user';
 
 
   const handleLogout = () => {
@@ -52,13 +52,13 @@ export function Topbar() {
           <NavLink
             to={paths.dashboard}
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-            title="FocusForge Home"
+            title="MindSprint Home"
           >
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--color-primary)] text-white font-bold text-xs shadow-xs">
               <CheckCircle2 className="h-3.5 w-3.5" />
             </div>
             <span className="font-bold text-sm tracking-tight text-[var(--color-text-primary)] hidden sm:inline">
-              FocusForge
+              MindSprint
             </span>
           </NavLink>
         </div>
@@ -94,7 +94,7 @@ export function Topbar() {
           <NavLink
             to={paths.analytics}
             className="hidden sm:flex items-center gap-1 px-2 h-7 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
-            title="Daily Study Streak"
+            title="Daily Productivity Streak"
           >
             <Flame className="h-3.5 w-3.5" />
             <span>Streak</span>

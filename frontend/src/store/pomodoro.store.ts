@@ -214,7 +214,7 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
       },
     }),
     {
-      name: 'focusforge_pomodoro_global_store',
+      name: 'mindsprint_pomodoro_global_store',
       partialize: (state) => ({
         mode: state.mode,
         secondsLeft: state.secondsLeft,

@@ -1,4 +1,4 @@
-# Design System - FocusForge (MindSprint Productivity Suite)
+# Design System - MindSprint (MindSprint Productivity Suite)
 
 ## Design Tokens & System Theme (Design MD)
 

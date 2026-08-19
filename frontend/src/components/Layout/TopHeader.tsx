@@ -65,7 +65,7 @@ export function TopHeader() {
         <div className="flex items-center gap-2">
           <Logo size={22} />
           <span className="hidden sm:inline text-[15px] font-bold tracking-tight">
-            FocusForge
+            MindSprint
           </span>
         </div>
         <span className="hidden md:block h-5 w-px bg-[var(--color-border)] mx-1" />

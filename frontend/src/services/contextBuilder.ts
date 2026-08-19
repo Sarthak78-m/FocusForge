@@ -210,7 +210,7 @@ function buildAnalytics(result: Extract<CommandResult, { intent: 'SHOW_ANALYTICS
 
   const rate = Math.round(analytics.taskCompletionRate * 100);
   const lines = [
-    '📊 **Your Study Analytics**\n',
+    '📊 **Your Productivity Analytics**\n',
     `- **Tasks completed this week:** ${analytics.weeklyCompletedTasks}`,
     `- **Completion rate:** ${rate}%`,
   ];
@@ -279,7 +279,7 @@ function buildGenerateQuiz(result: Extract<CommandResult, { intent: 'GENERATE_QU
   if (result.subject) {
     return `📝 **Quiz time on ${result.subject}!**\n\nI've navigated you to the Quiz section. Select your difficulty and hit Start to test yourself on **${result.subject}**.`;
   }
-  return '📝 **Ready to quiz yourself?**\n\nHead to the Quiz section to pick a subject and difficulty level. Testing yourself is one of the most effective study techniques!';
+  return '📝 **Ready to quiz yourself?**\n\nHead to the Quiz section to pick a subject and difficulty level. Testing yourself is one of the most effective work techniques!';
 }
 
 function buildOpenNotes(): string {
@@ -289,7 +289,7 @@ function buildOpenNotes(): string {
 function buildWeakSubjects(result: Extract<CommandResult, { intent: 'WEAK_SUBJECTS' }>): string {
   const { subjects } = result;
   if (subjects.length === 0) {
-    return '🌟 **No weak subjects identified yet.**\n\nComplete more quizzes and study sessions so I can analyse your performance across subjects.';
+    return '🌟 **No weak subjects identified yet.**\n\nComplete more quizzes and focus sessions so I can analyse your performance across subjects.';
   }
   const lines = ['📉 **Subjects that need more attention:**\n'];
   subjects.forEach((s) => lines.push(`- ⚠️ ${s}`));
@@ -314,10 +314,10 @@ function buildStudyStreak(result: Extract<CommandResult, { intent: 'STUDY_STREAK
   const { streak, todayMinutes, weeklyMinutes } = result;
 
   if (streak === null) {
-    return '🔥 **Streak data not available yet.**\n\nComplete Pomodoro sessions to start tracking your daily study streak!';
+    return '🔥 **Streak data not available yet.**\n\nComplete Pomodoro sessions to start tracking your daily work streak!';
   }
 
-  const lines = ['🔥 **Your Study Streak**\n'];
+  const lines = ['🔥 **Your Productivity Streak**\n'];
   lines.push(`- **Current streak:** ${streak} day${streak !== 1 ? 's' : ''}`);
   if (todayMinutes !== null) {
     lines.push(`- **Today:** ${todayMinutes} minutes studied`);
@@ -342,7 +342,7 @@ function buildStudyStreak(result: Extract<CommandResult, { intent: 'STUDY_STREAK
 function buildUpcomingExam(result: Extract<CommandResult, { intent: 'UPCOMING_EXAM' }>): string {
   const { deadlines } = result;
   if (deadlines.length === 0) {
-    return '📅 **No upcoming exams or deadlines found.**\n\nAdd deadlines to your Study Planner to keep track of important dates.';
+    return '📅 **No upcoming exams or deadlines found.**\n\nAdd deadlines to your Productivity Planner to keep track of important dates.';
   }
 
   const lines = [`📅 **${deadlines.length} upcoming deadline${deadlines.length > 1 ? 's' : ''}:**\n`];
@@ -369,11 +369,11 @@ function buildRecommendedStudyOrder(
 ): string {
   const { snapshot, success, reason } = result;
   if (!success || !snapshot) {
-    if (reason === 'NO_CONTEXT') return '❌ Study context data is currently unavailable.';
-    return '🎉 **All clean!** No pending tasks found. Set up some tasks to get study recommendations.';
+    if (reason === 'NO_CONTEXT') return '❌ Productivity context data is currently unavailable.';
+    return '🎉 **All clean!** No pending tasks found. Set up some tasks to get work recommendations.';
   }
 
-  const lines = ['📚 **Your Recommended Study Order:**\n'];
+  const lines = ['📚 **Your Recommended Productivity Order:**\n'];
   const tasks = [...snapshot.pendingTasks];
 
   // Logic: 1. Overdue tasks first, then high priority, then matching weak subjects, then others.
@@ -419,12 +419,12 @@ function buildEstimateCompletion(
 ): string {
   const { snapshot, success, reason } = result;
   if (!success || !snapshot) {
-    if (reason === 'NO_CONTEXT') return '❌ Study context data is currently unavailable.';
+    if (reason === 'NO_CONTEXT') return '❌ Productivity context data is currently unavailable.';
     return '📋 **No tasks left today!** Nothing to estimate.';
   }
 
   // Calculate estimated completion based on pending tasks count.
-  // Standard assumption: 45 minutes average study time per task.
+  // Standard assumption: 45 minutes average work time per task.
   const taskCount = snapshot.pendingTasks.length;
   const avgMinutesPerTask = 45;
   const totalEstimatedMinutes = taskCount * avgMinutesPerTask;
@@ -443,7 +443,7 @@ function buildEstimateCompletion(
 
   lines.push('\n**Suggested Realistic Schedule:**');
   const pomodoros = Math.ceil(totalEstimatedMinutes / 25);
-  lines.push(`- Study block: **${pomodoros} Pomodoro session${pomodoros !== 1 ? 's' : ''}** (25m focus + 5m break each)`);
+  lines.push(`- Productivity block: **${pomodoros} Pomodoro session${pomodoros !== 1 ? 's' : ''}** (25m focus + 5m break each)`);
   
   if (pomodoros > 4) {
     lines.push('- ⚠️ **Note:** That is a lot for one stretch. Take a longer **15-minute break** after the 4th session.');
@@ -458,7 +458,7 @@ function buildUnknown(): string {
     '- **Tasks:** *"today\'s tasks"*, *"complete task [name]"*, *"delete task [name]"*',
     '- **Goals:** *"pending goals"*, *"completed goals"*',
     '- **Pomodoro:** *"start pomodoro"*, *"stop timer"*, *"resume timer"*',
-    '- **Analytics:** *"show analytics"*, *"study streak"*',
+    '- **Analytics:** *"show analytics"*, *"work streak"*',
     '- **Subjects:** *"weak subjects"*, *"strong subjects"*',
     '- **Exams:** *"upcoming exam"*',
     '- **Quiz:** *"quiz me"*, *"generate quiz on [subject]"*',

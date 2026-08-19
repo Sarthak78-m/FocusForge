@@ -13,7 +13,7 @@ import type { Goal, CreateGoalPayload } from '@/types/goal';
 
 function getStorageKey(): string {
   try {
-    const user = localStorage.getItem('focusforge_mock_user');
+    const user = localStorage.getItem('mindsprint_mock_user');
     if (user) {
       const parsed = JSON.parse(user);
       if (parsed?.email) return `mindsprint_goals_${parsed.email.toLowerCase()}`;

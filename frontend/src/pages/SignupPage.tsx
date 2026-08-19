@@ -63,19 +63,19 @@ export function SignupPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-primary)] text-white font-bold text-xs shadow-sm">
             <CheckCircle2 className="h-4 w-4" />
           </div>
-          <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">FocusForge</span>
+          <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">MindSprint</span>
         </div>
 
         <div className="space-y-4 relative z-10 max-w-xs">
           <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            Create your study workspace.
+            Create your productivity workspace.
           </h2>
           <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
-            Free forever for students. Organize your study tasks, stay in flow with Pomodoro sprint intervals, and keep connected Markdown notes.
+            Free forever for users. Organize your tasks, stay in flow with Pomodoro sprint intervals, and keep connected Markdown notes.
           </p>
         </div>
 
-        <p className="text-2xs text-[var(--color-text-tertiary)] relative z-10">FocusForge Workspace</p>
+        <p className="text-2xs text-[var(--color-text-tertiary)] relative z-10">MindSprint Workspace</p>
       </div>
 
 
@@ -87,7 +87,7 @@ export function SignupPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white shadow-xs">
               <Timer className="h-5 w-5" />
             </div>
-            <span className="text-lg font-bold text-[var(--color-text-primary)]">FocusForge</span>
+            <span className="text-lg font-bold text-[var(--color-text-primary)]">MindSprint</span>
           </div>
 
           {registeredEmail ? (
@@ -98,7 +98,7 @@ export function SignupPage() {
               <div>
                 <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Account Created!</h1>
                 <p className="mt-2 text-xs leading-relaxed text-[var(--color-text-secondary)]">
-                  Your FocusForge study workspace is ready. You can log in directly with your email:
+                  Your MindSprint productivity workspace is ready. You can log in directly with your email:
                 </p>
                 <p className="mt-2 text-sm font-bold text-[var(--color-text-primary)]">{registeredEmail}</p>
               </div>
@@ -117,7 +117,7 @@ export function SignupPage() {
                 <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
                   Create Your Account
                 </h1>
-                <p className="mt-1 text-xs font-medium text-[var(--color-text-secondary)]">Join FocusForge and build your study momentum</p>
+                <p className="mt-1 text-xs font-medium text-[var(--color-text-secondary)]">Join MindSprint and build your momentum</p>
               </div>
 
               <form onSubmit={handleSubmit((values) => registerAccount(values))} className="space-y-4" noValidate>

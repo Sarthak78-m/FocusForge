@@ -12,7 +12,7 @@ type MessageInputProps = {
 export function MessageInput({
   onSend,
   disabled = false,
-  placeholder = 'Ask your study coach...',
+  placeholder = 'Ask your productivity coach...',
 }: MessageInputProps) {
   const { isOffline, isOpen } = useChatContext();
   const [value, setValue] = useState('');

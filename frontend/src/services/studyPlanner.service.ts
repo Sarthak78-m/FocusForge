@@ -17,7 +17,7 @@ import type {
   Deadline,
 } from '@/types/studyPlanner';
 
-// ─── Study Blocks ─────────────────────────────────────────────────────────────
+// ─── Productivity Blocks ─────────────────────────────────────────────────────────────
 
 export type GetStudyBlocksParams = {
   from?: string;    // ISO date YYYY-MM-DD
@@ -31,7 +31,7 @@ export type GetStudyBlocksParams = {
 export const studyPlannerService = {
   /**
    * GET /api/study-planner/blocks
-   * List study blocks with optional date-range, subject, and status filters.
+   * List work blocks with optional date-range, subject, and status filters.
    */
   async getBlocks(params: GetStudyBlocksParams = {}) {
     const { page = 0, size = 50, ...filters } = params;
@@ -55,7 +55,7 @@ export const studyPlannerService = {
 
   /**
    * GET /api/study-planner/today
-   * Study blocks scheduled for today.
+   * Productivity blocks scheduled for today.
    */
   async getTodayBlocks() {
     const response = await http.get<ApiResponse<StudyBlock[]>>('/study-planner/today');

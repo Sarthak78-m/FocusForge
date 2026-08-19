@@ -17,7 +17,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Payload for creating a study task")
+@Schema(description = "Payload for creating a work task")
 public class CreateTaskRequest {
 
     @NotBlank(message = "Title is required")

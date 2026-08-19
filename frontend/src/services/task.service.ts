@@ -30,15 +30,15 @@ const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 function getUserStorageKey(): string {
   try {
-    const mockUser = localStorage.getItem('focusforge_mock_user');
+    const mockUser = localStorage.getItem('mindsprint_mock_user');
     if (mockUser) {
       const parsed = JSON.parse(mockUser);
       if (parsed?.email) {
-        return `focusforge_user_tasks_${parsed.email.toLowerCase()}`;
+        return `mindsprint_user_tasks_${parsed.email.toLowerCase()}`;
       }
     }
   } catch {}
-  return 'focusforge_user_tasks_default';
+  return 'mindsprint_user_tasks_default';
 }
 
 function getStoredTasks(): Task[] {

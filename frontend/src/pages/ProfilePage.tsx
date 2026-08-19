@@ -55,12 +55,12 @@ function PhonePrivacyCard() {
 
     setIsSaving(true);
     try {
-      const mockUser = localStorage.getItem('focusforge_mock_user');
+      const mockUser = localStorage.getItem('mindsprint_mock_user');
       if (mockUser) {
         const parsed = JSON.parse(mockUser);
         parsed.maskedPhoneNumber = phone.length > 4 ? phone.slice(0, 3) + ' ***** **' + phone.slice(-4) : '*****';
         parsed.phoneNotificationsEnabled = enabled;
-        localStorage.setItem('focusforge_mock_user', JSON.stringify(parsed));
+        localStorage.setItem('mindsprint_mock_user', JSON.stringify(parsed));
       }
       notify({
         title: 'AES-256 Encrypted & Saved 🔒',
@@ -177,7 +177,7 @@ export function ProfilePage() {
           Account & Workspace Settings
         </h1>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Manage your personal profile, study preferences, and color themes
+          Manage your personal profile, work preferences, and color themes
         </p>
       </div>
 
@@ -203,7 +203,7 @@ export function ProfilePage() {
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                    {user?.name ?? 'Student'}
+                    {user?.name ?? 'user'}
                   </h2>
                   <p className="text-xs font-semibold text-slate-500">{user?.email ?? '—'}</p>
                 </div>
@@ -349,7 +349,7 @@ export function ProfilePage() {
         <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 flex items-center justify-between">
           <div>
             <p className="text-sm font-bold text-slate-900 dark:text-white">Active Session</p>
-            <p className="text-xs text-slate-500">Log out of your study workspace on this browser</p>
+            <p className="text-xs text-slate-500">Log out of your productivity workspace on this browser</p>
           </div>
           <button
             type="button"

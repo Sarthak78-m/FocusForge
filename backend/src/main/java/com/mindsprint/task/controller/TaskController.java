@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Tasks", description = "Authenticated study task management APIs")
+@Tag(name = "Tasks", description = "Authenticated work task management APIs")
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor

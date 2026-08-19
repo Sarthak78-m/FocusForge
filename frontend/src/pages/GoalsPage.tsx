@@ -148,7 +148,7 @@ export function GoalsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-[var(--color-text-primary)]">
-            Study Goals & Milestones
+            Productivity Goals & Milestones
           </h1>
           <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
             Set ambitious targets, track milestone progress, and achieve academic success
@@ -267,11 +267,11 @@ export function GoalsPage() {
           <Target className="mx-auto h-8 w-8 text-[var(--color-text-tertiary)]" />
           <h3 className="mt-3 text-sm font-semibold text-[var(--color-text-primary)]">
             {filterCategory === 'All'
-              ? 'No study goals set'
+              ? 'No work goals set'
               : `No goals in "${filterCategory}"`}
           </h3>
           <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-            Create your first milestone to track your study progress.
+            Create your first milestone to track your work progress.
           </p>
           <button
             onClick={() => {

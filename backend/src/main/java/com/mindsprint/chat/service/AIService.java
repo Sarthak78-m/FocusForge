@@ -68,7 +68,7 @@ public class AIService {
 
         // 3. Fallback if no keys are provided
         log.warn("No AI API keys configured (GEMINI_API_KEY or OPENAI_API_KEY are missing).");
-        return "⚠️ **AI integration is currently running in local offline mode.**\n\nTo enable full AI support, configure your API keys by setting the environment variables `GEMINI_API_KEY` or `OPENAI_API_KEY` in your Spring Boot environment.\n\nHere is what I can tell you from the context:\n\nIf you ask me general questions, I won't be able to answer them until the API key is configured. But you can still use all task, streak, and study commands!";
+        return "⚠️ **AI integration is currently running in local offline mode.**\n\nTo enable full AI support, configure your API keys by setting the environment variables `GEMINI_API_KEY` or `OPENAI_API_KEY` in your Spring Boot environment.\n\nHere is what I can tell you from the context:\n\nIf you ask me general questions, I won't be able to answer them until the API key is configured. But you can still use all task, streak, and work commands!";
     }
 
     private String callGemini(String prompt) throws Exception {

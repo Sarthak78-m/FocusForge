@@ -16,7 +16,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Study task response")
+@Schema(description = "Productivity task response")
 public class TaskResponse {
 
     private Long id;

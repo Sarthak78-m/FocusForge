@@ -318,7 +318,7 @@ function StitchStreakCard({ tasks = [] }: { tasks?: Task[] }) {
         <div className="flex items-center gap-1.5">
           <Flame className="h-4 w-4 text-[var(--color-primary)] fill-[var(--color-primary)]" />
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] group-hover:text-[var(--color-primary)] transition-colors">
-            Study Streak
+            Productivity Streak
           </p>
         </div>
         <span className="text-xs text-[var(--color-text-tertiary)] group-hover:text-[var(--color-primary)] transition-colors">
@@ -428,7 +428,7 @@ function StitchSubjectBreakdownCard({ tasks = [] }: { tasks?: Task[] }) {
    ══════════════════════════════════════════════════════════ */
 function QuickLinksCard() {
   const links = [
-    { label: 'Notes & Study Notebook', to: paths.notes, icon: FileText },
+    { label: 'Notes & Productivity Notebook', to: paths.notes, icon: FileText },
     { label: 'Pomodoro Interval Timer', to: paths.pomodoro, icon: Timer },
     { label: 'Productivity Analytics', to: paths.analytics, icon: BarChart2 },
     { label: 'Rewards & Milestones', to: paths.rewards, icon: Target },
@@ -470,7 +470,7 @@ export function DashboardPage() {
   let displayName = rawName;
   if (!displayName || displayName.includes('@')) {
     try {
-      const stored = localStorage.getItem('focusforge_mock_user');
+      const stored = localStorage.getItem('mindsprint_mock_user');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed?.name && !parsed.name.includes('@')) {
@@ -479,7 +479,7 @@ export function DashboardPage() {
       }
     } catch {}
   }
-  const firstName = displayName ? displayName.split(' ')[0] : 'Student';
+  const firstName = displayName ? displayName.split(' ')[0] : 'user';
   const tasks = tasksData?.content ?? [];
   const totalTasks = tasksData?.totalElements ?? 0;
   const todoCount = tasks.filter((t) => t.status === 'TODO').length;
@@ -499,7 +499,7 @@ export function DashboardPage() {
             {getGreeting()}, {firstName}! 👋
           </h1>
           <p className="mt-0.5 text-xs text-[var(--color-text-secondary)]">
-            {getFormattedDate()} · FocusForge Active Workspace
+            {getFormattedDate()} · MindSprint Active Workspace
           </p>
         </div>
 

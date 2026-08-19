@@ -46,19 +46,19 @@ export function LoginPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--color-primary)] text-white font-bold text-xs shadow-sm">
             <CheckCircle2 className="h-4 w-4" />
           </div>
-          <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">FocusForge</span>
+          <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">MindSprint</span>
         </div>
 
         <div className="space-y-4 relative z-10 max-w-xs">
           <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            Simple, focused study productivity.
+            Simple, focused work productivity.
           </h2>
           <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">
-            Log in to access your study tasks, active Pomodoro timer, and connected notes.
+            Log in to access your tasks, active Pomodoro timer, and connected notes.
           </p>
         </div>
 
-        <p className="text-2xs text-[var(--color-text-tertiary)] relative z-10">FocusForge Workspace</p>
+        <p className="text-2xs text-[var(--color-text-tertiary)] relative z-10">MindSprint Workspace</p>
       </div>
 
 
@@ -70,7 +70,7 @@ export function LoginPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white shadow-xs">
               <Timer className="h-5 w-5" />
             </div>
-            <span className="text-lg font-bold text-[var(--color-text-primary)]">FocusForge</span>
+            <span className="text-lg font-bold text-[var(--color-text-primary)]">MindSprint</span>
           </div>
 
           <div className="mb-6">

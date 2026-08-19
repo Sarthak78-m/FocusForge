@@ -8,8 +8,8 @@ public class PromptBuilder {
 
     public String buildPrompt(String userMessage, ChatContextDto context) {
         StringBuilder sb = new StringBuilder();
-        sb.append("You are the FocusForge Mind Sprint, an assistant designed to help the user learn smarter, organize their tasks, and study effectively.\n\n");
-        sb.append("Here is the current study context and database state of the user:\n");
+        sb.append("You are the MindSprint Mind Sprint, an assistant designed to help the user learn smarter, organize their tasks, and work effectively.\n\n");
+        sb.append("Here is the current work context and database state of the user:\n");
 
         if (context != null) {
             sb.append("--- USER CONTEXT ---\n");
@@ -61,7 +61,7 @@ public class PromptBuilder {
             // Analytics
             if (context.getAnalytics() != null) {
                 var a = context.getAnalytics();
-                sb.append("Study Analytics:\n");
+                sb.append("Productivity Analytics:\n");
                 sb.append("- Task completion rate: ").append(a.getTaskCompletionRate() * 100).append("%\n");
                 if (a.getWeakSubjects() != null && !a.getWeakSubjects().isEmpty()) {
                     sb.append("- Weak subjects (needs work): ").append(String.join(", ", a.getWeakSubjects())).append("\n");
