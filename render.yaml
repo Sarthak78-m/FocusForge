@@ -17,8 +17,9 @@ services:
         value: https://mindsprint-frontend.onrender.com
 
   # Frontend: React (Vite)
-  - type: static_site
+  - type: web
     name: mindsprint-frontend
+    env: static
     plan: free
     rootDir: frontend
     buildCommand: "npm install && npm run build"
