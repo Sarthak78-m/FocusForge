@@ -69,7 +69,7 @@ public class DatabaseConfig {
         log.info("[MindSprint DatabaseConfig] Resolved Username: {}", details.username);
 
         HikariConfig config = new HikariConfig();
-        if (details.jdbcUrl.contains("h2")) {
+        if (details.jdbcUrl.startsWith("jdbc:h2:")) {
             config.setDriverClassName("org.h2.Driver");
         } else {
             config.setDriverClassName("org.postgresql.Driver");
