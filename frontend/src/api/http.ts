@@ -14,8 +14,16 @@ export const http = axios.create({
 
 http.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
+  const requestUrl = config.url ?? '';
+  const isPublicEndpoint =
+    requestUrl.includes('/auth/login') ||
+    requestUrl.includes('/auth/register') ||
+    requestUrl.includes('/auth/verify-email') ||
+    requestUrl.includes('/auth/resend-verification') ||
+    requestUrl.includes('/auth/forgot-password') ||
+    requestUrl.includes('/auth/reset-password');
 
-  if (token) {
+  if (token && !isPublicEndpoint) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
