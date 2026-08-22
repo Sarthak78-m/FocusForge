@@ -92,11 +92,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException ex) {
             SecurityContextHolder.clearContext();
-            BadCredentialsException badCredentialsException = new BadCredentialsException(
-                    "Invalid or expired JWT token",
-                    ex
-            );
-            handlerExceptionResolver.resolveException(request, response, null, badCredentialsException);
+            // Let the filter chain continue without authentication.
+            // Spring Security's authorization rules will block access if required.
+            filterChain.doFilter(request, response);
         }
     }
 }
