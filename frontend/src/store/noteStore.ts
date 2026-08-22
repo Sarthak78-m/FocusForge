@@ -102,7 +102,9 @@ export const useNoteStore = create<NoteState>()((set, get) => ({
     }));
 
     // Async sync to Backend
-    http.post<ApiResponse<Note>>('/notes', note).catch(() => {});
+    http.post<ApiResponse<Note>>('/notes', note).catch((err) => {
+      console.error('Failed to sync note creation to backend:', err);
+    });
 
     return id;
   },
@@ -127,7 +129,9 @@ export const useNoteStore = create<NoteState>()((set, get) => ({
     }));
 
     // Async sync to Backend
-    http.put<ApiResponse<Note>>(`/notes/${id}`, updated).catch(() => {});
+    http.put<ApiResponse<Note>>(`/notes/${id}`, updated).catch((err) => {
+      console.error('Failed to sync note update to backend:', err);
+    });
   },
 
   deleteNote: async (id) => {
@@ -138,7 +142,9 @@ export const useNoteStore = create<NoteState>()((set, get) => ({
     }));
 
     // Async sync to Backend
-    http.delete(`/notes/${id}`).catch(() => {});
+    http.delete(`/notes/${id}`).catch((err) => {
+      console.error('Failed to sync note deletion to backend:', err);
+    });
   },
 
   toggleFavorite: async (id) => {
@@ -151,7 +157,9 @@ export const useNoteStore = create<NoteState>()((set, get) => ({
     }));
 
     // Async sync to Backend
-    http.patch(`/notes/${id}/favorite`).catch(() => {});
+    http.patch(`/notes/${id}/favorite`).catch((err) => {
+      console.error('Failed to sync note favorite toggle to backend:', err);
+    });
   },
 
   setActiveNote: (id) => set({ activeNoteId: id }),

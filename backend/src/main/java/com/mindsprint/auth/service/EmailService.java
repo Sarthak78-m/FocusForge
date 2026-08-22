@@ -184,7 +184,7 @@ public class EmailService {
         String from = StringUtils.hasText(emailFrom) ? emailFrom : mailUsername;
 
         if (mailSender == null || !StringUtils.hasText(from)) {
-            if (isDevelopmentProfile() || !isEmailConfigured()) {
+            if (isDevelopmentProfile()) {
                 log.info("Development email link generated for {}: {}", recipient, developmentUrl);
                 return;
             }

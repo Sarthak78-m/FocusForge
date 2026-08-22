@@ -37,7 +37,7 @@ public class ChatController {
         } catch (Exception e) {
             log.error("Error processing chat message: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError()
-                    .body(ApiResponse.error("Failed to generate response: " + e.getMessage(), null));
+                    .body(ApiResponse.error("Unable to generate the AI response. Please try again.", null));
         }
     }
 }

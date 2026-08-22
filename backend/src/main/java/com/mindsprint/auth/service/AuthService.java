@@ -67,7 +67,9 @@ public class AuthService {
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
-        boolean isAutoVerify = !verificationRequired || !emailService.isEmailConfigured() || emailService.isDevelopmentProfile();
+        // In production, email verification is ALWAYS required
+        // Auto-verification is only allowed in development profile
+        boolean isAutoVerify = !verificationRequired && emailService.isDevelopmentProfile();
 
         User user = User.builder()
                 .name(request.getName().trim())
@@ -108,14 +110,10 @@ public class AuthService {
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
         authRateLimiter.resetLoginFailures(rateLimitKey);
+        
+        // Email verification is strictly enforced - no auto-verification in production
         if (!user.isEmailVerified()) {
-            boolean canAutoVerify = !verificationRequired || !emailService.isEmailConfigured() || emailService.isDevelopmentProfile() || !emailVerificationTokenRepository.existsByUser(user);
-            if (canAutoVerify) {
-                user.setEmailVerified(true);
-                userRepository.save(user);
-            } else {
-                throw new EmailNotVerifiedException("Please verify your email before logging in.");
-            }
+            throw new EmailNotVerifiedException("Please verify your email before logging in.");
         }
 
         return AuthenticationResponse.builder()

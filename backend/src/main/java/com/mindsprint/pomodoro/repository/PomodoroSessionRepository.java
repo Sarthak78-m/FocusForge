@@ -45,4 +45,7 @@ public interface PomodoroSessionRepository extends JpaRepository<PomodoroSession
     List<PomodoroSession> findByUserIdAndSessionTypeAndStatusAndStartedAtBetween(Long userId, com.mindsprint.pomodoro.PomodoroSessionType sessionType, com.mindsprint.pomodoro.SessionStatus status, LocalDateTime start, LocalDateTime end);
     List<PomodoroSession> findByUserIdAndSessionTypeAndStatus(Long userId, com.mindsprint.pomodoro.PomodoroSessionType sessionType, com.mindsprint.pomodoro.SessionStatus status);
     long countByUserIdAndStatus(Long userId, com.mindsprint.pomodoro.SessionStatus status);
+    
+    // Find the most recent active session for a user
+    java.util.Optional<PomodoroSession> findFirstByUserIdAndStatusOrderByStartedAtDesc(Long userId, com.mindsprint.pomodoro.SessionStatus status);
 }

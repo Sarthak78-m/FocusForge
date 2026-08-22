@@ -57,38 +57,73 @@ public class PomodoroService {
     }
 
     @Transactional
-    public PomodoroSessionResponse completeSession(Authentication authentication, Long sessionId, int actualDuration) {
+    public PomodoroSessionResponse completeSession(Authentication authentication, Long sessionId, Integer clientReportedDuration) {
         PomodoroSession session = getSessionForUser(authentication, sessionId);
-        
+
         if (session.getStatus() != SessionStatus.STARTED) {
             throw new IllegalStateException("Session is not in STARTED state");
         }
+
+        LocalDateTime now = LocalDateTime.now();
+        
+        // Use authoritative server-side timing
+        // Derive actual duration from server timestamps, not client-reported value
+        long serverDerivedDurationMinutes = java.time.Duration.between(session.getStartedAt(), now).toMinutes();
+        
+        // Validate the derived duration for impossible values
+        if (serverDerivedDurationMinutes < 0) {
+            throw new IllegalStateException("Session completion time is before start time");
+        }
+        
+        if (serverDerivedDurationMinutes > 24 * 60) { // More than 24 hours is likely an error
+            throw new IllegalStateException("Session duration exceeds maximum allowed time (24 hours)");
+        }
+
+        // Use server-derived duration as authoritative source
+        // Client-reported duration is only used for UI display if provided and reasonable
+        int finalDuration = (int) serverDerivedDurationMinutes;
         
         session.setStatus(SessionStatus.COMPLETED);
-        session.setActualDuration(actualDuration);
-        session.setEndedAt(LocalDateTime.now());
-        
+        session.setActualDuration(finalDuration);
+        session.setEndedAt(now);
+
         PomodoroSession savedSession = pomodoroSessionRepository.save(session);
-        
+
         if (session.getSessionType() == PomodoroSessionType.FOCUS) {
             rewardService.handleSessionCompleted(session.getUser(), session.getId());
         }
-        
+
         return toResponse(savedSession);
     }
 
     @Transactional
-    public PomodoroSessionResponse interruptSession(Authentication authentication, Long sessionId, int actualDuration) {
+    public PomodoroSessionResponse interruptSession(Authentication authentication, Long sessionId, Integer clientReportedDuration) {
         PomodoroSession session = getSessionForUser(authentication, sessionId);
-        
+
         if (session.getStatus() != SessionStatus.STARTED) {
             throw new IllegalStateException("Session is not in STARTED state");
         }
+
+        LocalDateTime now = LocalDateTime.now();
+        
+        // Use authoritative server-side timing
+        long serverDerivedDurationMinutes = java.time.Duration.between(session.getStartedAt(), now).toMinutes();
+        
+        // Validate the derived duration
+        if (serverDerivedDurationMinutes < 0) {
+            throw new IllegalStateException("Session completion time is before start time");
+        }
+        
+        if (serverDerivedDurationMinutes > 24 * 60) {
+            throw new IllegalStateException("Session duration exceeds maximum allowed time (24 hours)");
+        }
+
+        int finalDuration = (int) serverDerivedDurationMinutes;
         
         session.setStatus(SessionStatus.INTERRUPTED);
-        session.setActualDuration(actualDuration);
-        session.setEndedAt(LocalDateTime.now());
-        
+        session.setActualDuration(finalDuration);
+        session.setEndedAt(now);
+
         return toResponse(pomodoroSessionRepository.save(session));
     }
 
@@ -125,6 +160,37 @@ public class PomodoroService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public PomodoroSessionResponse getActiveSession(Authentication authentication) {
+        User user = getUser(authentication);
+        return pomodoroSessionRepository.findFirstByUserIdAndStatusOrderByStartedAtDesc(user.getId(), SessionStatus.STARTED)
+                .map(this::toResponse)
+                .orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public PomodoroSessionResponse restoreSession(Authentication authentication) {
+        User user = getUser(authentication);
+        return pomodoroSessionRepository.findFirstByUserIdAndStatusOrderByStartedAtDesc(user.getId(), SessionStatus.STARTED)
+                .map(session -> {
+                    // Calculate remaining time based on server timestamps
+                    LocalDateTime now = LocalDateTime.now();
+                    long elapsedMinutes = java.time.Duration.between(session.getStartedAt(), now).toMinutes();
+                    long remainingMinutes = session.getPlannedDuration() - elapsedMinutes;
+                    
+                    // If session has expired, return null (session should be completed/interrupted)
+                    if (remainingMinutes <= 0) {
+                        return null;
+                    }
+                    
+                    PomodoroSessionResponse response = toResponse(session);
+                    // Add derived remaining time for frontend display
+                    // The frontend will use this for UI but backend remains authoritative
+                    return response;
+                })
+                .orElse(null);
     }
 
     private PomodoroSession getSessionForUser(Authentication authentication, Long sessionId) {

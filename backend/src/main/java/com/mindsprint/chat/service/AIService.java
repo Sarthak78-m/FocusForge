@@ -32,8 +32,8 @@ public class AIService {
 
     public String generateResponse(String prompt) {
         // Log keys status securely
-        log.info("AIService invoking LLM. Gemini Key Present: {}, OpenAI Key Present: {}", 
-                geminiApiKey != null && !geminiApiKey.isEmpty(), 
+        log.info("AIService invoking LLM. Gemini Key Present: {}, OpenAI Key Present: {}",
+                geminiApiKey != null && !geminiApiKey.isEmpty(),
                 openaiApiKey != null && !openaiApiKey.isEmpty());
 
         // 1. Try Gemini first if key is present
@@ -49,10 +49,10 @@ public class AIService {
                         return callOpenAI(prompt);
                     } catch (Exception ex) {
                         log.error("Fallback OpenAI call also failed: {}", ex.getMessage(), ex);
-                        throw new RuntimeException("Both Gemini and OpenAI calls failed: " + ex.getMessage());
+                        throw new RuntimeException("AI service temporarily unavailable");
                     }
                 }
-                throw new RuntimeException("Gemini API call failed: " + e.getMessage());
+                throw new RuntimeException("AI service temporarily unavailable");
             }
         }
 
@@ -62,7 +62,7 @@ public class AIService {
                 return callOpenAI(prompt);
             } catch (Exception e) {
                 log.error("Error calling OpenAI API: {}", e.getMessage(), e);
-                throw new RuntimeException("OpenAI API call failed: " + e.getMessage());
+                throw new RuntimeException("AI service temporarily unavailable");
             }
         }
 

@@ -9,13 +9,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 import java.net.URI;
+import java.util.Arrays;
 
 @Configuration
 public class DatabaseConfig {
 
     private static final Logger log = LoggerFactory.getLogger(DatabaseConfig.class);
+    private final Environment environment;
+
+    public DatabaseConfig(Environment environment) {
+        this.environment = environment;
+    }
 
     @Value("${spring.datasource.url:}")
     private String springUrl;
@@ -88,13 +95,25 @@ public class DatabaseConfig {
         try {
             return new HikariDataSource(config);
         } catch (Exception e) {
-            log.error("[MindSprint DatabaseConfig] PostgreSQL connection failed: {}. Falling back to H2 in-memory DB.", e.getMessage());
-            HikariConfig h2Config = new HikariConfig();
-            h2Config.setDriverClassName("org.h2.Driver");
-            h2Config.setJdbcUrl("jdbc:h2:mem:mindsprint_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
-            h2Config.setUsername("sa");
-            h2Config.setPassword("");
-            return new HikariDataSource(h2Config);
+            log.error("[MindSprint DatabaseConfig] PostgreSQL connection failed: {}. In production, this is a critical failure.", e.getMessage());
+            
+            // Only allow H2 fallback in development environments
+            String[] activeProfiles = environment.getActiveProfiles();
+            boolean isDevelopment = Arrays.stream(activeProfiles)
+                .map(String::toLowerCase)
+                .anyMatch(profile -> profile.equals("local") || profile.equals("dev") || profile.equals("test"));
+            
+            if (isDevelopment) {
+                log.warn("[MindSprint DatabaseConfig] Falling back to H2 in-memory DB for development only.");
+                HikariConfig h2Config = new HikariConfig();
+                h2Config.setDriverClassName("org.h2.Driver");
+                h2Config.setJdbcUrl("jdbc:h2:mem:mindsprint_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+                h2Config.setUsername("sa");
+                h2Config.setPassword("");
+                return new HikariDataSource(h2Config);
+            } else {
+                throw new IllegalStateException("Production database connection failed. Application cannot start without a valid database connection.", e);
+            }
         }
     }
 
@@ -144,7 +163,9 @@ public class DatabaseConfig {
                 if (host != null) {
                     url = "jdbc:postgresql://" + host + ":" + port + path;
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                log.warn("Failed to parse database URL for credential extraction, using defaults: {}", e.getMessage());
+            }
         }
 
         if (!url.startsWith("jdbc:")) {

@@ -53,7 +53,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+        
+        // In production, use the configured frontend URL for security
+        // In development, allow localhost for convenience
+        if (frontendUrl != null && !frontendUrl.equals("http://localhost:5173") && !frontendUrl.equals("http://localhost")) {
+            config.setAllowedOrigins(List.of(frontendUrl));
+        } else {
+            // Development mode - allow localhost origins
+            config.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
+        }
+        
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
