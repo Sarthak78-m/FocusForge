@@ -179,16 +179,40 @@ public class EmailService {
         send(user.getEmail(), subject, htmlBody, taskUrl);
     }
 
+    @Value("${spring.mail.host:}")
+    private String mailHost;
+
+    @Value("${spring.mail.port:587}")
+    private String mailPort;
+
+    @Value("${spring.mail.password:}")
+    private String mailPassword;
+
     private void send(String recipient, String subject, String htmlBody, String developmentUrl) {
         JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
         String from = StringUtils.hasText(emailFrom) ? emailFrom : mailUsername;
+
+        log.info("=== EMAIL DELIVERY DIAGNOSTICS ===");
+        log.info("1. EMAIL_HOST provided: {}", StringUtils.hasText(mailHost));
+        log.info("2. EMAIL_HOST value: '{}'", mailHost);
+        log.info("3. EMAIL_PORT value: '{}'", mailPort);
+        log.info("4. EMAIL_USERNAME provided: {}", StringUtils.hasText(mailUsername));
+        log.info("5. EMAIL_USERNAME value: '{}'", mailUsername);
+        log.info("6. EMAIL_FROM provided: {}", StringUtils.hasText(emailFrom));
+        log.info("7. EMAIL_FROM value: '{}'", emailFrom);
+        log.info("8. Resolved 'from' address: '{}'", from);
+        log.info("9. EMAIL_PASSWORD provided: {}", StringUtils.hasText(mailPassword));
+        log.info("10. JavaMailSender bean exists: {}", (mailSender != null));
+        log.info("==================================");
 
         if (mailSender == null || !StringUtils.hasText(from)) {
             if (isDevelopmentProfile()) {
                 log.info("Development email link generated for {}: {}", recipient, developmentUrl);
                 return;
             }
-            throw new EmailDeliveryException("Email delivery is not configured");
+            String exactReason = (mailSender == null) ? "JavaMailSender bean is null (spring.mail.host is likely empty or invalid)" : "Resolved 'from' address is empty";
+            log.error("Email delivery failed BEFORE sending. Reason: {}", exactReason);
+            throw new EmailDeliveryException("Email delivery is not configured: " + exactReason);
         }
 
         try {
@@ -201,7 +225,17 @@ public class EmailService {
             mailSender.send(mimeMessage);
             log.info("Successfully sent email to {} with subject '{}'", recipient, subject);
         } catch (Exception ex) {
-            log.error("Failed to send email to {}: {}", recipient, ex.getMessage(), ex);
+            log.error("Failed to send email to {}. Exception: {}", recipient, ex.getClass().getName());
+            log.error("Exception Message: {}", ex.getMessage());
+            Throwable cause = ex.getCause();
+            int depth = 1;
+            while (cause != null) {
+                log.error("Cause [{}]: {} - {}", depth, cause.getClass().getName(), cause.getMessage());
+                cause = cause.getCause();
+                depth++;
+            }
+            log.error("Full stack trace: ", ex);
+            
             if (isDevelopmentProfile()) {
                 log.info("Fallback development link for {}: {}", recipient, developmentUrl);
                 return;
