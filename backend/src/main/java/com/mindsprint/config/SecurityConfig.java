@@ -34,12 +34,18 @@ public class SecurityConfig {
     private String frontendUrl;
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/auth/register",
-            "/api/auth/login",
-            "/api/auth/verify-email",
-            "/api/auth/resend-verification",
-            "/api/auth/forgot-password",
-            "/api/auth/reset-password",
+            "/**/auth/register",
+            "/**/auth/register/**",
+            "/**/auth/login",
+            "/**/auth/login/**",
+            "/**/auth/verify-email",
+            "/**/auth/verify-email/**",
+            "/**/auth/resend-verification",
+            "/**/auth/resend-verification/**",
+            "/**/auth/forgot-password",
+            "/**/auth/forgot-password/**",
+            "/**/auth/reset-password",
+            "/**/auth/reset-password/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -77,10 +83,12 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> {
+                    for (String endpoint : PUBLIC_ENDPOINTS) {
+                        auth.requestMatchers(new org.springframework.security.web.util.matcher.AntPathRequestMatcher(endpoint)).permitAll();
+                    }
+                    auth.anyRequest().authenticated();
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .exceptionHandling(exception -> exception
