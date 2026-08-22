@@ -1,7 +1,8 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Star, Trash2, Save, Eye, EyeOff } from 'lucide-react';
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { IconButton } from '../components/ui/IconButton';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -101,13 +102,13 @@ function renderMarkdown(raw: string): string {
 export function NoteEditorPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
-  const updateNote = useNoteStore((s) => s.updateNote);
-  const toggleFavorite = useNoteStore((s) => s.toggleFavorite);
-  const deleteNote = useNoteStore((s) => s.deleteNote);
-  const createNote = useNoteStore((s) => s.createNote);
+  const { data: notes = [] } = useNotes();
+  const updateNote = useUpdateNote();
+  const toggleFavorite = useToggleFavoriteNote();
+  const deleteNote = useDeleteNote();
+  const createNote = useCreateNote();
 
-  const note = notes.find((n) => n.id === id);
+  const note = notes.find((n) => n.id === Number(id));
 
   const [title, setTitle] = useState(note?.title ?? '');
   const [content, setContent] = useState(note?.content ?? '');
@@ -189,8 +190,8 @@ export function NoteEditorPage() {
         navigate(`/notes/${linkedNote.id}`);
       } else {
         if (window.confirm(`Note "${linkText}" doesn't exist. Create it?`)) {
-          const newId = await createNote();
-          await updateNote(newId, { title: linkText });
+          const newId = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
+          await updateNote.mutate({ id: newId, payload: { title: linkText } });
           navigate(`/notes/${newId}`);
         }
       }
@@ -208,7 +209,7 @@ export function NoteEditorPage() {
     if (!note || !id) return;
     const t = setTimeout(() => {
       if (title !== note.title || content !== note.content) {
-        updateNote(id, { title, content });
+        updateNote.mutate({ id: Number(id), payload: { title, content } });
         setSavedAt(Date.now());
       }
     }, 500);
@@ -241,7 +242,7 @@ export function NoteEditorPage() {
   function handleDelete() {
     if (!id) return;
     if (window.confirm(`Delete "${note!.title}"? This cannot be undone.`)) {
-      deleteNote(id);
+      deleteNote.mutate(Number(id));
       navigate('/notes');
     }
   }
@@ -285,7 +286,7 @@ export function NoteEditorPage() {
           <IconButton
             size="sm"
             label={note.favorite ? 'Unfavorite' : 'Favorite'}
-            onClick={() => toggleFavorite(note.id)}
+            onClick={() => toggleFavorite.mutate(note.id)}
           >
             <Star
               className={`h-4 w-4 ${

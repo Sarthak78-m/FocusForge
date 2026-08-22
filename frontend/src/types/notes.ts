@@ -4,8 +4,12 @@
 export type Note = {
   id: number;
   title: string;
-  content: string;        // plain text or markdown
+  content: string;
   subject?: string | null;
+  folder: string;
+  favorite: boolean;
+  wordCount: number;
+  preview?: string; // UI only generated occasionally, but not from backend
   tags: string[];
   linkedTaskId?: number | null;
   linkedGoalId?: number | null;
@@ -17,6 +21,8 @@ export type CreateNotePayload = {
   title: string;
   content: string;
   subject?: string;
+  folder?: string;
+  favorite?: boolean;
   tags?: string[];
   linkedTaskId?: number;
   linkedGoalId?: number;

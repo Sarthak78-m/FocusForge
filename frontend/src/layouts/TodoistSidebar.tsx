@@ -14,14 +14,16 @@ import {
 } from 'lucide-react';
 import { paths } from '@/routes/paths';
 import { useAppStore } from '@/store/appStore';
-import { useNoteStore } from '@/store/noteStore';
+import { useNotes } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { useTasks } from '@/hooks/useTasks';
 import { cn } from '@/utils/cn';
 
 export function TodoistSidebar() {
   const leftSidebarOpen = useAppStore((s) => s.leftSidebarOpen);
   const openCreateTaskModal = useAppStore((s) => s.openCreateTaskModal);
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
+  const typedNotes: Note[] = notes;
   const { data: tasksData } = useTasks({ size: 100 });
   const [projectsOpen, setProjectsOpen] = useState(true);
   const navigate = useNavigate();
@@ -214,12 +216,12 @@ export function TodoistSidebar() {
 
           {projectsOpen && (
             <div className="mt-1 space-y-0.5">
-              {Array.from(new Set(notes.flatMap((n) => n.tags || []))).length === 0 ? (
+              {Array.from(new Set(typedNotes.flatMap((n) => n.tags || []))).length === 0 ? (
                 <div className="px-3 py-2 text-2xs text-[var(--color-text-tertiary)] italic">
                   No tags yet. Add #tags to your notes.
                 </div>
               ) : (
-                Array.from(new Set(notes.flatMap((n) => n.tags || []))).map((tag) => (
+                Array.from(new Set(typedNotes.flatMap((n) => n.tags || []))).map((tag) => (
                   <NavLink
                     key={tag}
                     to={paths.tags}

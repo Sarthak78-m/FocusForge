@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Folder, FolderOpen, FileText, Star, ChevronDown, ChevronRight } from 'lucide-react';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -9,8 +10,8 @@ import { formatRelativeTime, cn } from '../lib/utils';
 
 export function FoldersPage() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
-  const toggleFavorite = useNoteStore((s) => s.toggleFavorite);
+  const { data: notes = [] } = useNotes();
+  const toggleFavorite = useToggleFavoriteNote();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   // Build folder → notes map sorted alphabetically
@@ -27,7 +28,7 @@ export function FoldersPage() {
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([folder, folderNotes]) => [
           folder,
-          [...folderNotes].sort((a, b) => b.updatedAt - a.updatedAt),
+          [...folderNotes].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()),
         ]),
     );
   }, [notes]);
@@ -122,7 +123,7 @@ export function FoldersPage() {
                         <button
                           onClick={(ev) => {
                             ev.stopPropagation();
-                            toggleFavorite(n.id);
+                            toggleFavorite.mutate(n.id);
                           }}
                           className="shrink-0"
                           aria-label={n.favorite ? 'Unfavorite' : 'Favorite'}

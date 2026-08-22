@@ -4,16 +4,10 @@ import { RouterProvider } from 'react-router-dom';
 import { LoadingSpinner, OfflineIndicator, ToastViewport } from '@/components/common';
 import { queryClient } from '@/api/queryClient';
 import { useTheme } from '@/hooks/useTheme';
-import { useNoteStore } from '@/store/noteStore';
 import { router } from '@/routes/router';
 
 export function App() {
   useTheme();
-  const initializeNotes = useNoteStore((s) => s.initialize);
-
-  useEffect(() => {
-    initializeNotes();
-  }, [initializeNotes]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,4 +25,3 @@ export function App() {
     </QueryClientProvider>
   );
 }
-

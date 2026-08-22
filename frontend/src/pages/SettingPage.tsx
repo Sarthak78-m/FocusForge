@@ -1,5 +1,6 @@
 import { useAppStore } from '../store/appStore';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card, CardBody, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Sun, Moon, Database, Trash2 } from 'lucide-react';
@@ -7,17 +8,12 @@ import { Sun, Moon, Database, Trash2 } from 'lucide-react';
 export function SettingsPage() {
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
-  const notes = useNoteStore((s) => s.notes);
-  const initialize = useNoteStore((s) => s.initialize);
+  const { data: notes = [] } = useNotes();
+  
 
   async function handleReset() {
-    if (!window.confirm('Reset all local data and reseed sample notes?')) return;
-    const { notesRepo, activityRepo, metaRepo } = await import(
-      '../lib/database/notesRepository'
-    );
-    await notesRepo.clear();
-    await activityRepo.clear();
-    await metaRepo.set('initialized', false);
+    if (!window.confirm('Reset local cache?')) return;
+    localStorage.clear();
     location.reload();
   }
 

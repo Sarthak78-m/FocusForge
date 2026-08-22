@@ -15,7 +15,8 @@ import {
   Settings,
   HelpCircle,
 } from 'lucide-react';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { cn } from '../../lib/utils';
 
 const navItems = [
@@ -28,7 +29,7 @@ const navItems = [
 export function MobileDrawer() {
   const drawer = useAppStore((s) => s.mobileDrawerOpen);
   const setDrawer = useAppStore((s) => s.setMobileDrawer);
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
 
   if (!drawer) return null;
 

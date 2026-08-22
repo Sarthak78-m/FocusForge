@@ -29,8 +29,9 @@ export function getGreetingEmoji(): string {
   return '🌙';
 }
 
-export function formatRelativeTime(timestamp: number): string {
-  const diff = Date.now() - timestamp;
+export function formatRelativeTime(timestamp: number | string): string {
+  const ts = typeof timestamp === 'string' ? new Date(timestamp).getTime() : timestamp;
+  const diff = Date.now() - ts;
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
@@ -42,14 +43,15 @@ export function formatRelativeTime(timestamp: number): string {
   if (hours < 24) return `${hours}h ago`;
   if (days < 7) return `${days}d ago`;
   if (days < 30) return `${Math.floor(days / 7)}w ago`;
-  return new Date(timestamp).toLocaleDateString('en-US', {
+  return new Date(ts).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
   });
 }
 
-export function formatDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString('en-US', {
+export function formatDate(timestamp: number | string): string {
+  const ts = typeof timestamp === 'string' ? new Date(timestamp).getTime() : timestamp;
+  return new Date(ts).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

@@ -1,6 +1,7 @@
 ﻿import { useNavigate } from 'react-router-dom';
 import { Star, Folder, Clock, FileText, Plus } from 'lucide-react';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { EmptyState } from '../ui/EmptyState';
@@ -9,12 +10,12 @@ import { formatRelativeTime } from '../../lib/utils';
 
 export function RecentNotes() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
-  const toggleFavorite = useNoteStore((s) => s.toggleFavorite);
-  const createNote = useNoteStore((s) => s.createNote);
+  const { data: notes = [] } = useNotes();
+  const toggleFavorite = useToggleFavoriteNote();
+  const createNote = useCreateNote();
 
   const recent = [...notes]
-    .sort((a, b) => b.updatedAt - a.updatedAt)
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 6);
 
   if (recent.length === 0) {
@@ -28,7 +29,7 @@ export function RecentNotes() {
           action={
             <button
               onClick={async () => {
-                const id = await createNote();
+                const id = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
                 navigate(`/notes/${id}`);
               }}
               className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-md bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-hover)] transition-colors"
@@ -81,7 +82,7 @@ export function RecentNotes() {
                   label={note.favorite ? 'Remove from favorites' : 'Add to favorites'}
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleFavorite(note.id);
+                    toggleFavorite.mutate(note.id);
                   }}
                   className="shrink-0 -mt-1 -mr-1"
                 >

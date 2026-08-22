@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, FileText, Star, Folder } from 'lucide-react';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -10,14 +11,14 @@ import { formatRelativeTime, cn } from '../lib/utils';
 
 export function NotesPage() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
-  const toggleFavorite = useNoteStore((s) => s.toggleFavorite);
-  const createNote = useNoteStore((s) => s.createNote);
+  const { data: notes = [] } = useNotes();
+  const toggleFavorite = useToggleFavoriteNote();
+  const createNote = useCreateNote();
   const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return [...notes].sort((a, b) => b.updatedAt - a.updatedAt);
+    if (!q) return [...notes].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
     return notes
       .filter(
         (n) =>
@@ -25,7 +26,7 @@ export function NotesPage() {
           n.content.toLowerCase().includes(q) ||
           n.tags.some((t) => t.toLowerCase().includes(q)),
       )
-      .sort((a, b) => b.updatedAt - a.updatedAt);
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }, [notes, query]);
 
   return (
@@ -43,7 +44,7 @@ export function NotesPage() {
           variant="primary"
           iconLeft={<FileText className="h-4 w-4" />}
           onClick={async () => {
-            const id = await createNote();
+            const id = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
             navigate(`/notes/${id}`);
           }}
         >
@@ -92,7 +93,7 @@ export function NotesPage() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleFavorite(n.id);
+                    toggleFavorite.mutate(n.id);
                   }}
                   className="shrink-0"
                   aria-label={n.favorite ? 'Unfavorite' : 'Favorite'}

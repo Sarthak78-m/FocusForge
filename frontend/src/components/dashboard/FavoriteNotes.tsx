@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Star, Folder, Clock, StarOff } from 'lucide-react';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../ui/Card';
 import { EmptyState } from '../ui/EmptyState';
 import { Button } from '../ui/Button';
@@ -8,7 +9,7 @@ import { formatDate } from '../../lib/utils';
 
 export function FavoriteNotes() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
   const favorites = notes.filter((n) => n.favorite);
 
   if (favorites.length === 0) {

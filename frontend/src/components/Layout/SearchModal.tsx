@@ -2,14 +2,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, FileText, Hash, X } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { IconButton } from '../ui/IconButton';
 import { cn } from '../../lib/utils';
 
 export function SearchModal() {
   const open = useAppStore((s) => s.searchOpen);
   const setOpen = useAppStore((s) => s.setSearchOpen);
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -36,7 +37,7 @@ export function SearchModal() {
       .slice(0, 10);
   }, [notes, query]);
 
-  function go(id: string) {
+  function go(id: number) {
     setOpen(false);
     navigate(`/notes/${id}`);
   }

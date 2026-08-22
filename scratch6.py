@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+﻿import os
+p = 'frontend/src/components/Layout/TopHeader.tsx'
+content = '''import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Sun, Moon, Menu } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 import { useCreateNote } from '@/hooks/useNotes';
@@ -19,7 +21,7 @@ export function TopHeader() {
 
   async function handleNew() {
     const note = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' });
-    navigate(`/notes/${note.id}`);
+    navigate(/notes/);
   }
 
   return (
@@ -96,3 +98,5 @@ export function TopHeader() {
     </header>
   );
 }
+'''
+with open(p, 'w', encoding='utf-8') as f: f.write(content)

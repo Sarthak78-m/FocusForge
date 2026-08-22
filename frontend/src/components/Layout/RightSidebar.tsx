@@ -1,7 +1,8 @@
 import { Lightbulb, Hash, Keyboard, Sparkles, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store/appStore';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { IconButton } from '../ui/IconButton';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -20,14 +21,14 @@ export function RightSidebar() {
   const open = useAppStore((s) => s.rightSidebarOpen);
   const setRight = useAppStore((s) => s.setRightSidebar);
   const setMobileDrawer = useAppStore((s) => s.setMobileDrawer);
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
 
   const tags = Array.from(
     new Set(notes.flatMap((n) => n.tags)),
   ).slice(0, 10);
 
   const recentNotes = [...notes]
-    .sort((a, b) => b.updatedAt - a.updatedAt)
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 4);
 
   const quote = QUOTES[new Date().getDate() % QUOTES.length];

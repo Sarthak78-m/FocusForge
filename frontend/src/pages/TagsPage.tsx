@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Hash, FileText, ChevronDown, ChevronRight } from 'lucide-react';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -9,7 +10,7 @@ import { formatRelativeTime } from '../lib/utils';
 
 export function TagsPage() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   // Build tag → notes map, sorted by note count desc
@@ -26,7 +27,7 @@ export function TagsPage() {
         .sort((a, b) => b[1].length - a[1].length)
         .map(([tag, tagNotes]) => [
           tag,
-          [...tagNotes].sort((a, b) => b.updatedAt - a.updatedAt),
+          [...tagNotes].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()),
         ]),
     );
   }, [notes]);

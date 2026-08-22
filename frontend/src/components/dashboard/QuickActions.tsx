@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { Plus, Timer, CheckSquare, GitBranch, MessageSquare } from 'lucide-react';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 
 export function QuickActions() {
   const navigate = useNavigate();
-  const createNote = useNoteStore((s) => s.createNote);
+  const createNote = useCreateNote();
 
   async function handleNew() {
-    const id = await createNote();
+    const id = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
     navigate(`/notes/${id}`);
   }
 

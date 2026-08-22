@@ -19,7 +19,8 @@ import {
   Target,
 } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
-import { useNoteStore } from '../../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { IconButton } from '../ui/IconButton';
 import { cn } from '../../lib/utils';
 
@@ -33,7 +34,7 @@ interface NavItem {
 export function LeftSidebar() {
   const open = useAppStore((s) => s.leftSidebarOpen);
   const toggle = useAppStore((s) => s.toggleLeftSidebar);
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
 
   const studyTools: NavItem[] = [
     { to: '/', icon: Home, label: 'Overview', end: true },

@@ -1,15 +1,4 @@
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  preview: string;
-  folder: string;
-  tags: string[];
-  favorite: boolean;
-  createdAt: number;
-  updatedAt: number;
-  wordCount: number;
-}
+export type { Note } from './notes';
 
 export type ActivityType = 'create' | 'edit' | 'link' | 'tag' | 'favorite';
 

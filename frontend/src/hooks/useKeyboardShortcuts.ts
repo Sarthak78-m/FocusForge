@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/appStore';
-import { useNoteStore } from '../store/noteStore';
+import { useCreateNote } from './useNotes';
 
 function isTypingTarget(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
@@ -15,7 +15,7 @@ export function useKeyboardShortcuts() {
   const navigate = useNavigate();
   const toggleSearch = useAppStore((s) => s.toggleSearch);
   const toggleLeftSidebar = useAppStore((s) => s.toggleLeftSidebar);
-  const createNote = useNoteStore((s) => s.createNote);
+  const createNote = useCreateNote();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -35,8 +35,8 @@ export function useKeyboardShortcuts() {
 
       if (mod && e.key.toLowerCase() === 'n' && !isTypingTarget(e.target)) {
         e.preventDefault();
-        createNote().then((id) => {
-          navigate(`/notes/${id}`);
+        createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then((note) => {
+          navigate(`/notes/${note.id}`);
         });
         return;
       }

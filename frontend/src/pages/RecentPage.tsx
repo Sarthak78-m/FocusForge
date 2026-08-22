@@ -1,15 +1,16 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, Star, FileText } from 'lucide-react';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
 import { Button } from '../components/ui/Button';
 import { formatRelativeTime, formatDate, cn } from '../lib/utils';
 
-/** Group notes by day bucket: Today / Yesterday / This week / Older */
-function getDayGroup(ts: number): string {
+function getDayGroup(tsArg: number | string): string {
+  const ts = typeof tsArg === 'string' ? new Date(tsArg).getTime() : tsArg;
   const now = Date.now();
   const diff = now - ts;
   const DAY = 86_400_000;
@@ -24,12 +25,12 @@ const GROUP_ORDER = ['Today', 'Yesterday', 'This week', 'This month', 'Older'];
 
 export function RecentPage() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
-  const toggleFavorite = useNoteStore((s) => s.toggleFavorite);
-  const createNote = useNoteStore((s) => s.createNote);
+  const { data: notes = [] } = useNotes();
+  const toggleFavorite = useToggleFavoriteNote();
+  const createNote = useCreateNote();
 
   const groups = useMemo(() => {
-    const sorted = [...notes].sort((a, b) => b.updatedAt - a.updatedAt);
+    const sorted = [...notes].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
     const map = new Map<string, typeof notes>();
     for (const n of sorted) {
       const g = getDayGroup(n.updatedAt);
@@ -60,7 +61,7 @@ export function RecentPage() {
           variant="primary"
           iconLeft={<FileText className="h-4 w-4" />}
           onClick={async () => {
-            const id = await createNote();
+            const id = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
             navigate(`/notes/${id}`);
           }}
         >
@@ -78,7 +79,7 @@ export function RecentPage() {
             <Button
               variant="primary"
               onClick={async () => {
-                const id = await createNote();
+                const id = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
                 navigate(`/notes/${id}`);
               }}
             >
@@ -112,7 +113,7 @@ export function RecentPage() {
                       <button
                         onClick={(ev) => {
                           ev.stopPropagation();
-                          toggleFavorite(n.id);
+                          toggleFavorite.mutate(Number(n.id));
                         }}
                         className="shrink-0"
                         aria-label={n.favorite ? 'Unfavorite' : 'Favorite'}

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Search, FileText } from 'lucide-react';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -11,9 +12,9 @@ import { formatRelativeTime, cn } from '../lib/utils';
 
 export function FavoritesPage() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
-  const toggleFavorite = useNoteStore((s) => s.toggleFavorite);
-  const createNote = useNoteStore((s) => s.createNote);
+  const { data: notes = [] } = useNotes();
+  const toggleFavorite = useToggleFavoriteNote();
+  const createNote = useCreateNote();
   const [query, setQuery] = useState('');
 
   const favorites = useMemo(() => {
@@ -28,7 +29,7 @@ export function FavoritesPage() {
           n.tags.some((t) => t.toLowerCase().includes(q))
         );
       })
-      .sort((a, b) => b.updatedAt - a.updatedAt);
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
   }, [notes, query]);
 
   const totalFavorites = notes.filter((n) => n.favorite).length;
@@ -50,7 +51,7 @@ export function FavoritesPage() {
           variant="primary"
           iconLeft={<FileText className="h-4 w-4" />}
           onClick={async () => {
-            const id = await createNote();
+            const id = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' }).then(n => n.id);
             navigate(`/notes/${id}`);
           }}
         >
@@ -113,7 +114,7 @@ export function FavoritesPage() {
                   label="Remove from favorites"
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleFavorite(n.id);
+                    toggleFavorite.mutate(n.id);
                   }}
                 >
                   <Star className={cn('h-4 w-4 fill-amber-400 text-amber-400')} />

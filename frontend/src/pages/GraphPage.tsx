@@ -1,13 +1,14 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
-import { useNoteStore } from '../store/noteStore';
+import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleFavoriteNote } from '@/hooks/useNotes';
+import type { Note } from '@/types/notes';
 import { HelpCircle, X, Maximize, ZoomIn, ZoomOut, Share2 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 
 export function GraphPage() {
   const navigate = useNavigate();
-  const notes = useNoteStore((s) => s.notes);
+  const { data: notes = [] } = useNotes();
   const { mode: themeMode } = useTheme();
   
   const [showGuide, setShowGuide] = useState(false);
