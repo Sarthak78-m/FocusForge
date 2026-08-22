@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -302,7 +302,7 @@ const FAQS = [
   },
   {
     q: 'Does it work offline?',
-    a: 'Yes. All your work notes and tasks automatically sync with local browser IndexedDB cache and sync with the Spring Boot backend whenever you are online.',
+    a: 'Yes. All your work notes and tasks securely sync directly with the robust Spring Boot and PostgreSQL backend.',
   },
   {
     q: 'Is there any complex setup needed?',

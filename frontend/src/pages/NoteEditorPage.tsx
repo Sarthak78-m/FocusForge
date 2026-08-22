@@ -209,8 +209,16 @@ export function NoteEditorPage() {
     if (!note || !id) return;
     const t = setTimeout(() => {
       if (title !== note.title || content !== note.content) {
-        updateNote.mutate({ id: Number(id), payload: { title, content } });
-        setSavedAt(Date.now());
+        updateNote.mutate(
+          { id: Number(id), payload: { title, content } },
+          {
+            onSuccess: () => setSavedAt(Date.now()),
+            onError: (err) => {
+              console.error('Failed to save note:', err);
+              // Do not setSavedAt on failure. Let it surface via react-query error state if needed
+            }
+          }
+        );
       }
     }, 500);
     return () => clearTimeout(t);

@@ -77,10 +77,10 @@ export function SettingsPage() {
             <div>
               <div className="text-sm font-medium flex items-center gap-1.5">
                 <Database className="h-3.5 w-3.5" />
-                Local data
+                Backend data
               </div>
               <div className="text-xs text-[var(--color-text-secondary)]">
-                {notes.length} notes stored in IndexedDB on this device
+                {notes.length} notes stored securely in PostgreSQL
               </div>
             </div>
             <Button
@@ -105,7 +105,7 @@ export function SettingsPage() {
               knowledge workspace.
             </p>
             <p className="text-2xs text-[var(--color-text-tertiary)]">
-              Built with React, TypeScript, Vite, Tailwind CSS, Zustand, and IndexedDB.
+              Built with React, TypeScript, Vite, Tailwind CSS, Zustand, and PostgreSQL.
             </p>
           </div>
         </CardBody>

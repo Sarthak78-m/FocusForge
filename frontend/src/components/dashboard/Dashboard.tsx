@@ -4,6 +4,7 @@ import { StatCard } from './StatCard';
 import { QuickActions } from './QuickActions';
 import { RecentNotes } from './RecentNotes';
 import { FavoriteNotes } from './FavoriteNotes';
+import { ActivityTimeline } from './ActivityTimeline';
 import { getGreeting, getGreetingEmoji, countLinks } from '../../lib/utils';
 
 function formatNumber(n: number): string {
@@ -55,6 +56,7 @@ export function Dashboard() {
         </div>
         <div className="space-y-6">
           <FavoriteNotes />
+          <ActivityTimeline />
         </div>
       </div>
     </div>

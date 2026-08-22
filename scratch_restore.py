@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+﻿import os
+p = 'frontend/src/components/Layout/TopHeader.tsx'
+content = '''import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Bell, Sun, Moon, Menu, FileText, Link2, Tag, Heart } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { useAppStore } from '../../store/appStore';
@@ -45,7 +47,7 @@ export function TopHeader() {
 
   async function handleNew() {
     const note = await createNote.mutateAsync({ title: 'Untitled', content: '', folder: 'Inbox' });
-    navigate(`/notes/${note.id}`);
+    navigate(/notes/);
   }
 
   return (
@@ -141,14 +143,10 @@ export function TopHeader() {
                   {recentActivity.map((a) => (
                     <li
                       key={a.id}
-                      className={`flex items-start gap-2.5 px-3 py-2.5 text-xs ${
-                        a.noteId
-                          ? 'hover:bg-[var(--color-card-hover)] cursor-pointer transition-colors'
-                          : ''
-                      }`}
+                      className={\lex items-start gap-2.5 px-3 py-2.5 text-xs \\}
                       onClick={() => {
                         if (a.noteId) {
-                          navigate(`/notes/${a.noteId}`);
+                          navigate(\/notes/\\);
                           setBellOpen(false);
                         }
                       }}
@@ -187,3 +185,5 @@ export function TopHeader() {
     </header>
   );
 }
+'''
+with open(p, 'w', encoding='utf-8') as f: f.write(content)
