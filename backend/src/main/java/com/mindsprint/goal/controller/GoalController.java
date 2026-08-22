@@ -1,8 +1,10 @@
-package com.mindsprint.goal;
+package com.mindsprint.goal.controller;
 
 import com.mindsprint.auth.dto.ApiResponse;
-import com.mindsprint.goal.dto.GoalRequest;
+import com.mindsprint.goal.dto.CreateGoalRequest;
+import com.mindsprint.goal.dto.UpdateGoalRequest;
 import com.mindsprint.goal.dto.GoalResponse;
+import com.mindsprint.goal.service.GoalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +13,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Goals", description = "Goal tracking APIs")
@@ -37,7 +40,7 @@ public class GoalController {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<GoalResponse>>> getGoals(
             Authentication authentication,
-            Pageable pageable
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<GoalResponse> page = goalService.getGoals(authentication, pageable);
         return ResponseEntity.ok(ApiResponse.success("Goals fetched successfully", page));
@@ -54,22 +57,22 @@ public class GoalController {
     @PostMapping
     public ResponseEntity<ApiResponse<GoalResponse>> createGoal(
             Authentication authentication,
-            @Valid @RequestBody GoalRequest request
+            @Valid @RequestBody CreateGoalRequest request
     ) {
-        GoalResponse created = goalService.createGoal(authentication, request);
+        GoalResponse created = goalService.createGoal(request, authentication);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Goal created successfully", created));
     }
 
-    @Operation(summary = "Increment goal progress")
-    @PatchMapping("/{id}/progress")
-    public ResponseEntity<ApiResponse<GoalResponse>> incrementProgress(
+    @Operation(summary = "Update goal")
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<GoalResponse>> updateGoal(
             Authentication authentication,
             @PathVariable Long id,
-            @RequestParam(defaultValue = "1") int units
+            @Valid @RequestBody UpdateGoalRequest request
     ) {
-        GoalResponse updated = goalService.incrementProgress(authentication, id, units);
-        return ResponseEntity.ok(ApiResponse.success("Goal progress updated", updated));
+        GoalResponse updated = goalService.updateGoal(id, request, authentication);
+        return ResponseEntity.ok(ApiResponse.success("Goal updated successfully", updated));
     }
 
     @Operation(summary = "Delete goal")
@@ -78,7 +81,7 @@ public class GoalController {
             Authentication authentication,
             @PathVariable Long id
     ) {
-        goalService.deleteGoal(authentication, id);
+        goalService.deleteGoal(id, authentication);
         return ResponseEntity.ok(ApiResponse.success("Goal deleted successfully", null));
     }
 }

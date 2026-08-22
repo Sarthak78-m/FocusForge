@@ -99,7 +99,7 @@ public class AuthService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, request.getPassword())
             );
-        } catch (AuthenticationException ex) {
+        } catch (BadCredentialsException ex) {
             authRateLimiter.recordLoginFailure(rateLimitKey);
             throw new BadCredentialsException("Invalid email or password", ex);
         }

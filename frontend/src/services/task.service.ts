@@ -6,7 +6,10 @@ export type CreateTaskPayload = {
   title: string;
   description?: string;
   priority?: TaskPriority;
+  category?: string;
+  estimatedPomodoros?: number;
   dueDate?: string; // ISO date: YYYY-MM-DD
+  goalId?: number | null;
 };
 
 export type UpdateTaskPayload = {
@@ -14,7 +17,10 @@ export type UpdateTaskPayload = {
   description?: string;
   status?: TaskStatus;
   priority?: TaskPriority;
+  category?: string;
+  estimatedPomodoros?: number;
   dueDate?: string;
+  goalId?: number | null;
 };
 
 export type GetTasksParams = {
@@ -52,6 +58,11 @@ export const taskService = {
 
   async completeTask(taskId: number): Promise<Task> {
     const response = await http.patch<ApiResponse<Task>>(`/tasks/${taskId}/complete`);
+    return unwrapApiResponse(response.data);
+  },
+
+  async reopenTask(taskId: number): Promise<Task> {
+    const response = await http.patch<ApiResponse<Task>>(`/tasks/${taskId}/reopen`);
     return unwrapApiResponse(response.data);
   },
 

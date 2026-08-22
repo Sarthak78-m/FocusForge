@@ -6,6 +6,7 @@ type TaskListProps = {
   tasks: Task[];
   isLoading?: boolean;
   onComplete: (id: number) => void;
+  onReopen: (id: number) => void;
   onEdit: (task: Task) => void;
   onDelete: (id: number) => void;
   completingId?: number | null;
@@ -27,7 +28,7 @@ function SkeletonCard() {
   );
 }
 
-export function TaskList({ tasks, isLoading, onComplete, onEdit, onDelete, completingId }: TaskListProps) {
+export function TaskList({ tasks, isLoading, onComplete, onReopen, onEdit, onDelete, completingId }: TaskListProps) {
   if (isLoading) {
     return (
       <div className="space-y-2">
@@ -59,6 +60,7 @@ export function TaskList({ tasks, isLoading, onComplete, onEdit, onDelete, compl
           key={task.id}
           task={task}
           onComplete={onComplete}
+          onReopen={onReopen}
           onEdit={onEdit}
           onDelete={onDelete}
           isCompleting={completingId === task.id}

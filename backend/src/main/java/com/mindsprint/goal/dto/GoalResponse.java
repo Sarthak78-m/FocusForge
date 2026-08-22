@@ -16,11 +16,9 @@ public class GoalResponse {
     private String title;
     private String category;
     private LocalDate targetDate;
-    private int currentUnits;
-    private int totalUnits;
-    private String unitName;
-    private int progressPercentage;
-    private boolean completed;
+    private String description;
+    private com.mindsprint.goal.GoalStatus status;
+    private Integer progress;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

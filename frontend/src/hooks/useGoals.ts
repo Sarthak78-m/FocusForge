@@ -40,24 +40,20 @@ export function useCreateGoal() {
   });
 }
 
-/** Increment goal progress by N units (default 1) */
-export function useIncrementGoalProgress() {
+/** Complete a goal explicitly */
+export function useCompleteGoal() {
   const queryClient = useQueryClient();
   const notify = useNotificationStore((s) => s.notify);
 
   return useMutation({
-    mutationFn: ({ goalId, units = 1 }: { goalId: number; units?: number }) =>
-      goalService.incrementProgress(goalId, units),
+    mutationFn: (goalId: number) => goalService.completeGoal(goalId),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: [GOALS_KEY] });
-      if (updated.completed) {
-        notify({ title: '🎉 Goal achieved!', tone: 'success' });
-      } else {
-        notify({ title: 'Progress updated', tone: 'success' });
-      }
+      queryClient.invalidateQueries({ queryKey: ['rewards'] });
+      notify({ title: '🎉 Goal achieved!', tone: 'success' });
     },
     onError: () => {
-      notify({ title: 'Failed to update progress', tone: 'error' });
+      notify({ title: 'Failed to complete goal', tone: 'error' });
     },
   });
 }

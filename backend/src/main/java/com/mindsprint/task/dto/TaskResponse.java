@@ -24,6 +24,8 @@ public class TaskResponse {
     private String description;
     private TaskStatus status;
     private TaskPriority priority;
+    private String category;
+    private Integer estimatedPomodoros;
     private LocalDate dueDate;
     private LocalDateTime completedAt;
     private LocalDateTime createdAt;

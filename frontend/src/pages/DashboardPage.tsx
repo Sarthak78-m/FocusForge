@@ -23,6 +23,7 @@ import { usePomodoro } from '@/hooks/usePomodoro';
 import { paths } from '@/routes/paths';
 import { cn } from '@/utils/cn';
 import type { Task, TaskStatus } from '@/types/task';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -155,7 +156,7 @@ function StitchPomodoroWidget() {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={isRunning ? pause : start}
+          onClick={isRunning ? pause : () => start()}
           className="flex-1 h-9 rounded-md bg-[var(--color-primary)] px-4 text-xs font-semibold text-white shadow-xs hover:opacity-90 active:scale-98 transition-all"
         >
           {isRunning ? 'Pause' : 'Start Focus'}
@@ -464,6 +465,7 @@ export function DashboardPage() {
   const user = useAuthStore((s) => s.user);
   const openCreateTaskModal = useAppStore((s) => s.openCreateTaskModal);
   const { data: tasksData } = useTasks({ size: 100 });
+  const { data: analytics } = useAnalytics();
 
   // Resolve display name from auth store
   const displayName = user?.name?.trim() || '';
@@ -509,27 +511,33 @@ export function DashboardPage() {
         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         <StatCard
-          label="Total Workspace Tasks"
-          value={totalTasks}
+          label="Focus Time (hrs)"
+          value={analytics?.totalFocusHours ?? 0}
+          icon={Clock}
+          color="#4073FF"
+          to={paths.analytics}
+        />
+        <StatCard
+          label="Sessions Completed"
+          value={analytics?.completedSessions ?? 0}
+          icon={CheckCircle2}
+          color="#FF9A00"
+          to={paths.pomodoro}
+        />
+        <StatCard
+          label="Tasks Completed"
+          value={analytics?.completedTasks ?? 0}
           icon={CheckCircle2}
           color="#E45834"
           to={paths.tasks}
         />
         <StatCard
-          label="Tasks To Do"
-          value={todoCount}
-          icon={Circle}
-          color="#FF9A00"
-          to={paths.tasks}
+          label="Day Streak"
+          value={analytics?.activeStreakDays ?? 0}
+          icon={Flame}
+          color="#FF5733"
+          to={paths.rewards}
         />
-        <StatCard
-          label="In Progress"
-          value={inProgressCount}
-          icon={Clock}
-          color="#4073FF"
-          to={paths.tasks}
-        />
-        <StitchStreakCard tasks={tasks} />
       </motion.div>
 
       {/* Row 2: Main Workspace Content */}

@@ -8,6 +8,7 @@ import {
   useCreateTask,
   useUpdateTask,
   useCompleteTask,
+  useReopenTask,
   useDeleteTask,
 } from '@/hooks/useTasks';
 import { useTheme } from '@/hooks/useTheme';
@@ -39,6 +40,7 @@ export function TasksPage() {
   const { mutate: createTask, isPending: isCreating } = useCreateTask();
   const { mutate: updateTask, isPending: isUpdating } = useUpdateTask();
   const { mutate: completeTask } = useCompleteTask();
+  const { mutate: reopenTask } = useReopenTask();
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
 
   const tasks = data?.content ?? [];
@@ -51,6 +53,8 @@ export function TasksPage() {
         title: values.title,
         description: values.description,
         priority: values.priority,
+        category: values.category || undefined,
+        estimatedPomodoros: values.estimatedPomodoros || undefined,
         dueDate: values.dueDate || undefined,
       },
       { onSuccess: () => setIsCreateOpen(false) },
@@ -67,6 +71,8 @@ export function TasksPage() {
           description: values.description,
           priority: values.priority,
           status: values.status,
+          category: values.category || undefined,
+          estimatedPomodoros: values.estimatedPomodoros || undefined,
           dueDate: values.dueDate || undefined,
         },
       },
@@ -77,6 +83,10 @@ export function TasksPage() {
   const handleComplete = (id: number) => {
     setCompletingId(id);
     completeTask(id, { onSettled: () => setCompletingId(null) });
+  };
+
+  const handleReopen = (id: number) => {
+    reopenTask(id);
   };
 
   const handleDelete = () => {
@@ -162,6 +172,7 @@ export function TasksPage() {
           isLoading={isLoading}
           completingId={completingId}
           onComplete={handleComplete}
+          onReopen={handleReopen}
           onEdit={(task) => setEditingTask(task)}
           onDelete={(id) => setDeletingId(id)}
         />

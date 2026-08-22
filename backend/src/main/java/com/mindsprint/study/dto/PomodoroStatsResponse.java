@@ -1,17 +1,8 @@
 package com.mindsprint.study.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ * @deprecated Use {@link com.mindsprint.pomodoro.dto.PomodoroStatsResponse} instead.
+ */
+@Deprecated
 public class PomodoroStatsResponse {
-    private long todaySessions;
-    private int todayWorkMinutes;
-    private int totalWorkMinutes;
-    private long totalSessions;
 }

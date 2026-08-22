@@ -194,7 +194,7 @@ async function handleCompletedGoals(): Promise<ExecutionResult> {
 async function handleAnalytics(
   snapshot: ChatContextSnapshot | null,
 ): Promise<ExecutionResult> {
-  const summary = await safe(() => analyticsService.getSummary('30d'), null);
+  const summary = await safe(() => analyticsService.getSummary(), null);
 
   const analyticsData = summary
     ? {
@@ -389,11 +389,9 @@ function handleStrongSubjects(snapshot: ChatContextSnapshot | null): ExecutionRe
 }
 
 async function handleStudyStreak(snapshot: ChatContextSnapshot | null): Promise<ExecutionResult> {
-  const stats = await safe(() => pomodoroService.getStats(), null);
-
-  const streak = (stats?.todaySessions ?? 0) > 0 ? 1 : (snapshot?.pomodoroStats?.currentStreak ?? null);
-  const todayMinutes = stats?.todayWorkMinutes ?? snapshot?.pomodoroStats?.todayWorkMinutes ?? null;
-  const weeklyMinutes = stats?.totalWorkMinutes ?? snapshot?.pomodoroStats?.weeklyWorkMinutes ?? null;
+  const streak = snapshot?.pomodoroStats?.currentStreak ?? null;
+  const todayMinutes = snapshot?.pomodoroStats?.todayWorkMinutes ?? null;
+  const weeklyMinutes = snapshot?.pomodoroStats?.weeklyWorkMinutes ?? null;
 
   return {
     commandResult: { intent: 'STUDY_STREAK', streak, todayMinutes, weeklyMinutes },

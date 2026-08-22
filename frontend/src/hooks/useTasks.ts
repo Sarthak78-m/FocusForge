@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import {
   taskService,
   type CreateTaskPayload,
@@ -6,8 +7,15 @@ import {
   type UpdateTaskPayload,
 } from '@/services/task.service';
 import { useNotificationStore } from '@/store/notification.store';
+import type { ApiErrorPayload } from '@/types/api';
 
 export const TASKS_KEY = 'tasks';
+
+/** Extract a human-readable error message from an Axios error response. */
+function extractErrorMessage(error: unknown, fallback: string): string {
+  const axiosError = error as AxiosError<ApiErrorPayload> | undefined;
+  return axiosError?.response?.data?.message ?? fallback;
+}
 
 export function useTasks(params: GetTasksParams = {}) {
   return useQuery({
@@ -25,6 +33,8 @@ export function useTask(taskId: number) {
   });
 }
 
+import { ANALYTICS_KEY } from '@/hooks/useAnalytics';
+
 export function useCreateTask() {
   const queryClient = useQueryClient();
   const notify = useNotificationStore((s) => s.notify);
@@ -33,10 +43,11 @@ export function useCreateTask() {
     mutationFn: (payload: CreateTaskPayload) => taskService.createTask(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [ANALYTICS_KEY] });
       notify({ title: 'Task created', tone: 'success' });
     },
-    onError: () => {
-      notify({ title: 'Failed to create task', tone: 'error' });
+    onError: (error) => {
+      notify({ title: 'Failed to create task', message: extractErrorMessage(error, 'Please check your input and try again.'), tone: 'error' });
     },
   });
 }
@@ -50,10 +61,11 @@ export function useUpdateTask() {
       taskService.updateTask(taskId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [ANALYTICS_KEY] });
       notify({ title: 'Task updated', tone: 'success' });
     },
-    onError: () => {
-      notify({ title: 'Failed to update task', tone: 'error' });
+    onError: (error) => {
+      notify({ title: 'Failed to update task', message: extractErrorMessage(error, 'Please check your input and try again.'), tone: 'error' });
     },
   });
 }
@@ -66,10 +78,28 @@ export function useCompleteTask() {
     mutationFn: (taskId: number) => taskService.completeTask(taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [ANALYTICS_KEY] });
       notify({ title: 'Task completed', tone: 'success' });
     },
-    onError: () => {
-      notify({ title: 'Failed to complete task', tone: 'error' });
+    onError: (error) => {
+      notify({ title: 'Failed to complete task', message: extractErrorMessage(error, 'Please try again.'), tone: 'error' });
+    },
+  });
+}
+
+export function useReopenTask() {
+  const queryClient = useQueryClient();
+  const notify = useNotificationStore((s) => s.notify);
+
+  return useMutation({
+    mutationFn: (taskId: number) => taskService.reopenTask(taskId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [ANALYTICS_KEY] });
+      notify({ title: 'Task reopened', tone: 'success' });
+    },
+    onError: (error) => {
+      notify({ title: 'Failed to reopen task', message: extractErrorMessage(error, 'Please try again.'), tone: 'error' });
     },
   });
 }
@@ -82,10 +112,11 @@ export function useDeleteTask() {
     mutationFn: (taskId: number) => taskService.deleteTask(taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TASKS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [ANALYTICS_KEY] });
       notify({ title: 'Task deleted', tone: 'info' });
     },
-    onError: () => {
-      notify({ title: 'Failed to delete task', tone: 'error' });
+    onError: (error) => {
+      notify({ title: 'Failed to delete task', message: extractErrorMessage(error, 'Please try again.'), tone: 'error' });
     },
   });
 }

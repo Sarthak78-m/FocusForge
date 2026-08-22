@@ -61,6 +61,12 @@ public class Task {
     @Column(nullable = false, length = 30)
     private TaskPriority priority;
 
+    @Column(length = 80)
+    private String category;
+
+    @Column(name = "estimated_pomodoros")
+    private Integer estimatedPomodoros;
+
     @Column(name = "due_date")
     private LocalDate dueDate;
 
@@ -78,6 +84,10 @@ public class Task {
             foreignKey = @ForeignKey(name = "fk_tasks_user")
     )
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goal_id")
+    private com.mindsprint.goal.Goal goal;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

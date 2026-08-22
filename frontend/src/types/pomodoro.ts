@@ -1,29 +1,27 @@
 // ─── Pomodoro Session Types ───────────────────────────────────────────────────
 // Aligned to backend SessionResponse / CreateSessionRequest DTOs
 
-export type PomodoroSessionType = 'WORK' | 'SHORT_BREAK' | 'LONG_BREAK';
+export type PomodoroSessionType = 'FOCUS' | 'SHORT_BREAK' | 'LONG_BREAK';
+export type SessionStatus = 'STARTED' | 'COMPLETED' | 'INTERRUPTED' | 'CANCELLED';
 
 export type PomodoroSession = {
   id: number;
-  durationMinutes: number;
   sessionType: PomodoroSessionType;
+  plannedDuration: number;
+  actualDuration: number | null;
   taskId: number | null;
-  notes: string | null;
+  status: SessionStatus;
   startedAt: string;
-  endedAt: string;
+  endedAt: string | null;
   createdAt: string;
 };
 
-export type PomodoroStats = {
-  todaySessions: number;
-  todayWorkMinutes: number;
-  totalWorkMinutes: number;
-  totalSessions: number;
-};
-
-export type CreateSessionPayload = {
-  durationMinutes: number;
+export type StartSessionPayload = {
+  plannedDuration: number;
   sessionType: PomodoroSessionType;
   taskId?: number | null;
-  notes?: string | null;
+};
+
+export type CompleteSessionPayload = {
+  actualDuration: number;
 };

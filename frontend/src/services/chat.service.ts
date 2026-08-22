@@ -111,10 +111,10 @@ export const chatService = {
       safe(() => goalService.getActiveGoals(), []),
 
       // Pomodoro stats — NOT YET IMPLEMENTED
-      safe(() => pomodoroService.getStats(), null),
+      safe(() => Promise.resolve(null as any), null),
 
       // Analytics summary — NOT YET IMPLEMENTED
-      safe(() => analyticsService.getSummary('30d'), null),
+      safe(() => analyticsService.getSummary(), null),
 
       // Upcoming deadlines — NOT YET IMPLEMENTED
       safe(() => deadlineService.getUpcoming(), []),
@@ -166,14 +166,7 @@ export const chatService = {
     }));
 
     // ── Transform pomodoro stats ───────────────────────────────────────────────
-    const pomodoroStats = pomodoroStatsResult
-      ? {
-          todaySessions: pomodoroStatsResult.todaySessions,
-          todayWorkMinutes: pomodoroStatsResult.todayWorkMinutes,
-          currentStreak: pomodoroStatsResult.todaySessions > 0 ? 1 : 0,
-          weeklyWorkMinutes: pomodoroStatsResult.totalWorkMinutes,
-        }
-      : null;
+    const pomodoroStats = null;
 
     // ── Transform analytics ────────────────────────────────────────────────────
     const analytics = analyticsSummaryResult

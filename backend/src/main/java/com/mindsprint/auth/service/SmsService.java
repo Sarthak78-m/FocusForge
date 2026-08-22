@@ -64,6 +64,7 @@ public class SmsService {
                     .uri(URI.create(twilioUrl))
                     .header("Authorization", authHeader)
                     .header("Content-Type", "application/x-www-form-urlencoded")
+                    .timeout(Duration.ofSeconds(10))
                     .POST(HttpRequest.BodyPublishers.ofString(formData))
                     .build();
 

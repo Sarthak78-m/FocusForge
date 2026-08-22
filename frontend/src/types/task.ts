@@ -8,8 +8,11 @@ export type Task = {
   description?: string | null;
   status: TaskStatus;
   priority: TaskPriority;
+  category?: string | null;
+  estimatedPomodoros?: number | null;
   dueDate?: string | null;
   completedAt?: string | null;
+  goalId?: number | null;
   createdAt: string;
   updatedAt: string;
 };

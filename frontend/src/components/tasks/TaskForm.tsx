@@ -5,13 +5,17 @@ import { z } from 'zod';
 import { Button, Input } from '@/components/common';
 import { cn } from '@/utils/cn';
 import type { Task, TaskPriority, TaskStatus } from '@/types/task';
+import { useGoals } from '@/hooks/useGoals';
 
 const schema = z.object({
   title: z.string().min(1, 'Title is required').max(160, 'Max 160 characters'),
   description: z.string().max(2000, 'Max 2000 characters').optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH'] as const).optional(),
   status: z.enum(['TODO', 'IN_PROGRESS', 'COMPLETED'] as const).optional(),
+  category: z.string().max(80, 'Max 80 characters').optional(),
+  estimatedPomodoros: z.coerce.number().int().min(1).max(20).optional().or(z.literal('')).transform((v) => (v === '' ? undefined : v)),
   dueDate: z.string().optional(),
+  goalId: z.coerce.number().optional().or(z.literal('')).transform((v) => (v === '' ? undefined : v)),
 });
 
 export type TaskFormValues = z.infer<typeof schema>;
@@ -54,9 +58,9 @@ function SelectField({
   placeholder,
 }: {
   id: string;
-  value: string | undefined;
+  value: string | number | undefined;
   onChange: (v: string) => void;
-  options: { value: string; label: string }[];
+  options: { value: string | number; label: string }[];
   placeholder: string;
 }) {
   return (
@@ -89,6 +93,9 @@ export function TaskForm({
   submitLabel = 'Save',
   showStatus = false,
 }: TaskFormProps) {
+  const { data: goals = [] } = useGoals();
+  const goalOptions = goals.map(g => ({ value: g.id, label: g.title }));
+
   const {
     register,
     handleSubmit,
@@ -103,7 +110,10 @@ export function TaskForm({
       description: task?.description ?? '',
       priority: task?.priority ?? undefined,
       status: task?.status ?? undefined,
+      category: task?.category ?? '',
+      estimatedPomodoros: task?.estimatedPomodoros ?? undefined,
       dueDate: task?.dueDate ?? '',
+      goalId: task?.goalId ?? undefined,
     },
   });
 
@@ -114,13 +124,17 @@ export function TaskForm({
         description: task.description ?? '',
         priority: task.priority,
         status: task.status,
+        category: task.category ?? '',
+        estimatedPomodoros: task.estimatedPomodoros ?? undefined,
         dueDate: task.dueDate ?? '',
+        goalId: task.goalId ?? undefined,
       });
     }
   }, [task, reset]);
 
   const priority = watch('priority');
   const status = watch('status');
+  const goalId = watch('goalId');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
@@ -182,6 +196,49 @@ export function TaskForm({
             <p className="text-xs text-error-600">{errors.dueDate.message}</p>
           )}
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Input
+            id="task-category"
+            label="Category"
+            placeholder="e.g. Backend, Design"
+            error={errors.category?.message}
+            {...register('category')}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <FieldLabel htmlFor="task-pomodoros">Est. Pomodoros 🍅</FieldLabel>
+          <input
+            id="task-pomodoros"
+            type="number"
+            min={1}
+            max={20}
+            placeholder="e.g. 3"
+            className={cn(
+              'h-11 w-full rounded-xl border border-[var(--color-border)] bg-white px-3 text-sm transition-all duration-200',
+              'text-[var(--color-text-primary)] dark:bg-[var(--color-surface)]',
+              'hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-400',
+            )}
+            {...register('estimatedPomodoros')}
+          />
+          {errors.estimatedPomodoros && (
+            <p className="text-xs text-error-600">{errors.estimatedPomodoros.message}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <FieldLabel htmlFor="task-goal">Goal (Optional)</FieldLabel>
+        <SelectField
+          id="task-goal"
+          value={goalId}
+          onChange={(v) => setValue('goalId', v ? Number(v) : undefined)}
+          options={goalOptions}
+          placeholder="No Goal"
+        />
       </div>
 
       {showStatus && (

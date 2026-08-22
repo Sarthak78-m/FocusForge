@@ -20,18 +20,22 @@ type PomodoroStoreState = {
   isRunning: boolean;
   sessionCount: number;
   targetEndTime: number | null;
+  activeSessionId: number | null;
   durations: Record<PomodoroMode, number>;
-  start: () => void;
+  init: () => Promise<void>;
+  start: (taskId?: number | null) => Promise<void>;
   pause: () => void;
-  reset: () => void;
-  setMode: (mode: PomodoroMode) => void;
+  reset: () => Promise<void>;
+  skip: () => Promise<void>;
+  setMode: (mode: PomodoroMode) => Promise<void>;
   adjustTime: (deltaSeconds: number) => void;
   setCustomDuration: (mode: PomodoroMode, minutes: number) => void;
-  tick: () => void;
+  tick: () => Promise<void>;
 };
 
 import { useNotificationStore } from '@/store/notification.store';
 import { pomodoroService } from '@/services/pomodoro.service';
+import { queryClient } from '@/api/queryClient';
 
 function playAudioChime() {
   try {
@@ -86,16 +90,49 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
       sessionCount: 0,
       targetEndTime: null,
 
-      start: () => {
-        const { isRunning, secondsLeft } = get();
+      activeSessionId: null,
+
+      init: async () => {
+        try {
+          const sessions = await pomodoroService.getTodaySessions();
+          const active = sessions.find((s) => s.status === 'STARTED');
+          if (active) {
+            set({ activeSessionId: active.id });
+          }
+        } catch (err) {
+          console.error('Failed to init pomodoro sessions', err);
+        }
+      },
+
+      start: async (taskId?: number | null) => {
+        const { isRunning, secondsLeft, mode, durations, activeSessionId } = get();
         if (isRunning) return;
 
         if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission();
         }
 
-        const targetEndTime = Date.now() + secondsLeft * 1000;
-        set({ isRunning: true, targetEndTime });
+        try {
+          if (!activeSessionId) {
+            const mappedType = mode === 'work' ? 'FOCUS' : mode === 'short-break' ? 'SHORT_BREAK' : 'LONG_BREAK';
+            const plannedMin = Math.round(durations[mode] / 60);
+            
+            const session = await pomodoroService.startSession({
+              sessionType: mappedType,
+              plannedDuration: plannedMin,
+              taskId: taskId ?? null,
+            });
+            set({ activeSessionId: session.id });
+          }
+          const targetEndTime = Date.now() + secondsLeft * 1000;
+          set({ isRunning: true, targetEndTime });
+        } catch (error) {
+          useNotificationStore.getState().notify({
+            title: 'Failed to start session',
+            message: 'Network error or backend unavailable.',
+            tone: 'error',
+          });
+        }
       },
 
       pause: () => {
@@ -108,19 +145,71 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
         set({ isRunning: false, targetEndTime: null, secondsLeft });
       },
 
-      reset: () => {
-        const { mode, durations } = get();
+      reset: async () => {
+        const { mode, durations, activeSessionId, totalSeconds, secondsLeft } = get();
+        if (activeSessionId) {
+          try {
+            const actualDuration = Math.round((totalSeconds - secondsLeft) / 60);
+            await pomodoroService.interruptSession(activeSessionId, { actualDuration });
+            queryClient.invalidateQueries({ queryKey: ['analytics'] });
+            queryClient.invalidateQueries({ queryKey: ['rewards'] });
+          } catch (e) {
+             console.error('Failed to interrupt session', e);
+          }
+        }
+        
         const defaultSec = durations[mode] || DEFAULT_DURATIONS[mode];
         set({
           secondsLeft: defaultSec,
           totalSeconds: defaultSec,
           isRunning: false,
           targetEndTime: null,
+          activeSessionId: null,
         });
       },
 
-      setMode: (newMode: PomodoroMode) => {
-        const { durations } = get();
+      skip: async () => {
+        const { mode, durations, activeSessionId, sessionCount, totalSeconds, secondsLeft } = get();
+        if (activeSessionId) {
+          try {
+            const actualDuration = Math.round((totalSeconds - secondsLeft) / 60);
+            await pomodoroService.interruptSession(activeSessionId, { actualDuration });
+            queryClient.invalidateQueries({ queryKey: ['analytics'] });
+            queryClient.invalidateQueries({ queryKey: ['rewards'] });
+          } catch (e) {
+             console.error('Failed to interrupt session', e);
+          }
+        }
+        
+        const newSessionCount = mode === 'work' ? sessionCount + 1 : sessionCount;
+        const nextMode = mode === 'work'
+          ? (newSessionCount % SESSIONS_BEFORE_LONG_BREAK === 0 ? 'long-break' : 'short-break')
+          : 'work';
+          
+        const nextDuration = durations[nextMode] || DEFAULT_DURATIONS[nextMode];
+        set({
+          mode: nextMode,
+          secondsLeft: nextDuration,
+          totalSeconds: nextDuration,
+          isRunning: false,
+          targetEndTime: null,
+          activeSessionId: null,
+          sessionCount: newSessionCount,
+        });
+      },
+
+      setMode: async (newMode: PomodoroMode) => {
+        const { durations, activeSessionId, totalSeconds, secondsLeft } = get();
+        if (activeSessionId) {
+          try {
+            const actualDuration = Math.round((totalSeconds - secondsLeft) / 60);
+            await pomodoroService.interruptSession(activeSessionId, { actualDuration });
+            queryClient.invalidateQueries({ queryKey: ['analytics'] });
+            queryClient.invalidateQueries({ queryKey: ['rewards'] });
+          } catch (e) {
+             console.error('Failed to interrupt session', e);
+          }
+        }
         const defaultSec = durations[newMode] || DEFAULT_DURATIONS[newMode];
         set({
           mode: newMode,
@@ -128,6 +217,7 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
           totalSeconds: defaultSec,
           isRunning: false,
           targetEndTime: null,
+          activeSessionId: null,
         });
       },
 
@@ -171,9 +261,8 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
         set(updates);
       },
 
-
-      tick: () => {
-        const { isRunning, targetEndTime, mode, sessionCount, durations } = get();
+      tick: async () => {
+        const { isRunning, targetEndTime, mode, sessionCount, durations, activeSessionId } = get();
         if (!isRunning || !targetEndTime) return;
 
         const now = Date.now();
@@ -182,12 +271,17 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
         if (diffSeconds <= 0) {
           triggerCompletionNotification(mode);
 
-          if (mode === 'work') {
-            const durationMin = Math.max(1, Math.round((durations.work || 1500) / 60));
-            pomodoroService.logSession({
-              durationMinutes: durationMin,
-              sessionType: 'WORK',
-            }).catch(() => {});
+          if (activeSessionId) {
+            try {
+              const durationMin = Math.round((durations[mode] || 1500) / 60);
+              await pomodoroService.completeSession(activeSessionId, {
+                actualDuration: durationMin,
+              });
+              queryClient.invalidateQueries({ queryKey: ['analytics'] });
+              queryClient.invalidateQueries({ queryKey: ['rewards'] });
+            } catch (err) {
+              console.error('Failed to complete session', err);
+            }
           }
 
           const newSessionCount = mode === 'work' ? sessionCount + 1 : sessionCount;
@@ -206,6 +300,7 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
             totalSeconds: nextDuration,
             isRunning: false,
             targetEndTime: null,
+            activeSessionId: null,
             sessionCount: newSessionCount,
           });
         } else {
@@ -223,6 +318,7 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
         sessionCount: state.sessionCount,
         targetEndTime: state.targetEndTime,
         durations: state.durations,
+        activeSessionId: state.activeSessionId,
       }),
     }
   )

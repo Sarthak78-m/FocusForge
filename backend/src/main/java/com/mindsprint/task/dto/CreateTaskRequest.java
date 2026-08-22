@@ -3,6 +3,8 @@ package com.mindsprint.task.dto;
 import com.mindsprint.task.TaskPriority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -31,6 +33,15 @@ public class CreateTaskRequest {
 
     @Schema(example = "HIGH")
     private TaskPriority priority;
+
+    @Size(max = 80, message = "Category must not exceed 80 characters")
+    @Schema(example = "Backend")
+    private String category;
+
+    @Min(value = 1, message = "Estimated pomodoros must be at least 1")
+    @Max(value = 20, message = "Estimated pomodoros must not exceed 20")
+    @Schema(example = "3")
+    private Integer estimatedPomodoros;
 
     @FutureOrPresent(message = "Due date cannot be in the past")
     @Schema(example = "2026-07-15")

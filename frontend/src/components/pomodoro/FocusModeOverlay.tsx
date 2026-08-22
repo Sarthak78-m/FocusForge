@@ -157,7 +157,7 @@ export function FocusModeOverlay({ isOpen, onClose }: FocusModeOverlayProps) {
           <div className="mt-8 flex items-center gap-4">
             <button
               type="button"
-              onClick={isRunning ? pause : start}
+              onClick={isRunning ? pause : () => start()}
               className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-xl transition-all hover:scale-105 active:scale-95"
             >
               {isRunning ? <Pause className="h-7 w-7" /> : <Play className="h-7 w-7 ml-1" />}

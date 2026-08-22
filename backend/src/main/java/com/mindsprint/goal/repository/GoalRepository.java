@@ -1,7 +1,6 @@
-package com.mindsprint.repository;
+package com.mindsprint.goal.repository;
 
 import com.mindsprint.goal.Goal;
-import com.mindsprint.user.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -11,7 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
-    Page<Goal> findByUser(User user, Pageable pageable);
-    List<Goal> findByUserAndCompletedFalse(User user);
-    Optional<Goal> findByIdAndUser(Long id, User user);
+    Page<Goal> findByUserId(Long userId, Pageable pageable);
+    List<Goal> findByUserId(Long userId);
+    List<Goal> findByUserIdAndStatus(Long userId, com.mindsprint.goal.GoalStatus status);
+    Optional<Goal> findByIdAndUserId(Long id, Long userId);
 }

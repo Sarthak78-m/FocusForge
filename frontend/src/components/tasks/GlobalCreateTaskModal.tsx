@@ -16,16 +16,14 @@ export function GlobalCreateTaskModal() {
         title: values.title,
         description: values.description,
         priority: values.priority,
+        category: values.category || undefined,
+        estimatedPomodoros: values.estimatedPomodoros || undefined,
         dueDate: values.dueDate || undefined,
+        goalId: values.goalId || undefined,
       },
       {
         onSuccess: () => {
           setIsOpen(false);
-          notify({
-            title: 'Task Created',
-            message: `"${values.title}" was added to your workspace.`,
-            tone: 'success',
-          });
         },
       }
     );

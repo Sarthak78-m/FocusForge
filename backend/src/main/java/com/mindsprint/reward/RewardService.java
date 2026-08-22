@@ -1,96 +1,133 @@
 package com.mindsprint.reward;
 
-import com.mindsprint.exception.ResourceNotFoundException;
-import com.mindsprint.repository.GoalRepository;
-import com.mindsprint.repository.TaskRepository;
+import com.mindsprint.analytics.AnalyticsService;
+import com.mindsprint.pomodoro.repository.PomodoroSessionRepository;
 import com.mindsprint.repository.UserRepository;
-import com.mindsprint.reward.dto.RewardSummaryResponse;
-import com.mindsprint.reward.dto.RewardSummaryResponse.BadgeDto;
-import com.mindsprint.study.PomodoroSession;
-import com.mindsprint.study.PomodoroSessionRepository;
-import com.mindsprint.task.TaskStatus;
 import com.mindsprint.user.User;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RewardService {
 
+    private final RewardTransactionRepository rewardTransactionRepository;
+    private final UserAchievementRepository userAchievementRepository;
     private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
     private final PomodoroSessionRepository pomodoroSessionRepository;
-    private final GoalRepository goalRepository;
+    private final AnalyticsService analyticsService;
+
+    @Transactional
+    public void handleSessionCompleted(User user, Long sessionId) {
+        String refId = "pomodoro:" + sessionId;
+        if (rewardTransactionRepository.existsByUserAndEventTypeAndReferenceId(user, RewardEventType.FOCUS_SESSION_COMPLETED, refId)) {
+            log.info("Reward already granted for session {}", sessionId);
+            return;
+        }
+
+        awardXp(user, RewardEventType.FOCUS_SESSION_COMPLETED, 10, refId);
+        evaluateAchievements(user);
+    }
+
+    @Transactional
+    public void handleGoalCompleted(User user, Long goalId) {
+        String refId = "goal:" + goalId;
+        if (rewardTransactionRepository.existsByUserAndEventTypeAndReferenceId(user, RewardEventType.GOAL_COMPLETED, refId)) {
+            log.info("Reward already granted for goal {}", goalId);
+            return;
+        }
+
+        awardXp(user, RewardEventType.GOAL_COMPLETED, 25, refId);
+        evaluateAchievements(user);
+    }
+
+    private void awardXp(User user, RewardEventType eventType, int xpAmount, String referenceId) {
+        RewardTransaction transaction = RewardTransaction.builder()
+                .user(user)
+                .eventType(eventType)
+                .xpAmount(xpAmount)
+                .referenceId(referenceId)
+                .build();
+        
+        rewardTransactionRepository.save(transaction);
+        
+        user.setXp(user.getXp() + xpAmount);
+        
+        int newLevel = LevelConfig.calculateLevelFromXp(user.getXp());
+        if (newLevel > user.getLevel()) {
+            user.setLevel(newLevel);
+        }
+        
+        userRepository.save(user);
+    }
+
+    private void evaluateAchievements(User user) {
+        if (!userAchievementRepository.existsByUserAndAchievementType(user, AchievementType.FIRST_SESSION)) {
+            long completedSessions = pomodoroSessionRepository.countByUserIdAndStatus(user.getId(), com.mindsprint.pomodoro.SessionStatus.COMPLETED);
+            if (completedSessions >= 1) {
+                grantAchievement(user, AchievementType.FIRST_SESSION, 50);
+            }
+        }
+        
+        if (!userAchievementRepository.existsByUserAndAchievementType(user, AchievementType.TEN_SESSIONS)) {
+            long completedSessions = pomodoroSessionRepository.countByUserIdAndStatus(user.getId(), com.mindsprint.pomodoro.SessionStatus.COMPLETED);
+            if (completedSessions >= 10) {
+                grantAchievement(user, AchievementType.TEN_SESSIONS, 100);
+            }
+        }
+        
+        if (!userAchievementRepository.existsByUserAndAchievementType(user, AchievementType.FIRST_GOAL)) {
+            boolean hasCompletedGoal = rewardTransactionRepository.existsByUserAndEventTypeAndReferenceIdStartingWith(user, RewardEventType.GOAL_COMPLETED, "goal:");
+            if (hasCompletedGoal) {
+                grantAchievement(user, AchievementType.FIRST_GOAL, 50);
+            }
+        }
+    }
+
+    private void grantAchievement(User user, AchievementType achievementType, int bonusXp) {
+        UserAchievement achievement = UserAchievement.builder()
+                .user(user)
+                .achievementType(achievementType)
+                .build();
+        userAchievementRepository.save(achievement);
+        
+        awardXp(user, RewardEventType.ACHIEVEMENT_UNLOCKED, bonusXp, "achievement:" + achievementType.name());
+    }
 
     @Transactional(readOnly = true)
-    public RewardSummaryResponse getRewards(Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName().toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public com.mindsprint.reward.dto.RewardSummaryResponse getSummary(org.springframework.security.core.Authentication authentication) {
+        User user = getUser(authentication);
+        int currentXp = user.getXp();
+        int level = user.getLevel();
+        int nextLevelXp = LevelConfig.getRequiredXpForLevel(level + 1);
 
-        int completedTasks = (int) taskRepository.countByUserIdAndStatus(user.getId(), TaskStatus.COMPLETED);
-        int totalWorkMinutes = pomodoroSessionRepository.sumTotalWorkMinutes(user);
-        long workSessions = pomodoroSessionRepository.countByUserAndSessionType(user, PomodoroSession.SessionType.WORK);
-
-        // Compute XP based on real progress
-        int currentXp = (completedTasks * 50) + ((int) workSessions * 100) + (totalWorkMinutes / 25 * 20);
-        int level = Math.max(1, (currentXp / 500) + 1);
-        int nextLevelXp = level * 500;
-
-        List<BadgeDto> badges = List.of(
-                BadgeDto.builder()
-                        .id("b1")
-                        .name("First Sprint Champion")
-                        .description("Completed your first Pomodoro focus sprint")
-                        .icon("⚡")
-                        .unlocked(workSessions >= 1)
-                        .unlockedAt(workSessions >= 1 ? "Achieved" : null)
-                        .build(),
-                BadgeDto.builder()
-                        .id("b2")
-                        .name("Task Completer")
-                        .description("Completed at least 5 tasks")
-                        .icon("✓")
-                        .unlocked(completedTasks >= 5)
-                        .unlockedAt(completedTasks >= 5 ? "Achieved" : null)
-                        .build(),
-                BadgeDto.builder()
-                        .id("b3")
-                        .name("Focus Sprint Master")
-                        .description("Completed 4 deep work focus sessions")
-                        .icon("⏱️")
-                        .unlocked(workSessions >= 4)
-                        .unlockedAt(workSessions >= 4 ? "Achieved" : null)
-                        .build(),
-                BadgeDto.builder()
-                        .id("b4")
-                        .name("Task Crusher")
-                        .description("Completed 15 tasks in your workspace")
-                        .icon("🎯")
-                        .unlocked(completedTasks >= 15)
-                        .unlockedAt(completedTasks >= 15 ? "Achieved" : null)
-                        .build(),
-                BadgeDto.builder()
-                        .id("b5")
-                        .name("Deep Work Champion")
-                        .description("Completed 10 total Pomodoro focus sessions")
-                        .icon("🏆")
-                        .unlocked(workSessions >= 10)
-                        .unlockedAt(workSessions >= 10 ? "Achieved" : null)
-                        .build()
-        );
-
-        int streakDays = workSessions > 0 ? Math.min(30, (int) workSessions) : (completedTasks > 0 ? 1 : 0);
-
-        return RewardSummaryResponse.builder()
+        return com.mindsprint.reward.dto.RewardSummaryResponse.builder()
                 .currentXp(currentXp)
                 .level(level)
-                .title("Scholar Level " + level)
                 .nextLevelXp(nextLevelXp)
-                .streakDays(streakDays)
-                .badges(badges)
+                .title("Level " + level)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<RewardTransaction> getHistory(org.springframework.security.core.Authentication authentication) {
+        User user = getUser(authentication);
+        return rewardTransactionRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserAchievement> getAchievements(org.springframework.security.core.Authentication authentication) {
+        User user = getUser(authentication);
+        return userAchievementRepository.findByUserIdOrderByEarnedAtDesc(user.getId());
+    }
+
+    private User getUser(org.springframework.security.core.Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName().toLowerCase())
+                .orElseThrow(() -> new com.mindsprint.exception.ResourceNotFoundException("User not found"));
     }
 }

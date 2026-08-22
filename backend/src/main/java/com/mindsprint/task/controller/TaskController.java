@@ -106,6 +106,16 @@ public class TaskController {
         return ResponseEntity.ok(ApiResponse.success("Task completed successfully", response));
     }
 
+    @Operation(summary = "Reopen a completed task")
+    @PatchMapping("/{taskId}/reopen")
+    public ResponseEntity<ApiResponse<TaskResponse>> reopenTask(
+            @PathVariable Long taskId,
+            Authentication authentication
+    ) {
+        TaskResponse response = taskService.reopenTask(taskId, authentication);
+        return ResponseEntity.ok(ApiResponse.success("Task reopened successfully", response));
+    }
+
     @Operation(summary = "Delete a task")
     @DeleteMapping("/{taskId}")
     public ResponseEntity<ApiResponse<Void>> deleteTask(

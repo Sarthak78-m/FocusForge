@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Target, Plus, Calendar, Trash2, X, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGoals, useCreateGoal, useIncrementGoalProgress, useDeleteGoal } from '@/hooks/useGoals';
+import { useGoals, useCreateGoal, useCompleteGoal, useDeleteGoal } from '@/hooks/useGoals';
 import { DEFAULT_GOAL_CATEGORIES } from '@/types/goal';
 import { useNotificationStore } from '@/store/notification.store';
 
@@ -27,7 +27,7 @@ function saveStoredCategories(categories: string[]) {
 export function GoalsPage() {
   const { data: goals = [], isLoading } = useGoals();
   const createGoal = useCreateGoal();
-  const incrementProgress = useIncrementGoalProgress();
+  const completeGoal = useCompleteGoal();
   const deleteGoal = useDeleteGoal();
   const notify = useNotificationStore((s) => s.notify);
 
@@ -317,13 +317,13 @@ export function GoalsPage() {
                       <span className="text-[var(--color-text-secondary)]">
                         {goal.currentUnits} / {goal.totalUnits} {goal.unitName}
                       </span>
-                      <span className="text-[var(--color-primary)]">{goal.progressPercentage}%</span>
+                      <span className="text-[var(--color-primary)]">{goal.progress}%</span>
                     </div>
 
                     <div className="h-2.5 w-full rounded-full bg-[var(--color-surface-secondary)] overflow-hidden">
                       <div
                         className="h-full rounded-full bg-[var(--color-primary)] transition-all duration-500"
-                        style={{ width: `${goal.progressPercentage}%` }}
+                        style={{ width: `${goal.progress}%` }}
                       />
                     </div>
                   </div>
@@ -331,7 +331,7 @@ export function GoalsPage() {
 
                 <div className="mt-6 flex items-center justify-between border-t border-[var(--color-border)] pt-4">
                   <span className="text-xs font-semibold text-[var(--color-text-tertiary)]">
-                    {goal.completed ? '🎉 Goal Achieved!' : 'In Progress'}
+                    {goal.status === 'COMPLETED' ? '🎉 Goal Achieved!' : goal.status === 'ACTIVE' ? 'In Progress' : goal.status}
                   </span>
 
                   <div className="flex items-center gap-2">
@@ -346,8 +346,8 @@ export function GoalsPage() {
 
                     <button
                       type="button"
-                      onClick={() => incrementProgress.mutate({ goalId: goal.id })}
-                      disabled={goal.completed}
+                      onClick={() => completeGoal.mutate(goal.id)}
+                      disabled={goal.status === 'COMPLETED'}
                       className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3.5 py-1.5 text-xs font-bold text-[var(--color-text-primary)] shadow-sm transition-all hover:bg-[var(--color-surface-secondary)] disabled:opacity-50"
                     >
                       <Plus className="h-3.5 w-3.5" />

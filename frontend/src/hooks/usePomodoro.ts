@@ -13,10 +13,16 @@ export function usePomodoro() {
   const start = usePomodoroStore((s) => s.start);
   const pause = usePomodoroStore((s) => s.pause);
   const reset = usePomodoroStore((s) => s.reset);
+  const skip = usePomodoroStore((s) => s.skip);
+  const init = usePomodoroStore((s) => s.init);
   const setMode = usePomodoroStore((s) => s.setMode);
   const adjustTime = usePomodoroStore((s) => s.adjustTime);
   const setCustomDuration = usePomodoroStore((s) => s.setCustomDuration);
   const tick = usePomodoroStore((s) => s.tick);
+
+  useEffect(() => {
+    init();
+  }, [init]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -46,6 +52,7 @@ export function usePomodoro() {
     start,
     pause,
     reset,
+    skip,
     setMode,
     adjustTime,
     setCustomDuration,

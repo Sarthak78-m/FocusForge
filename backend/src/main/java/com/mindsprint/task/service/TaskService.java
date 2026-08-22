@@ -37,6 +37,8 @@ public class TaskService {
                 .description(normalizeNullableText(request.getDescription()))
                 .status(TaskStatus.TODO)
                 .priority(request.getPriority() == null ? TaskPriority.MEDIUM : request.getPriority())
+                .category(normalizeNullableText(request.getCategory()))
+                .estimatedPomodoros(request.getEstimatedPomodoros())
                 .dueDate(request.getDueDate())
                 .user(user)
                 .build();
@@ -82,6 +84,14 @@ public class TaskService {
             task.setPriority(request.getPriority());
         }
 
+        if (request.getCategory() != null) {
+            task.setCategory(normalizeNullableText(request.getCategory()));
+        }
+
+        if (request.getEstimatedPomodoros() != null) {
+            task.setEstimatedPomodoros(request.getEstimatedPomodoros());
+        }
+
         if (request.getDueDate() != null) {
             task.setDueDate(request.getDueDate());
         }
@@ -97,6 +107,13 @@ public class TaskService {
     public TaskResponse completeTask(Long taskId, Authentication authentication) {
         Task task = getOwnedTask(taskId, getCurrentUser(authentication));
         applyStatus(task, TaskStatus.COMPLETED);
+        return toResponse(taskRepository.save(task));
+    }
+
+    @Transactional
+    public TaskResponse reopenTask(Long taskId, Authentication authentication) {
+        Task task = getOwnedTask(taskId, getCurrentUser(authentication));
+        applyStatus(task, TaskStatus.TODO);
         return toResponse(taskRepository.save(task));
     }
 
@@ -137,6 +154,8 @@ public class TaskService {
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .priority(task.getPriority())
+                .category(task.getCategory())
+                .estimatedPomodoros(task.getEstimatedPomodoros())
                 .dueDate(task.getDueDate())
                 .completedAt(task.getCompletedAt())
                 .createdAt(task.getCreatedAt())

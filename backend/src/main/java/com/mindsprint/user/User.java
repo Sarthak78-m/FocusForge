@@ -71,6 +71,19 @@ public class User implements UserDetails {
     @Column(name = "phone_notifications_enabled", nullable = false, columnDefinition = "boolean default false")
     private boolean phoneNotificationsEnabled = false;
 
+    @Builder.Default
+    @Column(nullable = false, length = 50)
+    private String timezone = "UTC";
+
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int xp = 0;
+
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "int default 1")
+    private int level = 1;
+
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

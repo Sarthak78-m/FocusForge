@@ -31,7 +31,7 @@ export function AICoachPage() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const query = textToSend || input;
     if (!query.trim()) return;
 
@@ -46,25 +46,30 @@ export function AICoachPage() {
     if (!textToSend) setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      let responseText = "That's a great work topic! Break it down into 25-minute Pomodoro sprints. Would you like me to generate a personalized task checklist or flashcard review set for this subject?";
-
-      if (query.toLowerCase().includes('schedule') || query.toLowerCase().includes('plan')) {
-        responseText = "Here is your suggested 3-Day Focus Sprint Schedule:\n\n• **Day 1**: Core concepts breakdown & formula sheets (2 hours)\n• **Day 2**: Active recall practice questions & weak area drills (2.5 hours)\n• **Day 3**: Full mock exam simulation under timed conditions (2 hours)\n\nWould you like me to automatically add these tasks to your MindSprint Task Studio?";
-      } else if (query.toLowerCase().includes('explain') || query.toLowerCase().includes('simple')) {
-        responseText = "Here is a simple analogy:\n\nThink of a **Neural Network** like a team of decision-makers. Each layer passes hints to the next. **Backpropagation** is the feedback loop — when the final answer is wrong, the team works backward to refine everyone's voting weight until accuracy improves!";
-      }
-
+    try {
+      const { commandEngine } = await import('@/services/commandEngine');
+      // Pass null for snapshot, the command engine handles fallback
+      const result = await commandEngine.processMessage(query, null, 'aicoach-session');
+      
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: responseText,
+        text: result.reply,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
-
+      
       setMessages((prev) => [...prev, aiMsg]);
+    } catch (err) {
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'ai',
+        text: "⚠️ **Connection Error**\n\nI couldn't contact the AI coach service. Please ensure the backend is running.",
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   return (

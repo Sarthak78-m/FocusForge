@@ -4,10 +4,10 @@ import type { AnalyticsRange } from '@/types/analytics';
 
 export const ANALYTICS_KEY = 'analytics';
 
-export function useAnalytics(range: AnalyticsRange = '30d') {
+export function useAnalytics() {
   return useQuery({
-    queryKey: [ANALYTICS_KEY, range],
-    queryFn: () => analyticsService.getSummary(range),
+    queryKey: [ANALYTICS_KEY],
+    queryFn: () => analyticsService.getSummary(),
     refetchOnWindowFocus: true,
   });
 }

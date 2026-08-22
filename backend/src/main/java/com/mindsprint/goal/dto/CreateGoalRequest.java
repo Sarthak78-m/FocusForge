@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoalRequest {
+public class CreateGoalRequest {
 
     @NotBlank(message = "Goal title is required")
     @Size(max = 200, message = "Goal title cannot exceed 200 characters")
@@ -29,10 +29,5 @@ public class GoalRequest {
     @FutureOrPresent(message = "Target date must be in the present or future")
     private LocalDate targetDate;
 
-    @Min(value = 1, message = "Total units must be at least 1")
-    private int totalUnits;
-
-    @NotBlank(message = "Unit name is required")
-    @Size(max = 50, message = "Unit name cannot exceed 50 characters")
-    private String unitName;
+    private String description;
 }

@@ -1,9 +1,14 @@
-package com.mindsprint.notes;
+package com.mindsprint.note.controller;
 
 import com.mindsprint.auth.dto.ApiResponse;
+import com.mindsprint.note.dto.CreateNoteRequest;
+import com.mindsprint.note.dto.NoteResponse;
+import com.mindsprint.note.dto.UpdateNoteRequest;
+import com.mindsprint.note.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,59 +25,68 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Notes", description = "Productivity notes and knowledge vault APIs")
+@Tag(name = "Notes", description = "Productivity notes and study vault APIs")
 @RestController
 @RequestMapping("/api/notes")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
-public class NotesController {
+public class NoteController {
 
     private final NoteService noteService;
 
     @Operation(summary = "Get all notes for current user")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<NoteDto>>> getAllNotes(Authentication authentication) {
-        List<NoteDto> notes = noteService.getAllNotes(authentication);
+    public ResponseEntity<ApiResponse<List<NoteResponse>>> getAllNotes(Authentication authentication) {
+        List<NoteResponse> notes = noteService.getAllNotes(authentication);
         return ResponseEntity.ok(ApiResponse.success("Notes retrieved successfully", notes));
     }
 
-    @Operation(summary = "Get a single note by ID")
+    @Operation(summary = "Get a note by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<NoteDto>> getNoteById(
-            @PathVariable String id,
+    public ResponseEntity<ApiResponse<NoteResponse>> getNoteById(
+            @PathVariable Long id,
             Authentication authentication
     ) {
-        NoteDto note = noteService.getNoteById(id, authentication);
-        return ResponseEntity.ok(ApiResponse.success("Note retrieved", note));
+        NoteResponse note = noteService.getNoteById(id, authentication);
+        return ResponseEntity.ok(ApiResponse.success("Note retrieved successfully", note));
     }
 
-    @Operation(summary = "Create or save a note")
-    @PostMapping
-    public ResponseEntity<ApiResponse<NoteDto>> createNote(
-            @RequestBody NoteDto noteDto,
+    @Operation(summary = "Get recently updated notes")
+    @GetMapping("/recent")
+    public ResponseEntity<ApiResponse<List<NoteResponse>>> getRecentNotes(
+            @RequestParam(defaultValue = "5") int limit,
             Authentication authentication
     ) {
-        NoteDto saved = noteService.saveNote(noteDto, authentication);
+        List<NoteResponse> notes = noteService.getRecentNotes(limit, authentication);
+        return ResponseEntity.ok(ApiResponse.success("Recent notes fetched successfully", notes));
+    }
+
+    @Operation(summary = "Create a new note")
+    @PostMapping
+    public ResponseEntity<ApiResponse<NoteResponse>> createNote(
+            @Valid @RequestBody CreateNoteRequest request,
+            Authentication authentication
+    ) {
+        NoteResponse created = noteService.createNote(request, authentication);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Note saved successfully", saved));
+                .body(ApiResponse.success("Note created successfully", created));
     }
 
     @Operation(summary = "Update an existing note")
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<NoteDto>> updateNote(
-            @PathVariable String id,
-            @RequestBody NoteDto noteDto,
+    public ResponseEntity<ApiResponse<NoteResponse>> updateNote(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateNoteRequest request,
             Authentication authentication
     ) {
-        noteDto.setId(id);
-        NoteDto updated = noteService.saveNote(noteDto, authentication);
+        NoteResponse updated = noteService.updateNote(id, request, authentication);
         return ResponseEntity.ok(ApiResponse.success("Note updated successfully", updated));
     }
 
     @Operation(summary = "Delete a note")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteNote(
-            @PathVariable String id,
+            @PathVariable Long id,
             Authentication authentication
     ) {
         noteService.deleteNote(id, authentication);
@@ -81,23 +95,11 @@ public class NotesController {
 
     @Operation(summary = "Toggle note favorite status")
     @PatchMapping("/{id}/favorite")
-    public ResponseEntity<ApiResponse<NoteDto>> toggleFavorite(
-            @PathVariable String id,
+    public ResponseEntity<ApiResponse<NoteResponse>> toggleFavorite(
+            @PathVariable Long id,
             Authentication authentication
     ) {
-        NoteDto note = noteService.toggleFavorite(id, authentication);
-        return ResponseEntity.ok(ApiResponse.success("Favorite updated", note));
-    }
-
-    @Operation(summary = "Get recent notes")
-    @GetMapping("/recent")
-    public ResponseEntity<ApiResponse<List<NoteDto>>> getRecentNotes(
-            @RequestParam(defaultValue = "5") int limit,
-            Authentication authentication
-    ) {
-        List<NoteDto> notes = noteService.getAllNotes(authentication);
-        List<NoteDto> recent = notes.stream().limit(limit).toList();
-        return ResponseEntity.ok(ApiResponse.success("Recent notes fetched", recent));
+        NoteResponse note = noteService.toggleFavorite(id, authentication);
+        return ResponseEntity.ok(ApiResponse.success("Favorite status updated successfully", note));
     }
 }
-

@@ -38,4 +38,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("dueBefore") LocalDate dueBefore,
             Pageable pageable
     );
+
+    java.util.List<Task> findByGoalId(Long goalId);
 }

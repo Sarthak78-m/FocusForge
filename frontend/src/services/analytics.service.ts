@@ -13,10 +13,8 @@ export const analyticsService = {
    * GET /api/analytics/summary
    * Productivity metrics, focus hours, weekly distribution, and completion rates.
    */
-  async getSummary(range: AnalyticsRange = '30d'): Promise<AnalyticsSummary> {
-    const response = await http.get<ApiResponse<AnalyticsSummary>>('/analytics/summary', {
-      params: { range },
-    });
+  async getSummary(): Promise<AnalyticsSummary> {
+    const response = await http.get<ApiResponse<AnalyticsSummary>>('/analytics/summary');
     return unwrapApiResponse(response.data);
   },
 };

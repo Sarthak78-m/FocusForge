@@ -1,14 +1,5 @@
 // ─── Reward Types ─────────────────────────────────────────────────────────────
-// Aligned to backend RewardSummaryResponse DTO
-
-export type Badge = {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  unlocked: boolean;
-  unlockedAt: string | null;
-};
+// Aligned to backend endpoints
 
 export type RewardSummary = {
   currentXp: number;
@@ -16,5 +7,21 @@ export type RewardSummary = {
   title: string;
   nextLevelXp: number;
   streakDays: number;
-  badges: Badge[];
+};
+
+export type RewardHistoryItem = {
+  id: number;
+  eventType: string;
+  xpAmount: number;
+  createdAt: string;
+};
+
+export type Achievement = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+  unlockedAt: string | null;
+  xp?: number;
 };

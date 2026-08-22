@@ -8,11 +8,17 @@ import React, {
 } from 'react';
 import type { Conversation, Message, QuickReply } from '@/types/chat';
 import type { ChatContextSnapshot } from '@/types/activity';
-import {
-  DUMMY_CONVERSATIONS,
-  DEFAULT_QUICK_REPLIES,
-  generateId,
-} from '@/data/chatDummy';
+const DEFAULT_QUICK_REPLIES: QuickReply[] = [
+  { id: 'qr-1', label: '📅 Productivity schedule', prompt: 'Help me plan my work schedule' },
+  { id: 'qr-2', label: '💡 Productivity tip', prompt: 'Give me a work tip' },
+  { id: 'qr-3', label: '🍅 Pomodoro guide', prompt: 'How do I use the Pomodoro technique?' },
+  { id: 'qr-4', label: '✅ Task advice', prompt: 'How do I manage my tasks effectively?' },
+  { id: 'qr-5', label: '😰 I\'m overwhelmed', prompt: 'I have too many tasks and feel overwhelmed. What should I do?' },
+];
+
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
 import { chatService } from '@/services/chat.service';
 import { useNotificationStore } from '@/store/notification.store';
 

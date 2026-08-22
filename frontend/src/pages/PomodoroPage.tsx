@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { usePomodoro, type PomodoroMode } from '@/hooks/usePomodoro';
 import { useTasks, useCompleteTask } from '@/hooks/useTasks';
+import { useTodayPomodoroSessions } from '@/hooks/usePomodoroSessions';
 import {
   soundscapes,
   CURATED_MP3_TRACKS,
@@ -108,12 +109,14 @@ export function PomodoroPage() {
     start,
     pause,
     reset,
+    skip,
     setMode,
     setCustomDuration,
   } = usePomodoro();
 
   const { data: tasksData } = useTasks({ status: 'TODO', size: 20 });
   const { mutate: completeTask } = useCompleteTask();
+  const { data: todaySessions } = useTodayPomodoroSessions();
   const pendingTasks = tasksData?.content ?? [];
   const notify = useNotificationStore((s) => s.notify);
 
@@ -496,7 +499,7 @@ export function PomodoroPage() {
 
           <button
             type="button"
-            onClick={isRunning ? pause : start}
+            onClick={isRunning ? pause : () => start(selectedTaskId)}
             className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)] text-white hover:opacity-90 transition-all shadow-md active:scale-95"
             title={isRunning ? 'Pause Timer' : 'Start Focus Sprint'}
           >
@@ -505,10 +508,7 @@ export function PomodoroPage() {
 
           <button
             type="button"
-            onClick={() => {
-              const nextMode: PomodoroMode = mode === 'work' ? 'short-break' : 'work';
-              setMode(nextMode);
-            }}
+            onClick={skip}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-secondary)] hover:text-[var(--color-text-primary)] transition-colors shadow-xs"
             title="Skip to Next Phase"
           >
@@ -827,6 +827,57 @@ export function PomodoroPage() {
           </div>
         </div>
       </div>
+
+      {/* Session History Section */}
+      <div className="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-xs">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-4">
+          Today's Session History
+        </h3>
+        {(!todaySessions || todaySessions.length === 0) ? (
+          <p className="text-xs text-[var(--color-text-tertiary)] italic">
+            No sessions completed today. Start a focus sprint!
+          </p>
+        ) : (
+          <div className="space-y-2 max-h-64 overflow-y-auto pr-2">
+            {todaySessions.map((session) => (
+              <div
+                key={session.id}
+                className="flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-secondary)]"
+              >
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-[var(--color-text-primary)]">
+                    {session.sessionType === 'FOCUS' ? '🎯 Focus' : session.sessionType === 'SHORT_BREAK' ? '☕ Short Break' : '🛋️ Long Break'}
+                  </span>
+                  <span className="text-2xs text-[var(--color-text-tertiary)] mt-0.5">
+                    {new Date(session.startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {session.taskId ? ` • Task #${session.taskId}` : ''}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right flex flex-col">
+                    <span className="text-xs font-medium text-[var(--color-text-primary)]">
+                      {session.actualDuration ?? session.plannedDuration} / {session.plannedDuration} min
+                    </span>
+                    <span
+                      className={cn(
+                        "text-2xs font-bold uppercase mt-0.5",
+                        session.status === 'COMPLETED'
+                          ? "text-green-500"
+                          : session.status === 'STARTED'
+                          ? "text-blue-500"
+                          : "text-[var(--color-text-tertiary)]"
+                      )}
+                    >
+                      {session.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

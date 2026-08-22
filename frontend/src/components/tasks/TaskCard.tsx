@@ -12,6 +12,7 @@ const PRIORITY_FLAGS: Record<TaskPriority, { label: string; flagColor: string; b
 type TaskCardProps = {
   task: Task;
   onComplete: (id: number) => void;
+  onReopen: (id: number) => void;
   onEdit: (task: Task) => void;
   onDelete: (id: number) => void;
   isCompleting?: boolean;
@@ -28,7 +29,7 @@ function formatDate(dateStr: string | null | undefined) {
   };
 }
 
-export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: TaskCardProps) {
+export function TaskCard({ task, onComplete, onReopen, onEdit, onDelete, isCompleting }: TaskCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const isCompleted = task.status === 'COMPLETED';
   const priority = PRIORITY_FLAGS[task.priority] || PRIORITY_FLAGS.LOW;
@@ -91,11 +92,18 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
               {priority.label}
             </span>
 
-            {/* Project Tag */}
+            {/* Category Tag */}
             <span className="inline-flex items-center gap-0.5 rounded border border-[var(--color-border)] bg-[var(--color-surface-secondary)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-text-secondary)]">
               <Hash className="h-2.5 w-2.5" />
-              General
+              {task.category || 'General'}
             </span>
+
+            {/* Pomodoros */}
+            {task.estimatedPomodoros != null && task.estimatedPomodoros > 0 && (
+              <span className="inline-flex items-center gap-0.5 rounded border border-[var(--color-border)] bg-[#fff0f0] px-1.5 py-0.5 text-[10px] font-medium text-rose-600 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50">
+                🍅 {task.estimatedPomodoros}
+              </span>
+            )}
 
             {/* Due Date Pill */}
             {due && (
@@ -135,6 +143,19 @@ export function TaskCard({ task, onComplete, onEdit, onDelete, isCompleting }: T
               aria-hidden="true"
             />
             <div className="absolute right-0 z-20 mt-1 w-40 rounded-xl border border-[var(--color-border)] bg-white p-1 shadow-lg backdrop-blur-md dark:bg-slate-900">
+              {isCompleted && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onReopen(task.id);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[var(--color-text-primary)] hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Circle className="h-3.5 w-3.5" />
+                  Reopen task
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => {

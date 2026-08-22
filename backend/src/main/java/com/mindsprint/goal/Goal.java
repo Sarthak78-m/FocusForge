@@ -4,6 +4,8 @@ import com.mindsprint.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -46,22 +48,16 @@ public class Goal {
     @Column(nullable = false, length = 100)
     private String category;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(nullable = false)
     private LocalDate targetDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     @Builder.Default
-    @Column(nullable = false)
-    private int currentUnits = 0;
-
-    @Column(nullable = false)
-    private int totalUnits;
-
-    @Column(nullable = false, length = 50)
-    private String unitName;
-
-    @Builder.Default
-    @Column(nullable = false)
-    private boolean completed = false;
+    private GoalStatus status = GoalStatus.ACTIVE;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -70,9 +66,4 @@ public class Goal {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    public int getProgressPercentage() {
-        if (totalUnits <= 0) return 100;
-        return Math.min(100, Math.round(((float) currentUnits / totalUnits) * 100));
-    }
 }
