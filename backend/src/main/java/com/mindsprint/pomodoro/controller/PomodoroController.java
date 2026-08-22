@@ -77,6 +77,14 @@ public class PomodoroController {
         return ResponseEntity.ok(ApiResponse.success("Today's sessions fetched successfully", sessions));
     }
 
+    @Operation(summary = "Restore the current active Pomodoro session")
+    @GetMapping("/active")
+    public ResponseEntity<ApiResponse<PomodoroSessionResponse>> getActiveSession(Authentication authentication) {
+        PomodoroSessionResponse session = pomodoroService.restoreSession(authentication);
+        String message = session == null ? "No active session" : "Active session restored successfully";
+        return ResponseEntity.ok(ApiResponse.success(message, session));
+    }
+
     @Operation(summary = "Get Pomodoro sessions for a task")
     @GetMapping("/task/{taskId}")
     public ResponseEntity<ApiResponse<List<PomodoroSessionResponse>>> getSessionsForTask(

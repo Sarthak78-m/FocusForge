@@ -79,6 +79,12 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ex.getMessage(), null));
     }
 
+    @ExceptionHandler(SessionConflictException.class)
+    public ResponseEntity<ApiResponse<Void>> handleSessionConflict(SessionConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ex.getMessage(), null));
+    }
+
     @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
     public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

@@ -15,6 +15,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(
         name = "pomodoro_sessions",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_pomo_user_active_session",
+                        columnNames = {"user_id", "active_session_key"}
+                )
+        },
         indexes = {
                 @Index(name = "idx_pomo_user_id", columnList = "user_id"),
                 @Index(name = "idx_pomo_started_at", columnList = "started_at")
@@ -79,6 +86,13 @@ public class PomodoroSession {
 
     @Column(name = "ended_at")
     private LocalDateTime endedAt;
+
+    /**
+     * A non-null value exists only while the session is STARTED. Combined with
+     * user_id, it creates a portable database-level one-active-session guard.
+     */
+    @Column(name = "active_session_key", length = 20)
+    private String activeSessionKey;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

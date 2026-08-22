@@ -94,9 +94,8 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
 
       init: async () => {
         try {
-          const sessions = await pomodoroService.getTodaySessions();
-          const active = sessions.find((s) => s.status === 'STARTED');
-          if (active) {
+          const active = await pomodoroService.getActiveSession();
+          if (active?.status === 'STARTED') {
             // Restore session from backend with authoritative timing
             set({ 
               activeSessionId: active.id,
@@ -109,6 +108,9 @@ export const usePomodoroStore = create<PomodoroStoreState>()(
               isRunning: false, // Always start paused on restore
               targetEndTime: null,
             });
+          } else {
+            // The backend reconciles expired sessions before responding.
+            set({ activeSessionId: null, isRunning: false, targetEndTime: null });
           }
         } catch (err) {
           console.error('Failed to init pomodoro sessions', err);

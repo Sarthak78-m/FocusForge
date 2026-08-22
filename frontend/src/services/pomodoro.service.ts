@@ -33,4 +33,9 @@ export const pomodoroService = {
     const res = await http.get<ApiResponse<PomodoroSession[]>>('/pomodoro/sessions/today');
     return unwrapApiResponse(res.data);
   },
+
+  async getActiveSession(): Promise<PomodoroSession | null> {
+    const res = await http.get<ApiResponse<PomodoroSession | null>>('/pomodoro/sessions/active');
+    return unwrapApiResponse(res.data);
+  },
 };

@@ -1,109 +1,141 @@
 package com.mindsprint.reward;
 
-import com.mindsprint.analytics.AnalyticsService;
+import com.mindsprint.exception.ResourceNotFoundException;
+import com.mindsprint.pomodoro.SessionStatus;
 import com.mindsprint.pomodoro.repository.PomodoroSessionRepository;
 import com.mindsprint.repository.UserRepository;
 import com.mindsprint.user.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RewardService {
 
+    private static final int FOCUS_SESSION_XP = 10;
+    private static final int GOAL_COMPLETED_XP = 25;
+    private static final int FIRST_SESSION_XP = 50;
+    private static final int TEN_SESSIONS_XP = 100;
+    private static final int FIRST_GOAL_XP = 50;
+
     private final RewardTransactionRepository rewardTransactionRepository;
     private final UserAchievementRepository userAchievementRepository;
     private final UserRepository userRepository;
     private final PomodoroSessionRepository pomodoroSessionRepository;
-    private final AnalyticsService analyticsService;
 
     @Transactional
     public void handleSessionCompleted(User user, Long sessionId) {
-        String refId = "pomodoro:" + sessionId;
-        if (rewardTransactionRepository.existsByUserAndEventTypeAndReferenceId(user, RewardEventType.FOCUS_SESSION_COMPLETED, refId)) {
-            log.info("Reward already granted for session {}", sessionId);
-            return;
-        }
-
-        awardXp(user, RewardEventType.FOCUS_SESSION_COMPLETED, 10, refId);
-        evaluateAchievements(user);
+        processEvent(
+                user.getId(),
+                RewardEventType.FOCUS_SESSION_COMPLETED,
+                FOCUS_SESSION_XP,
+                "pomodoro:" + sessionId
+        );
     }
 
     @Transactional
     public void handleGoalCompleted(User user, Long goalId) {
-        String refId = "goal:" + goalId;
-        if (rewardTransactionRepository.existsByUserAndEventTypeAndReferenceId(user, RewardEventType.GOAL_COMPLETED, refId)) {
-            log.info("Reward already granted for goal {}", goalId);
+        processEvent(
+                user.getId(),
+                RewardEventType.GOAL_COMPLETED,
+                GOAL_COMPLETED_XP,
+                "goal:" + goalId
+        );
+    }
+
+    /**
+     * Locking the user serializes reward writes for that user. The unique
+     * database constraint remains the final duplicate-event guard.
+     */
+    private void processEvent(Long userId, RewardEventType eventType, int xpAmount, String referenceId) {
+        User managedUser = userRepository.findByIdForUpdate(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!recordRewardIfAbsent(managedUser, eventType, xpAmount, referenceId)) {
+            synchronizeXp(managedUser);
             return;
         }
 
-        awardXp(user, RewardEventType.GOAL_COMPLETED, 25, refId);
-        evaluateAchievements(user);
+        evaluateAchievements(managedUser);
+        synchronizeXp(managedUser);
     }
 
-    private void awardXp(User user, RewardEventType eventType, int xpAmount, String referenceId) {
-        RewardTransaction transaction = RewardTransaction.builder()
+    private boolean recordRewardIfAbsent(
+            User user,
+            RewardEventType eventType,
+            int xpAmount,
+            String referenceId
+    ) {
+        if (rewardTransactionRepository.existsByUserAndEventTypeAndReferenceId(user, eventType, referenceId)) {
+            log.debug("Reward {} for {} already exists", eventType, referenceId);
+            return false;
+        }
+
+        rewardTransactionRepository.saveAndFlush(RewardTransaction.builder()
                 .user(user)
                 .eventType(eventType)
                 .xpAmount(xpAmount)
                 .referenceId(referenceId)
-                .build();
-        
-        rewardTransactionRepository.save(transaction);
-        
-        user.setXp(user.getXp() + xpAmount);
-        
-        int newLevel = LevelConfig.calculateLevelFromXp(user.getXp());
-        if (newLevel > user.getLevel()) {
-            user.setLevel(newLevel);
-        }
-        
-        userRepository.save(user);
+                .build());
+        return true;
     }
 
     private void evaluateAchievements(User user) {
-        if (!userAchievementRepository.existsByUserAndAchievementType(user, AchievementType.FIRST_SESSION)) {
-            long completedSessions = pomodoroSessionRepository.countByUserIdAndStatus(user.getId(), com.mindsprint.pomodoro.SessionStatus.COMPLETED);
-            if (completedSessions >= 1) {
-                grantAchievement(user, AchievementType.FIRST_SESSION, 50);
-            }
+        long completedSessions = pomodoroSessionRepository.countByUserIdAndStatus(user.getId(), SessionStatus.COMPLETED);
+        if (completedSessions >= 1) {
+            grantAchievementIfAbsent(user, AchievementType.FIRST_SESSION, FIRST_SESSION_XP);
         }
-        
-        if (!userAchievementRepository.existsByUserAndAchievementType(user, AchievementType.TEN_SESSIONS)) {
-            long completedSessions = pomodoroSessionRepository.countByUserIdAndStatus(user.getId(), com.mindsprint.pomodoro.SessionStatus.COMPLETED);
-            if (completedSessions >= 10) {
-                grantAchievement(user, AchievementType.TEN_SESSIONS, 100);
-            }
+        if (completedSessions >= 10) {
+            grantAchievementIfAbsent(user, AchievementType.TEN_SESSIONS, TEN_SESSIONS_XP);
         }
-        
-        if (!userAchievementRepository.existsByUserAndAchievementType(user, AchievementType.FIRST_GOAL)) {
-            boolean hasCompletedGoal = rewardTransactionRepository.existsByUserAndEventTypeAndReferenceIdStartingWith(user, RewardEventType.GOAL_COMPLETED, "goal:");
-            if (hasCompletedGoal) {
-                grantAchievement(user, AchievementType.FIRST_GOAL, 50);
-            }
+        if (rewardTransactionRepository.existsByUserAndEventTypeAndReferenceIdStartingWith(
+                user,
+                RewardEventType.GOAL_COMPLETED,
+                "goal:"
+        )) {
+            grantAchievementIfAbsent(user, AchievementType.FIRST_GOAL, FIRST_GOAL_XP);
         }
     }
 
-    private void grantAchievement(User user, AchievementType achievementType, int bonusXp) {
-        UserAchievement achievement = UserAchievement.builder()
+    private void grantAchievementIfAbsent(User user, AchievementType achievementType, int bonusXp) {
+        if (userAchievementRepository.existsByUserAndAchievementType(user, achievementType)) {
+            return;
+        }
+
+        userAchievementRepository.saveAndFlush(UserAchievement.builder()
                 .user(user)
                 .achievementType(achievementType)
-                .build();
-        userAchievementRepository.save(achievement);
-        
-        awardXp(user, RewardEventType.ACHIEVEMENT_UNLOCKED, bonusXp, "achievement:" + achievementType.name());
+                .build());
+        recordRewardIfAbsent(
+                user,
+                RewardEventType.ACHIEVEMENT_UNLOCKED,
+                bonusXp,
+                "achievement:" + achievementType.name()
+        );
+    }
+
+    private void synchronizeXp(User user) {
+        int totalXp = calculateTotalXp(user.getId());
+        user.setXp(totalXp);
+        user.setLevel(LevelConfig.calculateLevelFromXp(totalXp));
+        userRepository.saveAndFlush(user);
+    }
+
+    private int calculateTotalXp(Long userId) {
+        Integer totalXp = rewardTransactionRepository.sumXpAmountByUserId(userId);
+        return totalXp == null ? 0 : totalXp;
     }
 
     @Transactional(readOnly = true)
-    public com.mindsprint.reward.dto.RewardSummaryResponse getSummary(org.springframework.security.core.Authentication authentication) {
+    public com.mindsprint.reward.dto.RewardSummaryResponse getSummary(Authentication authentication) {
         User user = getUser(authentication);
-        int currentXp = user.getXp();
-        int level = user.getLevel();
+        int currentXp = calculateTotalXp(user.getId());
+        int level = LevelConfig.calculateLevelFromXp(currentXp);
         int nextLevelXp = LevelConfig.getRequiredXpForLevel(level + 1);
 
         return com.mindsprint.reward.dto.RewardSummaryResponse.builder()
@@ -115,19 +147,17 @@ public class RewardService {
     }
 
     @Transactional(readOnly = true)
-    public List<RewardTransaction> getHistory(org.springframework.security.core.Authentication authentication) {
-        User user = getUser(authentication);
-        return rewardTransactionRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+    public List<RewardTransaction> getHistory(Authentication authentication) {
+        return rewardTransactionRepository.findByUserIdOrderByCreatedAtDesc(getUser(authentication).getId());
     }
 
     @Transactional(readOnly = true)
-    public List<UserAchievement> getAchievements(org.springframework.security.core.Authentication authentication) {
-        User user = getUser(authentication);
-        return userAchievementRepository.findByUserIdOrderByEarnedAtDesc(user.getId());
+    public List<UserAchievement> getAchievements(Authentication authentication) {
+        return userAchievementRepository.findByUserIdOrderByEarnedAtDesc(getUser(authentication).getId());
     }
 
-    private User getUser(org.springframework.security.core.Authentication authentication) {
+    private User getUser(Authentication authentication) {
         return userRepository.findByEmail(authentication.getName().toLowerCase())
-                .orElseThrow(() -> new com.mindsprint.exception.ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }

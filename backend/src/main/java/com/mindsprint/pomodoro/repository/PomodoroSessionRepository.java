@@ -3,7 +3,10 @@ package com.mindsprint.pomodoro.repository;
 import com.mindsprint.pomodoro.PomodoroSession;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -47,5 +50,13 @@ public interface PomodoroSessionRepository extends JpaRepository<PomodoroSession
     long countByUserIdAndStatus(Long userId, com.mindsprint.pomodoro.SessionStatus status);
     
     // Find the most recent active session for a user
-    java.util.Optional<PomodoroSession> findFirstByUserIdAndStatusOrderByStartedAtDesc(Long userId, com.mindsprint.pomodoro.SessionStatus status);
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<PomodoroSession> findFirstByUserIdAndStatusOrderByStartedAtDesc(
+            Long userId,
+            com.mindsprint.pomodoro.SessionStatus status
+    );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select session from PomodoroSession session where session.id = :id and session.user.id = :userId")
+    Optional<PomodoroSession> findByIdAndUserIdForUpdate(@Param("id") Long id, @Param("userId") Long userId);
 }
