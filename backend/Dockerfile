@@ -2,8 +2,10 @@ FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 COPY pom.xml .
-COPY src ./src
+# Download dependencies to cache them in a separate Docker layer
+RUN mvn dependency:go-offline -B
 
+COPY src ./src
 RUN mvn clean package -DskipTests -B
 
 FROM eclipse-temurin:21-jre
@@ -21,5 +23,6 @@ ENTRYPOINT ["java", \
   "-XX:MaxRAMPercentage=75.0", \
   "-XX:TieredStopAtLevel=1", \
   "-noverify", \
+  "-Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip=*", \
   "-Djava.security.egd=file:/dev/./urandom", \
   "-jar", "app.jar"]
