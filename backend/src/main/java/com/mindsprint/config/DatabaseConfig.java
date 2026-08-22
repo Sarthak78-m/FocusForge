@@ -153,7 +153,7 @@ public class DatabaseConfig {
                 // Strip any preceding prefixes to isolate a clean URI for parsing
                 String cleanUri = url;
                 if (cleanUri.contains("postgresql://")) {
-                    cleanUri = "postgresql://" + cleanUri.substring(cleanUri.indexOf("postgresql://") + 15);
+                    cleanUri = "postgresql://" + cleanUri.substring(cleanUri.indexOf("postgresql://") + 13);
                 } else if (cleanUri.contains("postgres://")) {
                     cleanUri = "postgres://" + cleanUri.substring(cleanUri.indexOf("postgres://") + 11);
                 }
@@ -169,6 +169,9 @@ public class DatabaseConfig {
                 String path = uri.getPath();
                 if (host != null) {
                     url = "jdbc:postgresql://" + host + ":" + port + path;
+                    if (uri.getQuery() != null) {
+                        url += "?" + uri.getQuery();
+                    }
                 }
             } catch (Exception e) {
                 log.warn("Failed to parse database URL for credential extraction, using defaults: {}", e.getMessage());
