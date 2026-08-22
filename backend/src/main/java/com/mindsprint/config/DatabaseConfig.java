@@ -148,9 +148,16 @@ public class DatabaseConfig {
         String pass = resolvePassword();
 
         // Handle postgres:// or postgresql:// or jdbc:postgresql:// with embedded credentials
-        if (url.startsWith("postgres://") || url.startsWith("postgresql://") || url.startsWith("jdbc:postgresql://")) {
+        if (url.contains("postgres://") || url.contains("postgresql://")) {
             try {
-                String cleanUri = url.replace("jdbc:", "");
+                // Strip any preceding prefixes to isolate a clean URI for parsing
+                String cleanUri = url;
+                if (cleanUri.contains("postgresql://")) {
+                    cleanUri = "postgresql://" + cleanUri.substring(cleanUri.indexOf("postgresql://") + 15);
+                } else if (cleanUri.contains("postgres://")) {
+                    cleanUri = "postgres://" + cleanUri.substring(cleanUri.indexOf("postgres://") + 11);
+                }
+
                 URI uri = new URI(cleanUri);
                 if (uri.getUserInfo() != null && uri.getUserInfo().contains(":")) {
                     String[] userInfo = uri.getUserInfo().split(":", 2);

@@ -54,8 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return Arrays.stream(PUBLIC_PATTERNS).anyMatch(pattern -> pathMatcher.match(pattern, path));
+        String path = request.getRequestURI().replaceAll("/+$", "");
+        boolean isPublic = Arrays.stream(PUBLIC_PATTERNS).anyMatch(pattern -> pathMatcher.match(pattern, path));
+        return isPublic;
     }
 
     @Override
@@ -92,9 +93,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException ex) {
             SecurityContextHolder.clearContext();
-            // Let the filter chain continue without authentication.
-            // Spring Security's authorization rules will block access if required.
-            filterChain.doFilter(request, response);
+            // Let the filter chain continue ONLY if it's a public endpoint that somehow bypassed shouldNotFilter
+            String path = request.getRequestURI().replaceAll("/+$", "");
+            boolean isPublic = Arrays.stream(PUBLIC_PATTERNS).anyMatch(pattern -> pathMatcher.match(pattern, path));
+            if (isPublic) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            
+            BadCredentialsException badCredentialsException = new BadCredentialsException(
+                    "Invalid or expired JWT token",
+                    ex
+            );
+            handlerExceptionResolver.resolveException(request, response, null, badCredentialsException);
         }
     }
 }
